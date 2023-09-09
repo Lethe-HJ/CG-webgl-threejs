@@ -1,0 +1,66 @@
+{
+    "cells": [
+        {
+            "language": "javascript",
+            "source": [
+                "const { display } = require(\"node-kernel\");\r\nconst html = /*html*/ `\r\n\t\t<div id=\"container111\" style=\"width:600px;height:300px;position:relative;\"></div>\r\n\t\t<script type=\"module\">\r\n\t\t\timport * as THREE from 'https://unpkg.com/three/build/three.module.js';\r\n\r\n\t\t\tconst scene = new THREE.Scene();\r\n\t\t\tconst container = document.querySelector(\"#container111\");\r\n\t\t\tconst camera = new THREE.PerspectiveCamera( 75, container.clientWidth / container.clientHeight, 0.1, 1000 );\r\n\r\n\t\t\tconst renderer = new THREE.WebGLRenderer();\r\n\r\n\t\t\trenderer.setSize( container.clientWidth, container.clientHeight );\r\n\t\t\tcontainer.appendChild( renderer.domElement );\r\n\r\n\t\t\tconst geometry = new THREE.BoxGeometry( 1, 1, 1 );\r\n\t\t\tconst material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );\r\n\t\t\tconst cube = new THREE.Mesh( geometry, material );\r\n\t\t\tscene.add( cube );\r\n\r\n\t\t\tcamera.position.z = 5;\r\n\r\n\t\t\tfunction animate() {\r\n\t\t\t\trequestAnimationFrame( animate );\r\n\r\n\t\t\t\tcube.rotation.x += 0.01;\r\n\t\t\t\tcube.rotation.y += 0.01;\r\n\r\n\t\t\t\trenderer.render( scene, camera );\r\n\t\t\t}\r\n\r\n\t\t\tanimate();\r\n\t\t</script>\r\n\r\n`;\r\ndisplay.html(html);\r\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/html",
+                            "value": [
+                                "<style> table, th, tr { text-align: left; }</style>",
+                                "\t\t<div id=\"container111\" style=\"width:600px;height:300px;position:relative;\"></div>",
+                                "\t\t<script type=\"module\">",
+                                "\t\t\timport * as THREE from 'https://unpkg.com/three/build/three.module.js';",
+                                "",
+                                "\t\t\tconst scene = new THREE.Scene();",
+                                "\t\t\tconst container = document.querySelector(\"#container111\");",
+                                "\t\t\tconst camera = new THREE.PerspectiveCamera( 75, container.clientWidth / container.clientHeight, 0.1, 1000 );",
+                                "",
+                                "\t\t\tconst renderer = new THREE.WebGLRenderer();",
+                                "",
+                                "\t\t\trenderer.setSize( container.clientWidth, container.clientHeight );",
+                                "\t\t\tcontainer.appendChild( renderer.domElement );",
+                                "",
+                                "\t\t\tconst geometry = new THREE.BoxGeometry( 1, 1, 1 );",
+                                "\t\t\tconst material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );",
+                                "\t\t\tconst cube = new THREE.Mesh( geometry, material );",
+                                "\t\t\tscene.add( cube );",
+                                "",
+                                "\t\t\tcamera.position.z = 5;",
+                                "",
+                                "\t\t\tfunction animate() {",
+                                "\t\t\t\trequestAnimationFrame( animate );",
+                                "",
+                                "\t\t\t\tcube.rotation.x += 0.01;",
+                                "\t\t\t\tcube.rotation.y += 0.01;",
+                                "",
+                                "\t\t\t\trenderer.render( scene, camera );",
+                                "\t\t\t}",
+                                "",
+                                "\t\t\tanimate();",
+                                "\t\t</script>",
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

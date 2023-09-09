@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="code_cell1" style="width:600px;height:600px;position:relative;"></div>
+    <script type="module">
+        import * as THREE from "../../node_modules/three/build/three.module.js";
+        import { OrbitControls } from "../../node_modules/three/examples/jsm/controls/OrbitControls.js";
+        console.log("OrbitControls", OrbitControls)
+        const scene = new THREE.Scene();
+        const container = document.querySelector("#code_cell1");
+        const camera = new THREE.PerspectiveCamera( 75, container.clientWidth / container.clientHeight, 0.1, 1000 );
+
+        const renderer = new THREE.WebGLRenderer({alpha: true});
+
+        renderer.setSize( container.clientWidth, container.clientHeight );
+        container.appendChild( renderer.domElement );
+
+        const axesHelper = new THREE.AxesHelper(5);
+        scene.add(axesHelper);
+        
+        const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+        // 创建平面
+        const floor_geometry = new THREE.PlaneGeometry(1,1,64,64);
+        const floor = new THREE.Mesh( floor_geometry, material );
+        scene.add( floor );
+
+        camera.position.z = 5;
+
+
+        function animate() {
+            requestAnimationFrame(animate);
+            // 使用渲染器渲染相机看这个场景的内容渲染出来
+            renderer.render(scene, camera);
+        }
+        animate();
+    </script>
+</body>
+</html>
