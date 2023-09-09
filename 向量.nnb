@@ -1,0 +1,139 @@
+{
+    "cells": [
+        {
+            "language": "typescript",
+            "source": [
+                "const THREE = require('three');\r\nvar mesh = new THREE.Mesh()\r\nmesh.position.set(100,20,330);//设置网格模型的位置\r\nconsole.log('对象缩放属性',mesh.scale);\r\nconsole.log('对象位置属性',mesh.position);\r\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "对象缩放属性 Vector3 { x: 1, y: 1, z: 1 }",
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "var geometry = new THREE.BoxGeometry(50,25,25);//立方体\r\nconsole.log('几何体顶点位置坐标数据',geometry.vertices);\r\nconsole.log('几何体三角形',geometry.faces);\r\nconsole.log('几何体UV坐标',geometry.faceVertexUvs[0]);"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "几何体顶点位置坐标数据 undefined",
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.error",
+                            "value": {
+                                "name": "TypeError",
+                                "message": "Cannot read properties of undefined (reading '0')",
+                                "stack": "    at <Cell 2> [4, 45]\n    at <Cell 2> [7, 46]\n    at Script.runInContext (node:vm:135:12)\n    at Script.runInNewContext (node:vm:140:17)\n    at Object.runInNewContext (node:vm:292:38)\n    at C (c:\\Users\\Admin\\.vscode\\extensions\\donjayamanne.typescript-notebook-2.0.6\\out\\extension\\server\\index.js:2:113345)\n    at t.execCode (c:\\Users\\Admin\\.vscode\\extensions\\donjayamanne.typescript-notebook-2.0.6\\out\\extension\\server\\index.js:2:114312)\n    at k.<anonymous> (c:\\Users\\Admin\\.vscode\\extensions\\donjayamanne.typescript-notebook-2.0.6\\out\\extension\\server\\index.js:2:142156)\n    at k.emit (node:events:514:28)\n    at k.emit (node:domain:489:12)"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "// 创建一个三维向量，xyz分量分别为3, 5, 4\r\nvar v1 = new THREE.Vector3(3, 5, 4)\r\nconsole.log('向量x分量', v1.x);\r\n// 重置向量的y分量\r\nv1.y = 80;\r\n// 重新设置三个分量\r\nv1.set(2,4,8);"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "向量x分量 3",
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "text/plain",
+                            "value": [
+                                "Vector3 {",
+                                "  x: \u001b[33m2\u001b[39m,",
+                                "  y: \u001b[33m4\u001b[39m,",
+                                "  z: \u001b[33m8\u001b[39m",
+                                "}"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                ""
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "var p1 = new THREE.Vector3(10,20,15);\r\nvar v1 = p1.clone(); // 返回一个新的对象，和原来对象属性的值一样\r\nconsole.log(`查看克隆的结果`,v1);"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "var p1 = new THREE.Vector3(10,42,28);\r\nvar p2 = new THREE.Vector3();\r\np2.copy(p1);\r\nconsole.log(`查看复制的结果`,p2);"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "// 点1坐标\r\nvar p1 = new THREE.Vector3(10,8,12);\r\n// 点2坐标\r\nvar p2 = new THREE.Vector3(20,30,-10);\r\n// .clone()方法克隆p1，直接执行向量减法.sub()会改变p1向量本身\r\n// .sub()：向量减法运算\r\n// .length()：返回向量的长度\r\nvar L = p1.clone().sub(p2).length();\r\nconsole.log('两点之间距离',L);"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "// 三角形的三个点坐标p1，p2，p3\r\nvar p1 = new THREE.Vector3(0,0,0);// 点1坐标\r\nvar p2 = new THREE.Vector3(20,0,0);// 点2坐标\r\nvar p3 = new THREE.Vector3(0,40,0);// 点3坐标\r\n\r\n// p1，p2两个点确定一个向量\r\nvar v1 = p1.clone().sub(p2);\r\n// p1，p3两个点确定一个向量\r\nvar v2 = p1.clone().sub(p3);\r\n// .dot()计算两个向量点积.length()计算向量长度\r\n// 返回三角形顶点p1对应夹角余弦值\r\nvar CosineValue = v1.dot( v2 ) /(v1.length()*v2.length())\r\nconsole.log('三角形两条边夹角余弦值',CosineValue);\r\n// .acos()：反余弦函数，返回结果是弧度\r\nconsole.log('三角形两条边夹角',Math.acos(CosineValue)*180/Math.PI);"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "// 声明一个向量对象，用来保存.crossVectors()方法结果\r\nvar v3 = new THREE.Vector3();\r\nv3.crossVectors(v1,v2)"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "// 向量v2直接执行.cross()方法，叉乘的结果会覆盖向量v2的xyz分量\r\nv2.cross(v1);\r\nvar v3 = v2.clone();\r\nv3.cross(v1)"
+            ],
+            "outputs": []
+        }
+    ]
+}
