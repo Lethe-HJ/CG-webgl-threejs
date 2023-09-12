@@ -3,6 +3,7 @@
     "@types/node": "^20.5.1"
   },
   "dependencies": {
+    "jquery": "^3.7.1",
     "three": "^0.156.1"
   }
 }
