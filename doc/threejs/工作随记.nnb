@@ -1,0 +1,18 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "## 更新类型数组\r\n\r\n```js\r\nconst vertices = new Float32Array(VERTICES_LENGTH_ALL);\r\nthis.setAttribute('position', new Float32BufferAttribute(vertices, 3));\r\n\r\nthis.attributes.position.array = new_vertices; // 直接覆盖或者修改成员\r\n// this.attributes.position.array[0] = 0;\r\nthis.attributes.position.needsUpdate = true;\r\n```\r\n\r\n这里的`new Float32BufferAttribute` 会对vertices做深拷贝后续修改vertices无效 应该直接对`this.attributes.position.array`做修改\r\n然后再标记更新\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## THREE的类型数组\r\n\r\n+ THREE.Float64BufferAttribute \r\n+ THREE.Float32BufferAttribute\r\n+ THREE.Float16BufferAttribute \r\n+ THREE.Uint32BufferAttribute\r\n+ THREE.Int32BufferAttribute \r\n+ THREE.Uint16BufferAttribute\r\n+ THREE.Int16BufferAttribute \r\n+ THREE.Uint8ClampedBufferAttribute\r\n+ THREE.Uint8BufferAttribute \r\n+ THREE.Int8BufferAttribute\r\n\r\n其中`THREE.Uint8BufferAttribute` 和 `THREE.Uint8ClampedBufferAttribute` 都是 Three.js 中用于表示无符号 8 位整数的缓冲属性，但它们之间有一个关键的区别：\r\n\r\n1. **值的处理方式**：\r\n    - `THREE.Uint8BufferAttribute`：这种属性存储的值是普通的无符号 8 位整数，范围在 0 到 255 之间。当你将值存储在 `Uint8BufferAttribute` 中时，它们可以超出这个范围，因此可以存储负数或大于 255 的数值。这在某些情况下可能会导致不期望的结果，尤其是在图像处理等需要精确范围的任务中。\r\n    - `THREE.Uint8ClampedBufferAttribute`：相比之下，这种属性存储的值是被\"夹紧\"（clamped）到 0 到 255 范围内。这意味着如果你尝试存储小于 0 的值，它会被设置为 0；如果尝试存储大于 255 的值，它会被设置为 255。这确保了存储的值始终在合法范围内。\r\n\r\n2. **应用场景**：\r\n    - `THREE.Uint8BufferAttribute`：通常用于不需要值被限制在 0 到 255 范围内的情况。例如，它可以用于存储灰度图像的像素数据，其中像素值在 0 到 255 之间。\r\n    - `THREE.Uint8ClampedBufferAttribute`：通常用于需要确保值始终在 0 到 255 范围内的情况，特别是在颜色表示和图像处理中，以避免产生不合理的颜色或效果。\r\n\r\n总之，区别在于数据的范围和处理方式。如果你需要确保值在 0 到 255 范围内，不会溢出或产生异常，那么 `THREE.Uint8ClampedBufferAttribute` 是更安全的选择。如果你不需要这种夹紧行为，可以使用 `THREE.Uint8BufferAttribute`。选择哪个取决于你的具体应用场景和需求。"
+            ],
+            "outputs": []
+        }
+    ]
+}

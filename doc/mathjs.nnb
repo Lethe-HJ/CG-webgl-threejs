@@ -1,0 +1,11 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "# math.js\r\n\r\n## 1. 矢量与矩阵\r\n\r\n### 1.1 向量和矩阵的创建：\r\n\r\n  - 创建向量：`math.matrix([x, y, z])`（创建一个3D向量）\r\n  - 创建矩阵：`math.matrix([[a, b, c], [d, e, f], [g, h, i]])`（创建3x3矩阵）\r\n\r\n### 1.2 向量和矩阵的操作：\r\n\r\n  - 加法：`math.add(a, b)`\r\n  - 减法：`math.subtract(a, b)`\r\n  - 乘法：`math.multiply(a, b)`（矩阵相乘、矩阵和向量相乘、向量和标量相乘）\r\n  - 转置：`math.transpose(a)`\r\n  - 逆矩阵：`math.inv(a)`\r\n  - 行列式：`math.det(a)`\r\n\r\n### 1.3 向量操作：\r\n\r\n  - 点积：`math.dot(a, b)`（计算两个向量的点积）\r\n  - 叉积：`math.cross(a, b)`（计算两个3D向量的叉积）\r\n  - 范数：`math.norm(a)`（计算向量的长度）\r\n  - 标准化：`math.divide(a, math.norm(a))`（将向量转换为单位长度）\r\n\r\n### 1.4 旋转矩阵：\r\n\r\n  - 旋转矩阵（仅限于二维矩阵）：`math.rotationMatrix2d(angle)`\r\n\r\n\r\n\r\n\r\n\r\n## 2. 其余常用api\r\n\r\n1. 模运算：\r\n   - 模：`math.mod(a, b)`\r\n2. 数学常数：\r\n   - 圆周率：`math.pi`\r\n   - 自然对数的底：`math.e`\r\n3. 三角函数：\r\n   - 正弦：`math.sin(angle)`\r\n   - 余弦：`math.cos(angle)`\r\n   - 正切：`math.tan(angle)`\r\n   - 反正弦：`math.asin(value)`\r\n   - 反余弦：`math.acos(value)`\r\n   - 反正切：`math.atan(value)`\r\n   - 两参数反正切：`math.atan2(y, x)`\r\n4. 指数和对数：\r\n   - 指数：`math.exp(value)`\r\n   - 对数：`math.log(value, base)`\r\n5. 幂和开方：\r\n   - 幂：`math.pow(base, exponent)`\r\n   - 平方根：`math.sqrt(value)`\r\n   - 立方根：`math.cbrt(value)`\r\n6. 舍入函数：\r\n   - 向上取整：`math.ceil(value)`\r\n   - 向下取整：`math.floor(value)`\r\n   - 四舍五入：`math.round(value)`\r\n7. 随机数：\r\n   - 生成指定范围内的随机数：`math.random(min, max)`\r\n   - 生成指定范围内的随机整数：`math.randomInt(min, max)`"
+            ],
+            "outputs": []
+        }
+    ]
+}
