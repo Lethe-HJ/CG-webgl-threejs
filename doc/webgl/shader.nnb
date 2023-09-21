@@ -1,0 +1,113 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "### 变量类型\r\n\r\nuniform 外部的js代码输入的统一值\r\n\r\n```glsl\r\nuniform float u_time;     // 时间（加载后的秒数）\r\n```\r\n\r\nvarying 变化值\r\n\r\n\r\n### 数据类型\r\n\r\nvec2\r\nvec3\r\nvec4\r\nfloat\r\n\r\n设置精度\r\n\r\n```glsl\r\nprecision mediump float; // 设置浮点数的精度为中\r\nprecision lowp float; // 设置浮点数的精度为低\r\nprecision high float; // 设置浮点数的精度为高\r\n\r\n```\r\n\r\n### 默认变量\r\n\r\ngl_FragCoord 表示线程正在处理的顶点坐标 输入值\r\ngl_FragColor 表示线程将处理的片元的颜色 输出值"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 内置函数\r\n```glsl\r\nsin()\r\ncos()\r\ntan()\r\nasin()\r\nacos()\r\natan()\r\npow()\r\nexp() // 自然对数\r\nlog()\r\nsqrt()\r\nabs()\r\nsign() // 获取符号 +1.0或-1.0\r\nfloor()\r\nceil()\r\nfract() // 获取小数部分 \r\nmod() // 模(取余)\r\nmin()\r\nmax()\r\nclamp() // 约束值在某个区间\r\n```"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "var fragmentShader = /*glsl*/ `\r\n    #ifdef GL_ES\r\n    precision mediump float;\r\n    #endif\r\n\r\n    uniform vec2 u_resolution; // 画布尺寸（宽，高） GlslCanvas库内置的变量\r\n\r\n    // Plot a line on Y using a value between 0.0-1.0\r\n    float plot(vec2 st) {    \r\n        return smoothstep(0.02, 0.0, abs(st.y - st.x));\r\n    }\r\n\r\n    void main() {\r\n        vec2 st = gl_FragCoord.xy/u_resolution;\r\n\r\n        float y = st.x;\r\n\r\n        vec3 color = vec3(y);\r\n\r\n        // Plot a line\r\n        float pct = plot(st);\r\n        color = (1.0-pct)*color+pct*vec3(0.0,1.0,0.0);\r\n\r\n        gl_FragColor = vec4(color,1.0);\r\n    }\r\n\r\n`;\r\n\r\nconst Display = require(\"../../src/display.js\");\r\nDisplay.displayShader(fragmentShader);\r\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/html",
+                            "value": [
+                                "<style> table, th, tr { text-align: left; }</style>",
+                                "        <div id=\"container1695199182761\" style=\"border:1px solid red;width:300px;height:150px;position:relative;\"></div>",
+                                "        <script src=\"../../node_modules/glslCanvas/dist/GlslCanvas.js\"></script>",
+                                "        <script type=\"module\">",
+                                "        const checkInterval = setInterval(function() {",
+                                "            if (typeof GlslCanvas !== \"undefined\") {",
+                                "                clearInterval(checkInterval); // 停止轮询",
+                                "                const container = document.querySelector('#container1695199182761');",
+                                "                var canvas = document.createElement(\"canvas\");",
+                                "                var sandbox = new GlslCanvas(canvas);",
+                                "                sandbox.load(\"\\n    #ifdef GL_ES\\n    precision mediump float;\\n    #endif\\n\\n    uniform vec2 u_resolution; // 画布尺寸（宽，高） GlslCanvas库内置的变量\\n\\n    // Plot a line on Y using a value between 0.0-1.0\\n    float plot(vec2 st) {    \\n        return smoothstep(0.02, 0.0, abs(st.y - st.x));\\n    }\\n\\n    void main() {\\n        vec2 st = gl_FragCoord.xy/u_resolution;\\n\\n        float y = st.x;\\n\\n        vec3 color = vec3(y);\\n\\n        // Plot a line\\n        float pct = plot(st);\\n        color = (1.0-pct)*color+pct*vec3(0.0,1.0,0.0);\\n\\n        gl_FragColor = vec4(color,1.0);\\n    }\\n\\n\", \"\\n    attribute vec4 a_position;\\n    void main(){\\n        gl_Position = a_position;\\n    }\\n\");",
+                                "                container.appendChild(canvas);",
+                                "            }",
+                                "        }, 10); // 每10毫秒检查一次",
+                                "    </script>",
+                                "    "
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const Display = require(\"../../src/display.js\");\r\nDisplay.displayShader(/*glsl*/ `\r\n    precision mediump float;\r\n    uniform vec2 u_resolution;\r\n\r\n    float plot(vec2 st, float pct){\r\n    return  smoothstep( pct-0.02, pct, st.y) -\r\n            smoothstep( pct, pct+0.02, st.y);\r\n    }\r\n\r\n    void main() {\r\n        vec2 st = gl_FragCoord.xy/u_resolution; // 将片元的屏幕坐标（像素坐标）转换为一个在[0, 1]范围内的归一化坐标\r\n\r\n        float y = pow(st.x,5.0);\r\n\r\n        vec3 color = vec3(y);\r\n\r\n        float pct = plot(st,y); // 如果在指数函数线上 则越接近1 否则越接近0 只在边界上平滑\r\n        color = (1.0-pct)*color+pct*vec3(0.0,1.0,0.0);\r\n\r\n        gl_FragColor = vec4(color,1.0);\r\n    }\r\n`)"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/html",
+                            "value": [
+                                "<style> table, th, tr { text-align: left; }</style>",
+                                "        <div id=\"container1695259699143\" style=\"border:1px solid red;width:300px;height:150px;position:relative;\"></div>",
+                                "        <script src=\"../../node_modules/glslCanvas/dist/GlslCanvas.js\"></script>",
+                                "        <script type=\"module\">",
+                                "        const checkInterval = setInterval(function() {",
+                                "            if (typeof GlslCanvas !== \"undefined\") {",
+                                "                clearInterval(checkInterval); // 停止轮询",
+                                "                const container = document.querySelector('#container1695259699143');",
+                                "                var canvas = document.createElement(\"canvas\");",
+                                "                var sandbox = new GlslCanvas(canvas);",
+                                "                sandbox.load(\"\\n    #ifdef GL_ES\\n    precision mediump float;\\n    #endif\\n\\n    #define PI 3.14159265359\\n\\n    uniform vec2 u_resolution;\\n    uniform vec2 u_mouse;\\n    uniform float u_time;\\n\\n    float plot(vec2 st, float pct){\\n    return  smoothstep( pct-0.02, pct, st.y) -\\n            smoothstep( pct, pct+0.02, st.y);\\n    }\\n\\n    void main() {\\n        vec2 st = gl_FragCoord.xy/u_resolution;\\n\\n        float y = pow(st.x,5.0);\\n\\n        vec3 color = vec3(y);\\n\\n        float pct = plot(st,y);\\n        color = (1.0-pct)*color+pct*vec3(0.0,1.0,0.0);\\n\\n        gl_FragColor = vec4(color,1.0);\\n    }\\n\", \"\\n    attribute vec4 a_position;\\n    void main(){\\n        gl_Position = a_position;\\n    }\\n\");",
+                                "                container.appendChild(canvas);",
+                                "            }",
+                                "        }, 10); // 每10毫秒检查一次",
+                                "    </script>",
+                                "    "
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                ""
+            ],
+            "outputs": []
+        }
+    ]
+}

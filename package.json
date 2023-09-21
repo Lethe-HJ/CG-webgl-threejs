@@ -3,7 +3,10 @@
     "@types/node": "^20.5.1"
   },
   "dependencies": {
+    "glslCanvas": "^0.2.6",
     "jquery": "^3.7.1",
-    "three": "^0.156.1"
+    "mathjs": "^11.11.0",
+    "three": "^0.156.1",
+    "xhr": "^2.6.0"
   }
 }

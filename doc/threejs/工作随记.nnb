@@ -13,6 +13,13 @@
                 "## THREE的类型数组\r\n\r\n+ THREE.Float64BufferAttribute \r\n+ THREE.Float32BufferAttribute\r\n+ THREE.Float16BufferAttribute \r\n+ THREE.Uint32BufferAttribute\r\n+ THREE.Int32BufferAttribute \r\n+ THREE.Uint16BufferAttribute\r\n+ THREE.Int16BufferAttribute \r\n+ THREE.Uint8ClampedBufferAttribute\r\n+ THREE.Uint8BufferAttribute \r\n+ THREE.Int8BufferAttribute\r\n\r\n其中`THREE.Uint8BufferAttribute` 和 `THREE.Uint8ClampedBufferAttribute` 都是 Three.js 中用于表示无符号 8 位整数的缓冲属性，但它们之间有一个关键的区别：\r\n\r\n1. **值的处理方式**：\r\n    - `THREE.Uint8BufferAttribute`：这种属性存储的值是普通的无符号 8 位整数，范围在 0 到 255 之间。当你将值存储在 `Uint8BufferAttribute` 中时，它们可以超出这个范围，因此可以存储负数或大于 255 的数值。这在某些情况下可能会导致不期望的结果，尤其是在图像处理等需要精确范围的任务中。\r\n    - `THREE.Uint8ClampedBufferAttribute`：相比之下，这种属性存储的值是被\"夹紧\"（clamped）到 0 到 255 范围内。这意味着如果你尝试存储小于 0 的值，它会被设置为 0；如果尝试存储大于 255 的值，它会被设置为 255。这确保了存储的值始终在合法范围内。\r\n\r\n2. **应用场景**：\r\n    - `THREE.Uint8BufferAttribute`：通常用于不需要值被限制在 0 到 255 范围内的情况。例如，它可以用于存储灰度图像的像素数据，其中像素值在 0 到 255 之间。\r\n    - `THREE.Uint8ClampedBufferAttribute`：通常用于需要确保值始终在 0 到 255 范围内的情况，特别是在颜色表示和图像处理中，以避免产生不合理的颜色或效果。\r\n\r\n总之，区别在于数据的范围和处理方式。如果你需要确保值在 0 到 255 范围内，不会溢出或产生异常，那么 `THREE.Uint8ClampedBufferAttribute` 是更安全的选择。如果你不需要这种夹紧行为，可以使用 `THREE.Uint8BufferAttribute`。选择哪个取决于你的具体应用场景和需求。"
             ],
             "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "HTTPS (超文本传输安全协议) 是基于 SSL/TLS 的 HTTP 协议。SSL/TLS 是一种提供数据传输加密、服务器认证、消息完整性和可选的客户端认证的协议。要理解 HTTPS 的工作原理和安全性，首先需要了解 SSL/TLS 的一些基本概念和步骤：\r\n\r\n1. **公钥和私钥**：\r\n   - 公钥加密，只有对应的私钥可以解密。\r\n   - 私钥加密，只有对应的公钥可以解密。\r\n\r\n2. **握手过程**：\r\n   - 客户端发起连接请求。\r\n   - 服务器回应并提供其数字证书。这个证书包含服务器的公钥和由受信任的证书颁发机构 (CA) 签名。\r\n   - 客户端验证服务器的证书（通过比较它与系统中存储的受信任 CA 列表）。\r\n   - 客户端使用服务器的公钥加密一个随机生成的“预主密钥”并将其发送给服务器。\r\n   - 服务器使用其私钥解密并获取这个“预主密钥”。\r\n   - 服务器和客户端都使用这个“预主密钥”来生成会话密钥，用于加密和解密信息。\r\n\r\n3. **数据传输过程**：服务器和客户端使用从“预主密钥”派生出的会话密钥加密和解密数据。\r\n\r\n4. **安全性**：\r\n   - **认证**：由于证书由受信任的 CA 签名，因此客户端可以验证服务器的身份。这可以防止中间人攻击。\r\n   - **加密**：数据被加密，即使被拦截，也无法被解读。\r\n   - **完整性**：SSL/TLS 使用消息摘要来确保数据在传输过程中没有被篡改。\r\n\r\n5. **为什么这是安全的**：\r\n   - 私钥从不在网络上传输。\r\n   - 即使攻击者截获了由公钥加密的“预主密钥”，他们也无法解密它，除非他们有对应的私钥。\r\n   - 即使攻击者有服务器的数字证书和公钥，他们也无法伪造服务器的身份，因为他们没有对应的私钥来解密客户端发送的“预主密钥”。\r\n\r\n然而，HTTPS 和 SSL/TLS 不是完全不可攻破的。例如，它们可能受到特定的加密算法弱点、证书颁发机构的安全问题或服务器配置错误的影响。但总体上，当正确实施和配置时，HTTPS 提供了一个高度安全的数据传输机制。"
+            ],
+            "outputs": []
         }
     ]
 }
