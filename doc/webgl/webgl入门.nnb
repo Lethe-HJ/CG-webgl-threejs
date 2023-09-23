@@ -1,0 +1,74 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "`<canvas></canvas>` 是HTML5新增的一个 DOM 元素\r\n用途：显示 二维 和 三维 的图像\r\n二维图形可以使用 （ Canvas API 或 WebGL API）绘制\r\n三维图形使用 WebGL API 绘制\r\n\r\ncanvas api绘图主要通过`CanvasRenderingContext2D`接口完成 `canvas.getContext('2d')`\r\n \r\nWebGL API绘图主要通过`WebGLRenderingContext`接口完成 `canvas.getContext('webgl')`或`canvas.getContext('webgl2')`\r\n\r\n1. Three.js：JavaScript 3D WebGL库 \r\n2. Babylon.js：Web3D图形引擎 \r\n3. KickJS：Web的开源图形和游戏引擎 \r\n4. ClayGL：构建可扩展的Web3D应⽤程序 \r\n5. PlayCanvas：网络游戏和3D图形引擎 \r\n6. WebGLStudio.js和Litescene.js：开源Web 3D图形编辑器和创建器 \r\n7. Luma：Uber的3D WebGL可视化库 \r\n8. A-Frame是用于构建VR（虚拟现实）体验的Web框架\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "gl.clear()"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const { display } = require(\"node-kernel\");\r\n\r\nconst html = /*html*/ `\r\n  <canvas id=\"canvas1\" width=\"400\" height=\"400\">\r\n    此浏览器不支持canvas\r\n  </canvas>\r\n  <script>\r\n   {\r\n    const ctx = document.getElementById('canvas1')\r\n    const c = ctx.getContext('2d')\r\n    c.fillStyle = 'red'\r\n    c.fillRect(10,10,100,100);\r\n   }\r\n  </script>\r\n`;\r\ndisplay.html(html);\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "require(\"node-kernel\").display.html(/*html*/ `\r\n  <canvas id=\"canvas2\" width=\"400\" height=\"400\">\r\n    此浏览器不支持canvas\r\n  </canvas>\r\n  <script>\r\n  {\r\n    const ctx = document.getElementById('canvas2')\r\n    const gl = ctx.getContext('webgl');\r\n    gl.clearColor(1.0,0.0,0.0,1.0); // red 1.0  green 0.0  blue 0.0 alpha 1.0\r\n    gl.clear(gl.COLOR_BUFFER_BIT);\r\n  }\r\n\r\n  </script>\r\n`);\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "`gl.clearColor(r,g,b,a)` 指定清空 `<canvas>` 的颜⾊，接收四个参数（取值区间为 0.0~1.0）\r\n`gl.clear(buffer)`\r\n\r\nbuffer\r\n+ `gl.COLOR_BUFFER_BIT` 清空颜色缓存 搭配`gl.clearColor(r,g,b,a)`使用\r\n+ `gl.DEPTH_BUFFER_BIT` 清空深度缓冲区 搭配`gl.clearDepth(1.0)`使用\r\n+ `gl.STENCIL_BUFFER_BIT` 清空模板缓冲区 搭配`gl.clearStencil(0)`使用\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const { display } = require(\"node-kernel\");\r\n\r\n// 着色器\r\n// 创建着色器源码\r\nconst VERTEX_SHADER_SOURCE = /*glsl */ `\r\n  // 必须要存在 main 函数\r\n  void main() {\r\n    // 要绘制的点的坐标\r\n    gl_Position = vec4(0.0,0.0,0.0,1.0); // (x/w, y/w, z/w)\r\n    // 点的大小\r\n    gl_PointSize = 30.0;\r\n  }\r\n`.replace(/\\n/g, \"\\\\n\"); // 顶点着色器\r\n\r\nconst FRAGMENT_SHADER_SOURCE = /*glsl */ `\r\n  void main() {\r\n    gl_FragColor = vec4(1.0,0.0,0.0,1.0);\r\n  }\r\n`.replace(/\\n/g, \"\\\\n\"); // 片元着色器\r\n\r\nconst js = /*js*/ `\r\n    const ctx = document.getElementById('canvas2');\r\n    const gl = ctx.getContext('webgl');\r\n\r\n    const vertexShader = gl.createShader(gl.VERTEX_SHADER);\r\n    const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);\r\n    \r\n    gl.shaderSource(vertexShader, \"${VERTEX_SHADER_SOURCE}\") // 指定顶点着色器的源码\r\n    gl.shaderSource(fragmentShader, \"${FRAGMENT_SHADER_SOURCE}\") // 指定片元着色器的源码\r\n    \r\n    // 编译着色器\r\n    gl.compileShader(vertexShader)\r\n    gl.compileShader(fragmentShader)\r\n    \r\n    // 创建一个程序对象\r\n    const program = gl.createProgram();\r\n    \r\n    gl.attachShader(program, vertexShader)\r\n    gl.attachShader(program, fragmentShader)\r\n    \r\n    gl.linkProgram(program)\r\n    \r\n    gl.useProgram(program)\r\n\r\n    // const program = initShader(gl, VERTEX_SHADER_SOURCE, FRAGMENT_SHADER_SOURCE)\r\n\r\n    // 执行绘制\r\n\r\n    // 要绘制的图形是什么， 从哪个开始，   使用几个顶点\r\n    gl.drawArrays(gl.POINTS, 0, 1);\r\n    gl.drawArrays(gl.LINES, 0, 1); // 最少需要有两个点，\r\n    gl.drawArrays(gl.TRIANGLES, 0, 1); // 3个点\r\n\r\n    // 3个顶点\r\n    // 0.0, 0.0, 0.0\r\n    // 0.2, 0.0, 0.0\r\n    // 0.4, 0.0, 0.0\r\n    gl.drawArrays(gl.POINTS, 0, 1);\r\n    gl.drawArrays(gl.LINES, 1, 2);\r\n`;\r\nconst html = /*html*/ `\r\n    <canvas id=\"canvas2\" width=\"400\" height=\"400\">\r\n    此浏览器不支持canvas\r\n    </canvas>\r\n    <script>\r\n        { // 限制变量定义域\r\n            ${js}\r\n        }\r\n    </script>\r\n`;\r\ndisplay.html(html);\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "![canvas坐标系示意图](image-9.png)\r\n\r\n![webgl三维坐标系示意图](image-10.png)\r\n\r\n![绘图区域](image-11.png)\r\n\r\n![右手坐标系](image-12.png)\r\n\r\n![关于旋转方向](image-13.png)"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const { display } = require(\"node-kernel\");\r\n\r\n// 着色器\r\n// 创建着色器源码\r\nconst VERTEX_SHADER_SOURCE = /*glsl */ `\r\n  attribute vec4 aPosition;\r\n  void main() {\r\n    gl_Position = aPosition; \r\n    gl_PointSize = 30.0;\r\n  }\r\n`.replace(/\\n/g, \"\\\\n\");\r\n\r\nconst FRAGMENT_SHADER_SOURCE = /*glsl */ `\r\n  void main() {\r\n    gl_FragColor = vec4(1.0,0.0,0.0,1.0);\r\n  }\r\n`.replace(/\\n/g, \"\\\\n\");\r\n\r\nconst js = /*js*/ `\r\n    function initShader(gl, VERTEX_SHADER_SOURCE, FRAGMENT_SHADER_SOURCE) {\r\n        const vertexShader = gl.createShader(gl.VERTEX_SHADER);\r\n        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);\r\n    \r\n        gl.shaderSource(vertexShader, VERTEX_SHADER_SOURCE) // 指定顶点着色器的源码\r\n        gl.shaderSource(fragmentShader, FRAGMENT_SHADER_SOURCE) // 指定片元着色器的源码\r\n    \r\n        // 编译着色器\r\n        gl.compileShader(vertexShader)\r\n        gl.compileShader(fragmentShader)\r\n    \r\n        // 创建一个程序对象\r\n        const program = gl.createProgram();\r\n    \r\n        gl.attachShader(program, vertexShader)\r\n        gl.attachShader(program, fragmentShader)\r\n    \r\n        gl.linkProgram(program)\r\n    \r\n        gl.useProgram(program)\r\n    \r\n        return program;\r\n    }\r\n    const ctx = document.getElementById('canvas3');\r\n    const gl = ctx.getContext('webgl');\r\n\r\n    const program = initShader(gl, \"${VERTEX_SHADER_SOURCE}\", \"${FRAGMENT_SHADER_SOURCE}\");\r\n\r\n    const aPosition = gl.getAttribLocation(program, 'aPosition');\r\n\r\n    let x = 0;\r\n    setInterval(() => {\r\n        x+=0.1;\r\n        if(x>1.0) x=0;\r\n        gl.vertexAttrib1f(aPosition, x);\r\n        gl.drawArrays(gl.POINTS, 0, 1);\r\n    }, 200);\r\n`;\r\nconst html = /*html*/ `\r\n    <canvas id=\"canvas3\" width=\"400\" height=\"400\">\r\n    此浏览器不支持canvas\r\n    </canvas>\r\n    <script>\r\n        { // 限制变量定义域\r\n            ${js}\r\n        }\r\n    </script>\r\n`;\r\ndisplay.html(html);\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "注意: attribute 变量只能在顶点着色器中使用，不能在片元着色器中使用\r\n\r\n`gl.vertexAttrib1f(location, v0)`\r\n`gl.vertexAttrib2f(location, v0, v1)`\r\n`gl.vertexAttrib3f(location, v0, v1, v2)`\r\n`gl.vertexAttrib4f(location, v0, v1, v2, v3)`\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "// 创建着色器源码\r\nconst VERTEX_SHADER_SOURCE = /*glsl */ `\r\n    uniform vec4 uPosition;\r\n    attribute vec4 aPosition;\r\n    void main() {\r\n      gl_Position = aPosition; // vec4(0.0,0.0,0.0,1.0)\r\n      gl_PointSize = 10.0;\r\n    }\r\n  `.replace(/\\n/g, \"\\\\n\"); // 顶点着色器\r\n\r\nconst FRAGMENT_SHADER_SOURCE = /*glsl */ `\r\n    precision mediump float;\r\n    uniform vec2 uColor;\r\n    void main() {\r\n      gl_FragColor = vec4(uColor.r, uColor.g, 0.0,1.0); // vec4\r\n    }\r\n  `.replace(/\\n/g, \"\\\\n\"); // 片元着色器\r\n\r\nconst js = /*js*/ `\r\n  const ctx = document.getElementById('canvas')\r\n\r\n  const gl = ctx.getContext('webgl')\r\n\r\n  const program = initShader(gl, \"${VERTEX_SHADER_SOURCE}\", \"${FRAGMENT_SHADER_SOURCE}\")\r\n\r\n  const aPosition = gl.getAttribLocation(program, 'aPosition');\r\n  const uColor = gl.getUniformLocation(program, 'uColor')\r\n\r\n  const points = []\r\n  ctx.onclick = function(ev) {\r\n    // 坐标\r\n    const x = ev.clientX\r\n    const y = ev.clientY\r\n\r\n    const domPosition = ev.target.getBoundingClientRect();\r\n\r\n    const domx = x - domPosition.left\r\n    const domy = y - domPosition.top;\r\n    const halfWidth = ctx.offsetWidth / 2\r\n    const halfHeight = ctx.offsetHeight / 2\r\n\r\n    const clickX = (domx - halfWidth) / halfWidth\r\n    const clickY = (halfHeight - domy) / halfHeight\r\n\r\n    points.push({\r\n      clickX, clickY\r\n    })\r\n\r\n    for (let i = 0; i < points.length; i++) {\r\n      gl.vertexAttrib2f(aPosition, points[i].clickX, points[i].clickY)\r\n      gl.uniform2f(uColor, points[i].clickX, points[i].clickY)\r\n      gl.drawArrays(gl.POINTS, 0, 1);\r\n    }\r\n  }\r\n  `;\r\nconst html = /*html*/ `\r\n  <style>\r\n    * {\r\n      margin: 0;\r\n      padding: 0;\r\n    }\r\n\r\n    canvas{\r\n      margin: 50px auto 0;\r\n      display: block;\r\n      background: yellow;\r\n    }\r\n  </style>\r\n  <canvas id=\"canvas\" width=\"400\" height=\"400\">\r\n    此浏览器不支持canvas\r\n  </canvas>\r\n  <script>\r\n      {\r\n        ${js}\r\n      }\r\n  </script>\r\n`;\r\ndisplay.html(html);"
+            ],
+            "outputs": []
+        }
+    ]
+}

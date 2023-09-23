@@ -5,94 +5,14 @@
             "source": [
                 "const { display } = require(\"node-kernel\");\r\n\r\nconst vertexShader = /*glsl*/ `\r\n  void main(){\r\n      gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position, 1.0 ) ;\r\n  }\r\n`.replace(/\\n/g, \"\\\\n\");\r\nconst fragmentShader = /*glsl*/ `\r\n  void main(){\r\n      gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0);\r\n  }\r\n`.replace(/\\n/g, \"\\\\n\");\r\nconst imports_map = {\r\n  imports: {\r\n    three: \"../../node_modules/three/build/three.module.js\",\r\n    \"three/addons/\": \"../../node_modules/three/examples/jsm/\",\r\n  },\r\n};\r\nconst js = /*js*/ `\r\n  import * as THREE from \"three\";\r\n  import { OrbitControls } from \"three/addons/controls/OrbitControls.js\";\r\n  const container = document.querySelector('#container1');\r\n\r\n  const scene = new THREE.Scene();\r\n\r\n  // 创建透视相机\r\n  const camera = new THREE.PerspectiveCamera(\r\n    75,\r\n    container.clientWidth / container.clientHeight,\r\n    0.1,\r\n    1000\r\n  );\r\n  // 设置相机位置\r\n  // object3d具有position，属性是1个3维的向量\r\n  camera.position.set(0, 0, 2);\r\n  // 更新摄像头\r\n  camera.aspect = window.innerWidth / window.innerHeight;\r\n  //   更新摄像机的投影矩阵\r\n  camera.updateProjectionMatrix();\r\n  scene.add(camera);\r\n\r\n  // 加入辅助轴，帮助我们查看3维坐标轴\r\n  const axesHelper = new THREE.AxesHelper(5);\r\n  scene.add(axesHelper);\r\n\r\n  // 创建着色器材质\r\n  const shaderMaterial = new THREE.ShaderMaterial({\r\n    vertexShader: '${vertexShader}',\r\n    fragmentShader: '${fragmentShader}',\r\n  });\r\n\r\n  // 创建平面\r\n  const floor = new THREE.Mesh(\r\n    new THREE.PlaneGeometry(1, 1, 64, 64),\r\n    shaderMaterial\r\n  );\r\n  scene.add( floor );\r\n\r\n  const renderer = new THREE.WebGLRenderer({ alpha: true });\r\n  // renderer.shadowMap.enabled = true;\r\n  // renderer.shadowMap.type = THREE.BasicShadowMap;\r\n  // renderer.shadowMap.type = THREE.VSMShadowMap;\r\n  container.appendChild(renderer.domElement);\r\n  renderer.setSize(container.clientWidth, container.clientHeight);\r\n  window.addEventListener(\"resize\", () => {\r\n    camera.aspect = container.clientWidth / container.clientHeight;\r\n    camera.updateProjectionMatrix();\r\n    renderer.setSize(container.clientWidth, container.clientHeight);\r\n    renderer.setPixelRatio(window.devicePixelRatio);\r\n  });\r\n\r\n  const controls = new OrbitControls(camera, renderer.domElement);\r\n  controls.enableDamping = true;\r\n  function animate(t) {\r\n    requestAnimationFrame(animate);\r\n    renderer.render(scene, camera);\r\n  }\r\n  animate();\r\n`;\r\nconst html = /*html*/ `\r\n  <div id=\"container1\" style=\"border:1px solid red;width:600px;height:600px;position:relative;\"></div>\r\n  <script async src=\"https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js\"></script>\r\n  <script type=\"importmap-shim\">${JSON.stringify(imports_map)}</script>\r\n  <script type=\"module-shim\">${js}</script>\r\n`;\r\ntry {\r\n  display.html(html);\r\n} catch (error) {\r\n  console.log(error);\r\n}"
             ],
-            "outputs": [
-                {
-                    "items": [
-                        {
-                            "mime": "text/html",
-                            "value": [
-                                "<style> table, th, tr { text-align: left; }</style>",
-                                "  <div id=\"container1\" style=\"border:1px solid red;width:600px;height:600px;position:relative;\"></div>",
-                                "  <script async src=\"https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js\"></script>",
-                                "  <script type=\"importmap-shim\">{\"imports\":{\"three\":\"../../node_modules/three/build/three.module.js\",\"three/addons/\":\"../../node_modules/three/examples/jsm/\"}}</script>",
-                                "  <script type=\"module-shim\">",
-                                "  import * as THREE from \"three\";",
-                                "  import { OrbitControls } from \"three/addons/controls/OrbitControls.js\";",
-                                "  const container = document.querySelector('#container1');",
-                                "",
-                                "  const scene = new THREE.Scene();",
-                                "",
-                                "  // 创建透视相机",
-                                "  const camera = new THREE.PerspectiveCamera(",
-                                "    75,",
-                                "    container.clientWidth / container.clientHeight,",
-                                "    0.1,",
-                                "    1000",
-                                "  );",
-                                "  // 设置相机位置",
-                                "  // object3d具有position，属性是1个3维的向量",
-                                "  camera.position.set(0, 0, 2);",
-                                "  // 更新摄像头",
-                                "  camera.aspect = window.innerWidth / window.innerHeight;",
-                                "  //   更新摄像机的投影矩阵",
-                                "  camera.updateProjectionMatrix();",
-                                "  scene.add(camera);",
-                                "",
-                                "  // 加入辅助轴，帮助我们查看3维坐标轴",
-                                "  const axesHelper = new THREE.AxesHelper(5);",
-                                "  scene.add(axesHelper);",
-                                "",
-                                "  // 创建着色器材质",
-                                "  const shaderMaterial = new THREE.ShaderMaterial({",
-                                "    vertexShader: '\\n  void main(){\\n      gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position, 1.0 ) ;\\n  }\\n',",
-                                "    fragmentShader: '\\n  void main(){\\n      gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0);\\n  }\\n',",
-                                "  });",
-                                "",
-                                "  // 创建平面",
-                                "  const floor = new THREE.Mesh(",
-                                "    new THREE.PlaneGeometry(1, 1, 64, 64),",
-                                "    shaderMaterial",
-                                "  );",
-                                "  scene.add( floor );",
-                                "",
-                                "  const renderer = new THREE.WebGLRenderer({ alpha: true });",
-                                "  // renderer.shadowMap.enabled = true;",
-                                "  // renderer.shadowMap.type = THREE.BasicShadowMap;",
-                                "  // renderer.shadowMap.type = THREE.VSMShadowMap;",
-                                "  container.appendChild(renderer.domElement);",
-                                "  renderer.setSize(container.clientWidth, container.clientHeight);",
-                                "  window.addEventListener(\"resize\", () => {",
-                                "    camera.aspect = container.clientWidth / container.clientHeight;",
-                                "    camera.updateProjectionMatrix();",
-                                "    renderer.setSize(container.clientWidth, container.clientHeight);",
-                                "    renderer.setPixelRatio(window.devicePixelRatio);",
-                                "  });",
-                                "",
-                                "  const controls = new OrbitControls(camera, renderer.domElement);",
-                                "  controls.enableDamping = true;",
-                                "  function animate(t) {",
-                                "    requestAnimationFrame(animate);",
-                                "    renderer.render(scene, camera);",
-                                "  }",
-                                "  animate();",
-                                "</script>",
-                                ""
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "items": [
-                        {
-                            "mime": "application/vnd.code.notebook.stdout",
-                            "value": [
-                                "",
-                                ""
-                            ]
-                        }
-                    ]
-                }
-            ]
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const sprite_vertex_shader = /*glsl*/ `\r\n    varying vec2 vUv;\r\n    uniform mat4 cameraMatrix;\r\n    uniform vec3 sphereCenter;\r\n\r\n    void main() {\r\n        vUv = uv;\r\n\r\n        // 计算相对于球心的位置\r\n        vec3 pos = position + sphereCenter;\r\n\r\n        // 保证面向摄像机\r\n        vec4 viewPos = cameraMatrix * vec4(pos, 1.0);\r\n        gl_Position = projectionMatrix * viewPos;\r\n    }\r\n`;\r\n\r\nconst sprite_fragment_shader = /*glsl*/ `\r\n    varying vec2 vUv;\r\n    uniform sampler2D map;\r\n\r\n    void main() {\r\n        vec4 texColor = texture2D(map, vUv);\r\n        gl_FragColor = texColor;\r\n    }\r\n`;    \r\ncreateSprite(cross_texture, site_item) {\r\n        const camera = this.renderer.camera;\r\n        const center = site_item.site_data.xyz;\r\n        let spriteMaterial = new ShaderMaterial({\r\n            vertexShader: sprite_vertex_shader,\r\n            fragmentShader: sprite_fragment_shader,\r\n            uniforms: {\r\n                map: { value: cross_texture },\r\n                cameraMatrix: { value: camera.matrixWorldInverse },\r\n                sphereCenter: { value: new Vector3(...center) }\r\n            }\r\n        });\r\n        // spriteMaterial = new SpriteMaterial({ map: cross_texture, color: 0xffffff, depthTest: false });\r\n        const sprite = new Sprite(spriteMaterial);\r\n        sprite.position.set(...center);\r\n        const scale = site_item.radius / 1.5;\r\n        sprite.scale.set(scale, scale, 1);\r\n        // sprite.position.z += site_item.radius / 2;\r\n        this.renderer.on(CrystalEvent.WillRender, () => {\r\n            // 更新摄像机矩阵\r\n            spriteMaterial.uniforms.cameraMatrix.value = camera.matrixWorldInverse;\r\n        });\r\n        return sprite;\r\n    }\r\n\r\n    /**\r\n     * 渲染\r\n     */\r\n    render() {\r\n        const cross_texture = new TextureLoader().load('../../resource/add.png');\r\n        const material_config = this.getConfig([CrystalComponent.Sites, 'Material']);\r\n        if (this.crystal.params.ge_10w) {\r\n            this.materials = [new PointsMaterial(material_config)];\r\n        } else {\r\n            const toon_material_config = { ...material_config, vertexColors: false, color: '#ff0' };\r\n            if (this.crystal.params.ge_1w) {\r\n                this.materials = [new MeshLambertMaterial(material_config), new MeshToonMaterial(toon_material_config)];\r\n            } else {\r\n                this.materials = [new MeshPhongMaterial(material_config), new MeshToonMaterial(toon_material_config)];\r\n            }\r\n        }\r\n\r\n        let { widthSegments, heightSegments } = this.getSegments();\r\n        ATTRIBUTE_LENGTH = GEOMETRY_ATTRIBUTE_LENGTH[widthSegments];\r\n        const option = { radius: 0.3333, widthSegments, heightSegments };\r\n        const MAX_SITES_PER_GEOMETRY = 100000; // 10万\r\n        /**\r\n         * @type { DEFAULT_CACHE }\r\n         */\r\n        this.geometry_cache = cloneDeep(DEFAULT_CACHE);\r\n        const sites_len = this.sites.length;\r\n        this.crystal_sites = new Array(sites_len);\r\n        let crystal_sites_index = 0;\r\n        const sprites = new Group();\r\n        sprites.name = 'sprites';\r\n        for (let startIdx = 0; startIdx < sites_len; startIdx += MAX_SITES_PER_GEOMETRY) {\r\n            const endIdx = Math.min(startIdx + MAX_SITES_PER_GEOMETRY, sites_len);\r\n            const chunkLength = endIdx - startIdx;\r\n            const crystal_sites_chunk = new Array(chunkLength);\r\n\r\n            for (let i = startIdx, j = 0; i < endIdx; i++, j++) {\r\n                const site_item = this.createSiteItemData(this.sites[i]);\r\n                this.crystal_sites[crystal_sites_index++] = site_item;\r\n                if (!this.site_items_map.has(site_item.uuid)) {\r\n                    this.site_items_map.set(site_item.uuid, site_item);\r\n                }\r\n                crystal_sites_chunk[j] = site_item;\r\n                const sprite = this.createSprite(cross_texture, site_item);\r\n                sprites.add(sprite);\r\n            }\r\n            const mesh = this.getMesh(crystal_sites_chunk, option);\r\n            mesh.name = CrystalComponent.Atom;\r\n\r\n            this.meshes.push(mesh);\r\n            this.group.add(mesh);\r\n            this.group.add(sprites);\r\n            this.group._selected_able = true;\r\n        }\r\n    }\r\n"
+            ],
+            "outputs": []
         }
     ]
 }
