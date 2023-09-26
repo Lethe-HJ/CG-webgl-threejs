@@ -10,6 +10,9 @@ vscode插件
 2. inline-html
 3. Node.js Notebooks
 
+```bash
+git clone https://github.com/Lethe-HJ/CG-webgl-threejs.git
+```
 
 
 ## 2. 使用示例
