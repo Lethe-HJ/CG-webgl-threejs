@@ -10,7 +10,9 @@
 2. inline-html
 3. Node.js Notebooks
 
-### 1.2 安装
+```bash
+git clone https://github.com/Lethe-HJ/CG-webgl-threejs.git
+```
 
 ```bash
 git config --global core.autocrlf true

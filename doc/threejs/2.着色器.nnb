@@ -5,7 +5,94 @@
             "source": [
                 "const { display } = require(\"node-kernel\");\r\n\r\nconst vertexShader = /*glsl*/ `\r\n  void main(){\r\n      gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position, 1.0 ) ;\r\n  }\r\n`.replace(/\\n/g, \"\\\\n\");\r\nconst fragmentShader = /*glsl*/ `\r\n  void main(){\r\n      gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0);\r\n  }\r\n`.replace(/\\n/g, \"\\\\n\");\r\nconst imports_map = {\r\n  imports: {\r\n    three: \"../../node_modules/three/build/three.module.js\",\r\n    \"three/addons/\": \"../../node_modules/three/examples/jsm/\",\r\n  },\r\n};\r\nconst js = /*js*/ `\r\n  import * as THREE from \"three\";\r\n  import { OrbitControls } from \"three/addons/controls/OrbitControls.js\";\r\n  const container = document.querySelector('#container1');\r\n\r\n  const scene = new THREE.Scene();\r\n\r\n  // 创建透视相机\r\n  const camera = new THREE.PerspectiveCamera(\r\n    75,\r\n    container.clientWidth / container.clientHeight,\r\n    0.1,\r\n    1000\r\n  );\r\n  // 设置相机位置\r\n  // object3d具有position，属性是1个3维的向量\r\n  camera.position.set(0, 0, 2);\r\n  // 更新摄像头\r\n  camera.aspect = window.innerWidth / window.innerHeight;\r\n  //   更新摄像机的投影矩阵\r\n  camera.updateProjectionMatrix();\r\n  scene.add(camera);\r\n\r\n  // 加入辅助轴，帮助我们查看3维坐标轴\r\n  const axesHelper = new THREE.AxesHelper(5);\r\n  scene.add(axesHelper);\r\n\r\n  // 创建着色器材质\r\n  const shaderMaterial = new THREE.ShaderMaterial({\r\n    vertexShader: '${vertexShader}',\r\n    fragmentShader: '${fragmentShader}',\r\n  });\r\n\r\n  // 创建平面\r\n  const floor = new THREE.Mesh(\r\n    new THREE.PlaneGeometry(1, 1, 64, 64),\r\n    shaderMaterial\r\n  );\r\n  scene.add( floor );\r\n\r\n  const renderer = new THREE.WebGLRenderer({ alpha: true });\r\n  // renderer.shadowMap.enabled = true;\r\n  // renderer.shadowMap.type = THREE.BasicShadowMap;\r\n  // renderer.shadowMap.type = THREE.VSMShadowMap;\r\n  container.appendChild(renderer.domElement);\r\n  renderer.setSize(container.clientWidth, container.clientHeight);\r\n  window.addEventListener(\"resize\", () => {\r\n    camera.aspect = container.clientWidth / container.clientHeight;\r\n    camera.updateProjectionMatrix();\r\n    renderer.setSize(container.clientWidth, container.clientHeight);\r\n    renderer.setPixelRatio(window.devicePixelRatio);\r\n  });\r\n\r\n  const controls = new OrbitControls(camera, renderer.domElement);\r\n  controls.enableDamping = true;\r\n  function animate(t) {\r\n    requestAnimationFrame(animate);\r\n    renderer.render(scene, camera);\r\n  }\r\n  animate();\r\n`;\r\nconst html = /*html*/ `\r\n  <div id=\"container1\" style=\"border:1px solid red;width:600px;height:600px;position:relative;\"></div>\r\n  <script async src=\"https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js\"></script>\r\n  <script type=\"importmap-shim\">${JSON.stringify(imports_map)}</script>\r\n  <script type=\"module-shim\">${js}</script>\r\n`;\r\ntry {\r\n  display.html(html);\r\n} catch (error) {\r\n  console.log(error);\r\n}"
             ],
-            "outputs": []
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/html",
+                            "value": [
+                                "<style> table, th, tr { text-align: left; }</style>",
+                                "  <div id=\"container1\" style=\"border:1px solid red;width:600px;height:600px;position:relative;\"></div>",
+                                "  <script async src=\"https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js\"></script>",
+                                "  <script type=\"importmap-shim\">{\"imports\":{\"three\":\"../../node_modules/three/build/three.module.js\",\"three/addons/\":\"../../node_modules/three/examples/jsm/\"}}</script>",
+                                "  <script type=\"module-shim\">",
+                                "  import * as THREE from \"three\";",
+                                "  import { OrbitControls } from \"three/addons/controls/OrbitControls.js\";",
+                                "  const container = document.querySelector('#container1');",
+                                "",
+                                "  const scene = new THREE.Scene();",
+                                "",
+                                "  // 创建透视相机",
+                                "  const camera = new THREE.PerspectiveCamera(",
+                                "    75,",
+                                "    container.clientWidth / container.clientHeight,",
+                                "    0.1,",
+                                "    1000",
+                                "  );",
+                                "  // 设置相机位置",
+                                "  // object3d具有position，属性是1个3维的向量",
+                                "  camera.position.set(0, 0, 2);",
+                                "  // 更新摄像头",
+                                "  camera.aspect = window.innerWidth / window.innerHeight;",
+                                "  //   更新摄像机的投影矩阵",
+                                "  camera.updateProjectionMatrix();",
+                                "  scene.add(camera);",
+                                "",
+                                "  // 加入辅助轴，帮助我们查看3维坐标轴",
+                                "  const axesHelper = new THREE.AxesHelper(5);",
+                                "  scene.add(axesHelper);",
+                                "",
+                                "  // 创建着色器材质",
+                                "  const shaderMaterial = new THREE.ShaderMaterial({",
+                                "    vertexShader: '\\n  void main(){\\n      gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position, 1.0 ) ;\\n  }\\n',",
+                                "    fragmentShader: '\\n  void main(){\\n      gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0);\\n  }\\n',",
+                                "  });",
+                                "",
+                                "  // 创建平面",
+                                "  const floor = new THREE.Mesh(",
+                                "    new THREE.PlaneGeometry(1, 1, 64, 64),",
+                                "    shaderMaterial",
+                                "  );",
+                                "  scene.add( floor );",
+                                "",
+                                "  const renderer = new THREE.WebGLRenderer({ alpha: true });",
+                                "  // renderer.shadowMap.enabled = true;",
+                                "  // renderer.shadowMap.type = THREE.BasicShadowMap;",
+                                "  // renderer.shadowMap.type = THREE.VSMShadowMap;",
+                                "  container.appendChild(renderer.domElement);",
+                                "  renderer.setSize(container.clientWidth, container.clientHeight);",
+                                "  window.addEventListener(\"resize\", () => {",
+                                "    camera.aspect = container.clientWidth / container.clientHeight;",
+                                "    camera.updateProjectionMatrix();",
+                                "    renderer.setSize(container.clientWidth, container.clientHeight);",
+                                "    renderer.setPixelRatio(window.devicePixelRatio);",
+                                "  });",
+                                "",
+                                "  const controls = new OrbitControls(camera, renderer.domElement);",
+                                "  controls.enableDamping = true;",
+                                "  function animate(t) {",
+                                "    requestAnimationFrame(animate);",
+                                "    renderer.render(scene, camera);",
+                                "  }",
+                                "  animate();",
+                                "</script>",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
         },
         {
             "language": "javascript",
