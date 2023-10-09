@@ -4,13 +4,17 @@
 
 ## 1. 使用前的准备
 
-vscode插件
+### 1.1 vscode插件
 
 1. js-in-string
 2. inline-html
 3. Node.js Notebooks
 
+### 1.2 安装
 
+```bash
+git config --global core.autocrlf true
+```
 
 ## 2. 使用示例
 
