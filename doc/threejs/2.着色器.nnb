@@ -99,7 +99,31 @@
             "source": [
                 "const sprite_vertex_shader = /*glsl*/ `\r\n    varying vec2 vUv;\r\n    uniform mat4 cameraMatrix;\r\n    uniform vec3 sphereCenter;\r\n\r\n    void main() {\r\n        vUv = uv;\r\n\r\n        // 计算相对于球心的位置\r\n        vec3 pos = position + sphereCenter;\r\n\r\n        // 保证面向摄像机\r\n        vec4 viewPos = cameraMatrix * vec4(pos, 1.0);\r\n        gl_Position = projectionMatrix * viewPos;\r\n    }\r\n`;\r\n\r\nconst sprite_fragment_shader = /*glsl*/ `\r\n    varying vec2 vUv;\r\n    uniform sampler2D map;\r\n\r\n    void main() {\r\n        vec4 texColor = texture2D(map, vUv);\r\n        gl_FragColor = texColor;\r\n    }\r\n`;    \r\ncreateSprite(cross_texture, site_item) {\r\n        const camera = this.renderer.camera;\r\n        const center = site_item.site_data.xyz;\r\n        let spriteMaterial = new ShaderMaterial({\r\n            vertexShader: sprite_vertex_shader,\r\n            fragmentShader: sprite_fragment_shader,\r\n            uniforms: {\r\n                map: { value: cross_texture },\r\n                cameraMatrix: { value: camera.matrixWorldInverse },\r\n                sphereCenter: { value: new Vector3(...center) }\r\n            }\r\n        });\r\n        // spriteMaterial = new SpriteMaterial({ map: cross_texture, color: 0xffffff, depthTest: false });\r\n        const sprite = new Sprite(spriteMaterial);\r\n        sprite.position.set(...center);\r\n        const scale = site_item.radius / 1.5;\r\n        sprite.scale.set(scale, scale, 1);\r\n        // sprite.position.z += site_item.radius / 2;\r\n        this.renderer.on(CrystalEvent.WillRender, () => {\r\n            // 更新摄像机矩阵\r\n            spriteMaterial.uniforms.cameraMatrix.value = camera.matrixWorldInverse;\r\n        });\r\n        return sprite;\r\n    }\r\n\r\n    /**\r\n     * 渲染\r\n     */\r\n    render() {\r\n        const cross_texture = new TextureLoader().load('../../resource/add.png');\r\n        const material_config = this.getConfig([CrystalComponent.Sites, 'Material']);\r\n        if (this.crystal.params.ge_10w) {\r\n            this.materials = [new PointsMaterial(material_config)];\r\n        } else {\r\n            const toon_material_config = { ...material_config, vertexColors: false, color: '#ff0' };\r\n            if (this.crystal.params.ge_1w) {\r\n                this.materials = [new MeshLambertMaterial(material_config), new MeshToonMaterial(toon_material_config)];\r\n            } else {\r\n                this.materials = [new MeshPhongMaterial(material_config), new MeshToonMaterial(toon_material_config)];\r\n            }\r\n        }\r\n\r\n        let { widthSegments, heightSegments } = this.getSegments();\r\n        ATTRIBUTE_LENGTH = GEOMETRY_ATTRIBUTE_LENGTH[widthSegments];\r\n        const option = { radius: 0.3333, widthSegments, heightSegments };\r\n        const MAX_SITES_PER_GEOMETRY = 100000; // 10万\r\n        /**\r\n         * @type { DEFAULT_CACHE }\r\n         */\r\n        this.geometry_cache = cloneDeep(DEFAULT_CACHE);\r\n        const sites_len = this.sites.length;\r\n        this.crystal_sites = new Array(sites_len);\r\n        let crystal_sites_index = 0;\r\n        const sprites = new Group();\r\n        sprites.name = 'sprites';\r\n        for (let startIdx = 0; startIdx < sites_len; startIdx += MAX_SITES_PER_GEOMETRY) {\r\n            const endIdx = Math.min(startIdx + MAX_SITES_PER_GEOMETRY, sites_len);\r\n            const chunkLength = endIdx - startIdx;\r\n            const crystal_sites_chunk = new Array(chunkLength);\r\n\r\n            for (let i = startIdx, j = 0; i < endIdx; i++, j++) {\r\n                const site_item = this.createSiteItemData(this.sites[i]);\r\n                this.crystal_sites[crystal_sites_index++] = site_item;\r\n                if (!this.site_items_map.has(site_item.uuid)) {\r\n                    this.site_items_map.set(site_item.uuid, site_item);\r\n                }\r\n                crystal_sites_chunk[j] = site_item;\r\n                const sprite = this.createSprite(cross_texture, site_item);\r\n                sprites.add(sprite);\r\n            }\r\n            const mesh = this.getMesh(crystal_sites_chunk, option);\r\n            mesh.name = CrystalComponent.Atom;\r\n\r\n            this.meshes.push(mesh);\r\n            this.group.add(mesh);\r\n            this.group.add(sprites);\r\n            this.group._selected_able = true;\r\n        }\r\n    }\r\n"
             ],
-            "outputs": []
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.error",
+                            "value": {
+                                "name": "ReferenceError",
+                                "message": "createSprite is not defined",
+                                "stack": "    at <Cell 2> [27, 0]\n    at <Cell 2> [98, 46]\n    at Script.runInContext (node:vm:135:12)\n    at Script.runInNewContext (node:vm:140:17)\n    at Object.runInNewContext (node:vm:292:38)\n    at C (c:\\Users\\Admin\\.vscode\\extensions\\donjayamanne.typescript-notebook-2.0.6\\out\\extension\\server\\index.js:2:113345)\n    at t.execCode (c:\\Users\\Admin\\.vscode\\extensions\\donjayamanne.typescript-notebook-2.0.6\\out\\extension\\server\\index.js:2:114312)\n    at k.<anonymous> (c:\\Users\\Admin\\.vscode\\extensions\\donjayamanne.typescript-notebook-2.0.6\\out\\extension\\server\\index.js:2:142156)\n    at k.emit (node:events:514:28)\n    at k.emit (node:domain:489:12)"
+                            }
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }
