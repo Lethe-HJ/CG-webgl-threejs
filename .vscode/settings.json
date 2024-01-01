@@ -4,6 +4,7 @@
         "importmap",
         "lowp",
         "threejs",
+        "uuidv",
         "webgl"
     ]
 }
