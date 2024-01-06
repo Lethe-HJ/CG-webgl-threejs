@@ -1,6 +1,13 @@
 {
     "cells": [
         {
+            "language": "markdown",
+            "source": [
+                "## 两数相加\nCategory\tDifficulty\tLikes\tDislikes\tContestSlug\tProblemIndex\tScore\nalgorithms\tMedium (43.05%)\t10307\t0\t-\t-\t0\nTags\nCompanies\n给你两个 非空 的链表，表示两个非负的整数。它们每位数字都是按照 逆序 的方式存储的，并且每个节点只能存储 一位 数字。\n\n请你将两个数相加，并以相同形式返回一个表示和的链表。\n\n你可以假设除了数字 0 之外，这两个数都不会以 0 开头。\n\n示例 1：\n\n输入：l1 = [2,4,3], l2 = [5,6,4]\n输出：[7,0,8]\n解释：342 + 465 = 807.\n示例 2：\n\n输入：l1 = [0], l2 = [0]\n输出：[0]\n示例 3：\n\n输入：l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]\n输出：[8,9,9,9,0,0,0,1]\n \n\n提示：\n\n每个链表中的节点数在范围 [1, 100] 内\n0 <= Node.val <= 9\n题目数据保证列表表示的数字不含前导零"
+            ],
+            "outputs": []
+        },
+        {
             "language": "javascript",
             "source": [
                 "class ListNode {\n  static fromArray(arr) {\n    if (arr.length === 0) return null;\n\n    const head = new this(arr[0]);\n    let p = head;\n    for (let i = 1; i < arr.length; i++) {\n      p.next = new this(arr[i]);\n      p = p.next;\n    }\n    return head;\n  }\n  constructor(val = 0, next = null) {\n    this.val = val === undefined ? 0 : val;\n    this.next = next === undefined ? null : next;\n  }\n  toString() {\n    const arr = [];\n    let p = this;\n    while (p) {\n      arr.push(p.val);\n      p = p.next;\n    }\n    return JSON.stringify(arr);\n  }\n}\n\n/**\n * @param {ListNode} l1\n * @param {ListNode} l2\n * @return {ListNode}\n */\nvar addTwoNumbers = function (l1, l2) {\n  let carry = 0; // 存储进位\n  const head =  new ListNode();\n  let current  = head;\n  while (l1 || l2 || carry) {\n    let sum = carry;\n    if (l1) {\n      sum += l1.val;\n      l1 = l1.next;\n    }\n    if (l2) {\n      sum += l2.val;\n      l2 = l2.next;\n    }\n    carry = Math.floor(sum / 10); // 取十位上的数字\n    current.next = new ListNode(sum % 10);\n    current = current.next;\n  }\n  return head.next;\n};\n\nconst cases = [\n  [[9], [9], [8, 1]],\n  [\n    [2, 4, 3],\n    [5, 6, 4],\n    [7, 0, 8],\n  ],\n  [[0], [0], [0]],\n  [\n    [9, 9, 9, 9, 9, 9, 9],\n    [9, 9, 9, 9],\n    [8, 9, 9, 9, 0, 0, 0, 1],\n  ],\n];\n\nconst cases_list = cases.map((item) => {\n  return [\n    ListNode.fromArray(item[0]),\n    ListNode.fromArray(item[1]),\n    ListNode.fromArray(item[2]),\n  ];\n});\n\nconst { isEqual } = require(\"lodash\");\ncases_list.forEach((item) => {\n  const res = addTwoNumbers(item[0], item[1]);\n  console.assert(\n    isEqual(item[2], res),\n    String(item[0]),\n    String(item[1]),\n    \"expect\",\n    String(item[2]),\n    \"but get\",\n    String(res)\n  );\n});\n"

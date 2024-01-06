@@ -1,0 +1,31 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "## 无重复字符的最长子串\nCategory\tDifficulty\tLikes\tDislikes\tContestSlug\tProblemIndex\tScore\nalgorithms\tMedium (39.41%)\t9895\t0\t-\t-\t0\nTags\nCompanies\n给定一个字符串 s ，请你找出其中不含有重复字符的 最长子串 的长度。\n\n \n\n示例 1:\n\n输入: s = \"abcabcbb\"\n输出: 3 \n解释: 因为无重复字符的最长子串是 \"abc\"，所以其长度为 3。\n示例 2:\n\n输入: s = \"bbbbb\"\n输出: 1\n解释: 因为无重复字符的最长子串是 \"b\"，所以其长度为 1。\n示例 3:\n\n输入: s = \"pwwkew\"\n输出: 3\n解释: 因为无重复字符的最长子串是 \"wke\"，所以其长度为 3。\n     请注意，你的答案必须是 子串 的长度，\"pwke\" 是一个子序列，不是子串。\n \n\n提示：\n\n0 <= s.length <= 5 * 104\ns 由英文字母、数字、符号和空格组成"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "/**\n * @param {string} s\n * @return {number}\n */\nvar lengthOfLongestSubstring = function (s) {\n    let max_substr_len = 1;\n    const char_set = new Set();\n    const s_len = s.length;\n    let right_value, cur_len;\n    for (let left = 0; left <= s_len - 2; left += 1) {\n        char_set.clear();\n        char_set.add(s[left]);\n        for (let right = left + 1; right <= s_len - 1; right += 1) {\n        right_value = s[right];\n        if (char_set.has(right_value)) {\n            cur_len = right - left;\n            if (cur_len > max_substr_len) max_substr_len = cur_len;\n            break;\n        } else {\n            char_set.add(right_value);\n        }\n        }\n    }\n    return max_substr_len;\n};\n\nconst cases = [\n    [\"abcabcbb\", 3],\n    [\"bbbbb\", 1],\n    [\"pwwkew\", 3],\n];\n\nconst all_success = cases.every((item) => {\n    const res = lengthOfLongestSubstring(item[0], item[1]);\n    const success = item[1] === res;\n    console.assert(success, item[0], \"expect\", item[1], \"but get\", res);\n    return success;\n});\nif (all_success) console.log(\"成功通过全部测试用例\");\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "成功通过全部测试用例",
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
