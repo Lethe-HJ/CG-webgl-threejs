@@ -3,7 +3,7 @@
         {
             "language": "markdown",
             "source": [
-                "## 1. 初识webgl与canvas\r\n\r\n### 1.1 介绍canvas\r\n\r\n`<canvas></canvas>`  是HTML5新增的一个 DOM 元素\r\n用途：显示 二维 和 三维 的图像\r\n二维图形可以使用 （ Canvas API 或 WebGL API）绘制\r\n三维图形使用 WebGL API 绘制\r\n\r\ncanvas api绘图主要通过 `CanvasRenderingContext2D` 接口完成 `canvas.getContext('2d')`\r\n\r\n \r\nWebGL API绘图主要通过 `WebGLRenderingContext` 接口完成 `canvas.getContext('webgl')` 或 `canvas.getContext('webgl2')`\r\n"
+                "## 1. 初识 webgl 与 canvas\r\n\r\n### 1.1 介绍 canvas\r\n\r\n`<canvas></canvas>`   是 HTML5 新增的一个 DOM 元素\r\n用途：显示 二维 和 三维 的图像\r\n二维图形可以使用 （ Canvas API 或 WebGL API）绘制\r\n三维图形使用 WebGL API 绘制\r\n\r\ncanvas api 绘图主要通过 `CanvasRenderingContext2D` 接口完成 `canvas.getContext('2d')`\r\n\r\nWebGL API 绘图主要通过 `WebGLRenderingContext` 接口完成 `canvas.getContext('webgl')` 或 `canvas.getContext('webgl2')`\r\n"
             ],
             "outputs": []
         },
@@ -59,7 +59,7 @@
         {
             "language": "markdown",
             "source": [
-                "gl.clearColor与gl.clear\r\n\r\n`gl.clearColor(r,g,b,a)` 指定清空 `<canvas>` 的颜⾊，接收四个参数（取值区间为 0.0~1.0）\r\n `gl.clear(buffer)`\r\n\r\nbuffer\r\n* `gl.COLOR_BUFFER_BIT` 清空颜色缓存 搭配`gl.clearColor(r,g,b,a)`使用\r\n* `gl.DEPTH_BUFFER_BIT` 清空深度缓冲区 搭配`gl.clearDepth(1.0)`使用\r\n* `gl.STENCIL_BUFFER_BIT` 清空模板缓冲区 搭配`gl.clearStencil(0)`使用\r\n"
+                "gl.clearColor 与 gl.clear\r\n\r\n`gl.clearColor(r,g,b,a)` 指定清空 `<canvas>` 的颜⾊，接收四个参数（取值区间为 0.0~1.0）\r\n`gl.clear(buffer)`\r\n\r\nbuffer\r\n\r\n- `gl.COLOR_BUFFER_BIT` 清空颜色缓存 搭配`gl.clearColor(r,g,b,a)`使用\r\n- `gl.DEPTH_BUFFER_BIT` 清空深度缓冲区 搭配`gl.clearDepth(1.0)`使用\r\n- `gl.STENCIL_BUFFER_BIT` 清空模板缓冲区 搭配`gl.clearStencil(0)`使用\r\n"
             ],
             "outputs": []
         },
@@ -138,7 +138,7 @@
         {
             "language": "markdown",
             "source": [
-                "### 1.4 canvas坐标系示意图\r\n\r\n![canvas坐标系示意图](image-9.png)\r\n\r\n### 1.5 webgl三维坐标系示意图\r\n\r\n![webgl三维坐标系示意图](image-10.png)\r\n\r\n### 1.6 右手坐标系\r\n\r\n![右手坐标系](image-12.png)\r\n\r\n### 1.7 webgl的绘图区域\r\n\r\n![绘图区域](image-11.png)\r\n\r\n关于旋转方向 如下图所示的方向规定为相对于该旋转轴的旋转正方向\r\n \r\n\r\n![关于旋转方向](image-13.png)\r\n"
+                "### 1.4 canvas 坐标系示意图\r\n\r\n![canvas坐标系示意图](image-9.png)\r\n\r\n### 1.5 webgl 三维坐标系示意图\r\n\r\n![webgl三维坐标系示意图](image-10.png)\r\n\r\n### 1.6 右手坐标系\r\n\r\n![右手坐标系](image-12.png)\r\n\r\n### 1.7 webgl 的绘图区域\r\n\r\n![绘图区域](image-11.png)\r\n\r\n关于旋转方向 如下图所示的方向规定为相对于该旋转轴的旋转正方向\r\n\r\n![关于旋转方向](image-13.png)\r\n"
             ],
             "outputs": []
         },
@@ -230,7 +230,7 @@
         {
             "language": "markdown",
             "source": [
-                "注意: attribute 变量只能在顶点着色器中使用，不能在片元着色器中使用\r\n\r\n `gl.vertexAttrib1f(location, v0)`\r\n\r\n `gl.vertexAttrib2f(location, v0, v1)`\r\n\r\n `gl.vertexAttrib3f(location, v0, v1, v2)`\r\n\r\n `gl.vertexAttrib4f(location, v0, v1, v2, v3)`\r\n"
+                "注意: attribute 变量只能在顶点着色器中使用，不能在片元着色器中使用\r\n\r\n`gl.vertexAttrib1f(location, v0)`\r\n\r\n`gl.vertexAttrib2f(location, v0, v1)`\r\n\r\n`gl.vertexAttrib3f(location, v0, v1, v2)`\r\n\r\n`gl.vertexAttrib4f(location, v0, v1, v2, v3)`\r\n"
             ],
             "outputs": []
         },
@@ -244,7 +244,7 @@
         {
             "language": "javascript",
             "source": [
-                "const { display } = require(\"node-kernel\");\r\nconst { v1: uuidv1 } = require(\"uuid\");\r\nconst canvas_id = uuidv1();\r\n\r\n// 创建着色器源码\r\nconst VERTEX_SHADER_SOURCE = /*glsl */ `\r\n    uniform vec4 uPosition;\r\n    attribute vec4 aPosition;\r\n    void main() {\r\n    gl_Position = aPosition; // vec4(0.0,0.0,0.0,1.0)\r\n    gl_PointSize = 10.0;\r\n    }\r\n  `.replace(/\\n/g, \"\\\\n\"); // 顶点着色器\r\n\r\nconst FRAGMENT_SHADER_SOURCE = /*glsl */ `\r\n    precision mediump float;\r\n    uniform vec2 uColor;\r\n    void main() {\r\n    gl_FragColor = vec4(uColor.r, uColor.g, 0.0,1.0); // vec4\r\n    }\r\n  `.replace(/\\n/g, \"\\\\n\"); // 片元着色器\r\n\r\nconst js = /*js*/ `\r\n  const ctx = document.getElementById('${canvas_id}')\r\n\r\n  const gl = ctx.getContext('webgl')\r\n\r\n  const program = initShader(gl, \"${VERTEX_SHADER_SOURCE}\", \"${FRAGMENT_SHADER_SOURCE}\")\r\n\r\n  const aPosition = gl.getAttribLocation(program, 'aPosition');\r\n  const uColor = gl.getUniformLocation(program, 'uColor')\r\n\r\n  const points = []\r\n  ctx.onclick = function(ev) {\r\n    // 坐标\r\n    const x = ev.clientX\r\n    const y = ev.clientY\r\n\r\n    const domPosition = ev.target.getBoundingClientRect();\r\n\r\n    const domx = x - domPosition.left\r\n    const domy = y - domPosition.top;\r\n    const halfWidth = ctx.offsetWidth / 2\r\n    const halfHeight = ctx.offsetHeight / 2\r\n\r\n    const clickX = (domx - halfWidth) / halfWidth\r\n    const clickY = (halfHeight - domy) / halfHeight\r\n\r\n    points.push({\r\n    clickX, clickY\r\n    })\r\n\r\n    for (let i = 0; i < points.length; i++) {\r\n    gl.vertexAttrib2f(aPosition, points[i].clickX, points[i].clickY)\r\n    gl.uniform2f(uColor, points[i].clickX, points[i].clickY)\r\n    gl.drawArrays(gl.POINTS, 0, 1);\r\n    }\r\n  }\r\n  `;\r\nconst html = /*html*/ `\r\n  <style>\r\n    * {\r\n    margin: 0;\r\n    padding: 0;\r\n    }\r\n\r\n    canvas{\r\n    margin: 50px auto 0;\r\n    display: block;\r\n    background: yellow;\r\n    }\r\n  </style>\r\n  <canvas id=\"${canvas_id}\" width=\"400\" height=\"400\">\r\n    此浏览器不支持canvas\r\n  </canvas>\r\n  <script>\r\n    {\r\n      ${js}\r\n    }\r\n  </script>\r\n`;\r\ndisplay.html(html);"
+                "const { display } = require(\"node-kernel\");\r\nconst { v1: uuidv1 } = require(\"uuid\");\r\nconst canvas_id = uuidv1();\r\n\r\n// 创建着色器源码\r\nconst VERTEX_SHADER_SOURCE = /*glsl */ `\r\n    uniform vec4 uPosition;\r\n    attribute vec4 aPosition;\r\n    void main() {\r\n    gl_Position = aPosition; // vec4(0.0,0.0,0.0,1.0)\r\n    gl_PointSize = 10.0;\r\n    }\r\n  `.replace(/\\n/g, \"\\\\n\"); // 顶点着色器\r\n\r\nconst FRAGMENT_SHADER_SOURCE = /*glsl */ `\r\n    precision mediump float;\r\n    uniform vec2 uColor;\r\n    void main() {\r\n    gl_FragColor = vec4(uColor.r, uColor.g, 0.0,1.0); // vec4\r\n    }\r\n  `.replace(/\\n/g, \"\\\\n\"); // 片元着色器\r\n\r\nconst js = /*js*/ `\r\n  const ctx = document.getElementById('${canvas_id}')\r\n\r\n  const gl = ctx.getContext('webgl')\r\n\r\n  const program = initShader(gl, \"${VERTEX_SHADER_SOURCE}\", \"${FRAGMENT_SHADER_SOURCE}\")\r\n\r\n  const aPosition = gl.getAttribLocation(program, 'aPosition');\r\n  const uColor = gl.getUniformLocation(program, 'uColor')\r\n\r\n  const points = []\r\n  ctx.onclick = function(ev) {\r\n    // 坐标\r\n    const x = ev.clientX\r\n    const y = ev.clientY\r\n\r\n    const domPosition = ev.target.getBoundingClientRect();\r\n\r\n    const domx = x - domPosition.left\r\n    const domy = y - domPosition.top;\r\n    const halfWidth = ctx.offsetWidth / 2\r\n    const halfHeight = ctx.offsetHeight / 2\r\n\r\n    const clickX = (domx - halfWidth) / halfWidth\r\n    const clickY = (halfHeight - domy) / halfHeight\r\n\r\n    points.push({\r\n    clickX, clickY\r\n    })\r\n\r\n    for (let i = 0; i < points.length; i++) {\r\n    gl.vertexAttrib2f(aPosition, points[i].clickX, points[i].clickY)\r\n    gl.uniform2f(uColor, points[i].clickX, points[i].clickY)\r\n    gl.drawArrays(gl.POINTS, 0, 1);\r\n    }\r\n  }\r\n  `;\r\nconst html = /*html*/ `\r\n  <style>\r\n    * {\r\n    margin: 0;\r\n    padding: 0;\r\n    }\r\n\r\n    canvas{\r\n    margin: 50px auto 0;\r\n    display: block;\r\n    background: yellow;\r\n    }\r\n  </style>\r\n  <canvas id=\"${canvas_id}\" width=\"400\" height=\"400\">\r\n    此浏览器不支持canvas\r\n  </canvas>\r\n  <script>\r\n    {\r\n      ${js}\r\n    }\r\n  </script>\r\n`;\r\ndisplay.html(html);\r\n"
             ],
             "outputs": [
                 {
@@ -330,7 +330,7 @@
         {
             "language": "markdown",
             "source": [
-                " `gl.uniform1f(location, v0)`\r\n\r\n `gl.uniform2f(location, v0, v1)`\r\n\r\n `gl.uniform3f(location, v0, v1, v2)`\r\n\r\n `gl.uniform4f(location, v0, v1, v2, v3)`\r\n\r\n参数介绍:\r\n\r\n    location: \r\n      指定 uniform变量的存储位置 \r\n    v0,v1,v2,v3：\r\n      传入的四个分量的值\r\n"
+                "`gl.uniform1f(location, v0)`\r\n\r\n`gl.uniform2f(location, v0, v1)`\r\n\r\n`gl.uniform3f(location, v0, v1, v2)`\r\n\r\n`gl.uniform4f(location, v0, v1, v2, v3)`\r\n\r\n参数介绍:\r\n\r\n    location:\r\n      指定 uniform变量的存储位置\r\n    v0,v1,v2,v3：\r\n      传入的四个分量的值\r\n"
             ],
             "outputs": []
         },
@@ -360,13 +360,13 @@
                             "mime": "text/html",
                             "value": [
                                 "<style> table, th, tr { text-align: left; }</style>",
-                                "    <canvas id=\"55ee9580-a885-11ee-b016-59e07913fb20\" width=\"400\" height=\"400\">",
+                                "    <canvas id=\"46f48010-ab0c-11ee-a296-d94abf417637\" width=\"400\" height=\"400\">",
                                 "    此浏览器不支持canvas",
                                 "    </canvas>",
                                 "    <script>",
                                 "      { // 限制变量定义域",
                                 "        ",
-                                "    const ctx = document.getElementById('55ee9580-a885-11ee-b016-59e07913fb20');",
+                                "    const ctx = document.getElementById('46f48010-ab0c-11ee-a296-d94abf417637');",
                                 "    const gl = ctx.getContext('webgl');",
                                 "",
                                 "    const program = initShader(gl, \"\\n  attribute vec4 aPosition;\\n  attribute float aPointSize;\\n  void main() {\\n    gl_Position = aPosition;\\n    gl_PointSize = aPointSize;\\n  }\\n\", \"\\n  void main() {\\n    gl_FragColor = vec4(1.0,0.0,0.0,1.0);\\n  }\\n\");",
@@ -504,7 +504,7 @@
         {
             "language": "markdown",
             "source": [
-                "缓冲区对象是WebGL系统中的一块内存区域，可以一次性地向缓冲区对象中填充大量的顶点数据，然后将这些数据保存在其中，供顶点着色器使用\r\n在 webgl 中，需要处理⼤量的相同类型数据，所以引入类型化数组，这样程序就可以预知到数组中的数据类型， 提⾼性能。\r\n\r\n类型化数组类型\r\n* Int8Array: 8位整型\r\n* UInt8Array: 8位无符号整型\r\n* Int16Array: 16位整型\r\n* UInt16Array:16位无符号整型\r\n* Int32Array:32位整型\r\n* UInt32Array:32位无符号整型\r\n* Float32Array: 单精度32位浮点型\r\n* Float64Array: 双精度64位浮点型\r\n\r\n#### 缓冲区对象相关的api\r\n\r\n`gl.createBuffer` 创建缓冲区对象\r\n\r\n`gl.bindBuffer(target, buffer)` 绑定缓冲区对象\r\n* buffer: 已经创建好的缓冲区对象\r\n* target：可以是如下两种 \r\n  + gl. ARRAY_BUFFER: 表示缓冲区存储的是顶点的数据\r\n  + gl. ELEMENT_ARRAY_BUFFER: 表示缓冲区存储的是顶点的索引值\r\n\r\n`gl.bufferData(target, data, type)` 写入数据到缓冲区\r\n* target: 类型同 gl.bindBuffer 中的 target\r\n* data: 写⼊缓冲区的顶点数据，如程序中的 points\r\n* type: 表示如何使⽤缓冲区对象中的数据，分为以下⼏类\r\n  + gl. STATIC_DRAW: 写⼊⼀次，多次绘制\r\n  + gl. STREAM_DRAW: 写⼊⼀次，绘制若干次\r\n  + gl. DYNAMIC_DRAW: 写⼊多次，绘制多次\r\n\r\n`gl.vertexAttribPointer(location, size, type, normalized, stride, offset)` 分配缓冲区对象给location这个attribute变量 并指定数据格式等细节\r\n* location: attribute 变量的存储位置\r\n* size: 指定每个顶点所使⽤数据的个数\r\n* type: 指定数据格式\r\n  + gl. FLOAT：浮点型\r\n  + gl. UNSIGNED_BYTE：⽆符号字节\r\n  + gl. SHORT：短整型\r\n  + gl. UNSIGNED_SHORT：无符号短整型\r\n  + gl. INT：整型\r\n  + gl. UNSIGNED_INT：无符号整型\r\n* normalized: 表示是否将数据归⼀化到 [0, 1] [-1, 1] 这个区间\r\n* stride：两个相邻顶点之间的字节数\r\n* offset：数据偏移量\r\n\r\n`gl.enableVertexAttribArray(location)` 启用attribute变量\r\n* location: attribute 变量的存储地址\r\n\r\n`gl.disableVertexAttribArray(aPosition)` 禁⽤attribute变量\r\n\r\n#### 缓冲区使用流程\r\n\r\n1. 创建顶点数据\r\n2. 创建缓冲区对象\r\n3. 绑定缓冲区对象\r\n4. 写入数据到缓冲区\r\n5. 分配缓冲区对象给一个attribute变量\r\n6. 启用这个attribute变量\r\n\r\n缓冲区执行过程\r\n\r\n![缓冲区执行过程](image-14.png)\r\n"
+                "缓冲区对象是 WebGL 系统中的一块内存区域，可以一次性地向缓冲区对象中填充大量的顶点数据，然后将这些数据保存在其中，供顶点着色器使用\r\n在 webgl 中，需要处理⼤量的相同类型数据，所以引入类型化数组，这样程序就可以预知到数组中的数据类型， 提⾼性能。\r\n\r\n类型化数组类型\r\n\r\n- Int8Array: 8 位整型\r\n- UInt8Array: 8 位无符号整型\r\n- Int16Array: 16 位整型\r\n- UInt16Array:16 位无符号整型\r\n- Int32Array:32 位整型\r\n- UInt32Array:32 位无符号整型\r\n- Float32Array: 单精度 32 位浮点型\r\n- Float64Array: 双精度 64 位浮点型\r\n\r\n#### 缓冲区对象相关的 api\r\n\r\n`gl.createBuffer` 创建缓冲区对象\r\n\r\n`gl.bindBuffer(target, buffer)` 绑定缓冲区对象\r\n\r\n- buffer: 已经创建好的缓冲区对象\r\n- target：可以是如下两种\r\n  - gl. ARRAY_BUFFER: 表示缓冲区存储的是顶点的数据\r\n  - gl. ELEMENT_ARRAY_BUFFER: 表示缓冲区存储的是顶点的索引值\r\n\r\n`gl.bufferData(target, data, type)` 写入数据到缓冲区\r\n\r\n- target: 类型同 gl.bindBuffer 中的 target\r\n- data: 写⼊缓冲区的顶点数据，如程序中的 points\r\n- type: 表示如何使⽤缓冲区对象中的数据，分为以下⼏类\r\n  - gl. STATIC_DRAW: 写⼊⼀次，多次绘制\r\n  - gl. STREAM_DRAW: 写⼊⼀次，绘制若干次\r\n  - gl. DYNAMIC_DRAW: 写⼊多次，绘制多次\r\n\r\n`gl.vertexAttribPointer(location, size, type, normalized, stride, offset)` 分配缓冲区对象给 location 这个 attribute 变量 并指定数据格式等细节\r\n\r\n- location: attribute 变量的存储位置\r\n- size: 指定每个顶点所使⽤数据的个数\r\n- type: 指定数据格式\r\n  - gl. FLOAT：浮点型\r\n  - gl. UNSIGNED_BYTE：⽆符号字节\r\n  - gl. SHORT：短整型\r\n  - gl. UNSIGNED_SHORT：无符号短整型\r\n  - gl. INT：整型\r\n  - gl. UNSIGNED_INT：无符号整型\r\n- normalized: 表示是否将数据归⼀化到 [0, 1] [-1, 1] 这个区间\r\n- stride：两个相邻顶点之间的字节数\r\n- offset：数据偏移量\r\n\r\n`gl.enableVertexAttribArray(location)` 启用 attribute 变量\r\n\r\n- location: attribute 变量的存储地址\r\n\r\n`gl.disableVertexAttribArray(aPosition)` 禁⽤ attribute 变量\r\n\r\n#### 缓冲区使用流程\r\n\r\n1. 创建顶点数据\r\n2. 创建缓冲区对象\r\n3. 绑定缓冲区对象\r\n4. 写入数据到缓冲区\r\n5. 分配缓冲区对象给一个 attribute 变量\r\n6. 启用这个 attribute 变量\r\n\r\n缓冲区执行过程\r\n\r\n![缓冲区执行过程](image-14.png)\r\n"
             ],
             "outputs": []
         },
@@ -597,7 +597,7 @@
         {
             "language": "markdown",
             "source": [
-                "平移矩阵的推导过程\r\n\r\n![矩阵平移](image-16.png)\r\n\r\n首先，定义平移变换的基本公式为：\r\n\r\n$ x' = x + x_1 $\r\n\r\n$ y' = y + y_1 $\r\n\r\n$ z' = z + z_1 $\r\n\r\n$ w = 1 $ \r\n\r\n这里 $ w $ 是齐次坐标的一部分，使得变换可以用矩阵乘法表示。\r\n\r\n接着，我们将这些变换映射到齐次坐标系中的矩阵变换中：\r\n\r\n$\r\n\\begin{bmatrix}\r\nx \\\\\r\ny \\\\\r\nz \\\\\r\nw\r\n\\end{bmatrix}\r\n$ *\r\n$\r\n\\begin{bmatrix}\r\na & b & c & d \\\\\r\ne & f & g & h \\\\\r\ni & j & k & l \\\\\r\nm & n & o & p\r\n\\end{bmatrix}\r\n$ =\r\n$\r\n\\begin{bmatrix}\r\nx' \\\\\r\ny' \\\\\r\nz' \\\\\r\nw'\r\n\\end{bmatrix}\r\n$\r\n\r\n$ ax + by + cz + dw = x' $\r\n\r\n$ ex + fy + gz + hw = y' $\r\n\r\n$ ix + jy + kz + lw = z' $\r\n\r\n$ mx + ny + oz + pw = w' $\r\n\r\n通过代入 $ x', y', z', w $ 的定义，我们可以解出矩阵的各个元素：\r\n\r\n1. 代入 $ x' = x + x_1 $ 到 $ ax + by + cz + dw = x' $ 得到 $ a = 1, b = 0, c = 0, d = x_1 $。\r\n2. 代入 $ y' = y + y_1 $ 到 $ ex + fy + gz + hw = y' $ 得到 $ e = 0, f = 1, g = 0, h = y_1 $。\r\n3. 代入 $ z' = z + z_1 $ 到 $ ix + jy + kz + lw = z' $ 得到 $ i = 0, j = 0, k = 1, l = z_1 $。\r\n4. 由于 $ w $ 始终为 1，所以 $ mx + ny + oz + pw = w' $ 得到 $ 0x + 0y + 0z + 1w = 1 $。\r\n\r\n因此，整个平移变换的齐次坐标矩阵是：\r\n\r\n$ \r\n\\begin{pmatrix}\r\n1 & 0 & 0 & x_1 \\\\\r\n0 & 1 & 0 & y_1 \\\\\r\n0 & 0 & 1 & z_1 \\\\\r\n0 & 0 & 0 & 1\r\n\\end{pmatrix}\r\n$\r\n\r\n在数学中矩阵的表示是行主序的 就如上面得到的矩阵一样\r\n\r\n但是在webgl中因为一些历史问题需要换成列主序\r\n\r\n行主序换成列主序 具体做法是交换矩阵的行和列 即矩阵转置\r\n\r\n转置后的列主序矩阵如下\r\n\r\n$\r\n\\begin{pmatrix}\r\n1 & 0 & 0 & 0 \\\\\r\n0 & 1 & 0 & 0 \\\\\r\n0 & 0 & 1 & 0 \\\\\r\nx_1 & y_1 & z_1 & 1\r\n\\end{pmatrix}\r\n$\r\n\r\n转换成js代码如下\r\n\r\n```js\r\n    function getTranslateMatrix(x = 0, y = 0, z = 0) {\r\n        return new Float32Array([\r\n            1.0, 0.0, 0.0, 0.0,\r\n            0.0, 1.0, 0.0, 0.0,\r\n            0.0, 0.0, 1.0, 0.0,\r\n            x, y, z, 1,\r\n        ])\r\n    }\r\n```\r\n"
+                "平移矩阵的推导过程\r\n\r\n![矩阵平移](image-16.png)\r\n\r\n首先，定义平移变换的基本公式为：\r\n\r\n$ x' = x + x_1 $\r\n\r\n$ y' = y + y_1 $\r\n\r\n$ z' = z + z_1 $\r\n\r\n$ w = 1 $\r\n\r\n这里 $ w $ 是齐次坐标的一部分，使得变换可以用矩阵乘法表示。\r\n\r\n接着，我们将这些变换映射到齐次坐标系中的矩阵变换中：\r\n\r\n$\r\n\\begin{bmatrix}\r\nx \\\\\r\ny \\\\\r\nz \\\\\r\nw\r\n\\end{bmatrix}\r\n$ \\*\r\n$\r\n\\begin{bmatrix}\r\na & b & c & d \\\\\r\ne & f & g & h \\\\\r\ni & j & k & l \\\\\r\nm & n & o & p\r\n\\end{bmatrix}\r\n$ =\r\n$\r\n\\begin{bmatrix}\r\nx' \\\\\r\ny' \\\\\r\nz' \\\\\r\nw'\r\n\\end{bmatrix}\r\n$\r\n\r\n$ ax + by + cz + dw = x' $\r\n\r\n$ ex + fy + gz + hw = y' $\r\n\r\n$ ix + jy + kz + lw = z' $\r\n\r\n$ mx + ny + oz + pw = w' $\r\n\r\n通过代入 $ x', y', z', w $ 的定义，我们可以解出矩阵的各个元素：\r\n\r\n1. 代入 $ x' = x + x_1 $ 到 $ ax + by + cz + dw = x' $ 得到 $ a = 1, b = 0, c = 0, d = x_1 $。\r\n2. 代入 $ y' = y + y_1 $ 到 $ ex + fy + gz + hw = y' $ 得到 $ e = 0, f = 1, g = 0, h = y_1 $。\r\n3. 代入 $ z' = z + z_1 $ 到 $ ix + jy + kz + lw = z' $ 得到 $ i = 0, j = 0, k = 1, l = z_1 $。\r\n4. 由于 $ w $ 始终为 1，所以 $ mx + ny + oz + pw = w' $ 得到 $ 0x + 0y + 0z + 1w = 1 $。\r\n\r\n因此，整个平移变换的齐次坐标矩阵是：\r\n\r\n$\r\n\\begin{pmatrix}\r\n1 & 0 & 0 & x_1 \\\\\r\n0 & 1 & 0 & y_1 \\\\\r\n0 & 0 & 1 & z_1 \\\\\r\n0 & 0 & 0 & 1\r\n\\end{pmatrix}\r\n$\r\n\r\n在数学中矩阵的表示是行主序的 就如上面得到的矩阵一样\r\n\r\n但是在 webgl 中因为一些历史问题需要换成列主序\r\n\r\n行主序换成列主序 具体做法是交换矩阵的行和列 即矩阵转置\r\n\r\n转置后的列主序矩阵如下\r\n\r\n$\r\n\\begin{pmatrix}\r\n1 & 0 & 0 & 0 \\\\\r\n0 & 1 & 0 & 0 \\\\\r\n0 & 0 & 1 & 0 \\\\\r\nx_1 & y_1 & z_1 & 1\r\n\\end{pmatrix}\r\n$\r\n\r\n转换成 js 代码如下\r\n\r\n```js\r\nfunction getTranslateMatrix(x = 0, y = 0, z = 0) {\r\n  return new Float32Array([\r\n    1.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    1.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    1.0,\r\n    0.0,\r\n    x,\r\n    y,\r\n    z,\r\n    1,\r\n  ]);\r\n}\r\n```\r\n"
             ],
             "outputs": []
         },
@@ -705,7 +705,7 @@
         {
             "language": "markdown",
             "source": [
-                "缩放矩阵推导过程\r\n\r\n![Alt text](image-19.png)\r\n\r\n首先，定义平移变换的基本公式为：\r\n\r\n$ x' = Tx * x $\r\n\r\n$ y' = Ty * y $\r\n\r\n$ z' = Tz * z $\r\n\r\n$ w = 1 $ \r\n\r\n这里 $ w $ 是齐次坐标的一部分，使得变换可以用矩阵乘法表示。\r\n\r\n接着，我们将这些变换映射到齐次坐标系中的矩阵变换中：\r\n\r\n$\r\n\\begin{bmatrix}\r\nx \\\\\r\ny \\\\\r\nz \\\\\r\nw\r\n\\end{bmatrix}\r\n$ *\r\n$\r\n\\begin{bmatrix}\r\na & b & c & d \\\\\r\ne & f & g & h \\\\\r\ni & j & k & l \\\\\r\nm & n & o & p\r\n\\end{bmatrix}\r\n$ =\r\n$\r\n\\begin{bmatrix}\r\nx' \\\\\r\ny' \\\\\r\nz' \\\\\r\nw'\r\n\\end{bmatrix}\r\n$           \r\n\r\n$ ax + by + cz + dw = x' $\r\n\r\n$ ex + fy + gz + hw = y' $\r\n\r\n$ ix + jy + kz + lw = z' $\r\n\r\n$ mx + ny + oz + pw = w' $\r\n\r\n通过代入 $ x', y', z', w $ 的定义，我们可以解出矩阵的各个元素：\r\n\r\n1. 代入 $ x' = Tx * x $ 到 $ ax + by + cz + dw = x' $ 得到 $ a = Tx, b = 0,  c = 0,  d = 0 $。\r\n2. 代入 $ y' = Ty * y $ 到 $ ex + fy + gz + hw = y' $ 得到 $ e = 0,  f = Ty, g = 0,  h = 0 $。\r\n3. 代入 $ z' = Tz * z $ 到 $ ix + jy + kz + lw = z' $ 得到 $ i = 0,  j = 0,  k = Tz, l = 0 $。\r\n4. 由于 $ w $ 始终为 1,  故 $ mx + ny + oz + pw = w' $ 得到 $ p = 1 $。\r\n\r\n因此，整个平移变换的齐次坐标矩阵是：\r\n\r\n$ \r\n\\begin{pmatrix}\r\nTx & 0 & 0 & x_1 \\\\\r\n0 & Ty & 0 & y_1 \\\\\r\n0 & 0 & Tz & z_1 \\\\\r\n0 & 0 & 0 & 1\r\n\\end{pmatrix}\r\n$\r\n\r\n这是一个对称矩阵 列主序与行主序一致\r\n\r\n转换成js代码如下\r\n\r\n```js\r\nfunction getScaleMatrix(tx = 1, ty = 1, tz = 1) {\r\n    return new Float32Array([\r\n        tx, 0.0, 0.0, 0.0,\r\n        0.0, ty, 0.0, 0.0,\r\n        0.0, 0.0, tz, 0.0,\r\n        0.0, 0.0, 0.0, 1,\r\n    ])\r\n}\r\n```\r\n"
+                "缩放矩阵推导过程\r\n\r\n![Alt text](image-19.png)\r\n\r\n首先，定义平移变换的基本公式为：\r\n\r\n$ x' = Tx \\* x $\r\n\r\n$ y' = Ty \\* y $\r\n\r\n$ z' = Tz \\* z $\r\n\r\n$ w = 1 $\r\n\r\n这里 $ w $ 是齐次坐标的一部分，使得变换可以用矩阵乘法表示。\r\n\r\n接着，我们将这些变换映射到齐次坐标系中的矩阵变换中：\r\n\r\n$\r\n\\begin{bmatrix}\r\nx \\\\\r\ny \\\\\r\nz \\\\\r\nw\r\n\\end{bmatrix}\r\n$ \\*\r\n$\r\n\\begin{bmatrix}\r\na & b & c & d \\\\\r\ne & f & g & h \\\\\r\ni & j & k & l \\\\\r\nm & n & o & p\r\n\\end{bmatrix}\r\n$ =\r\n$\r\n\\begin{bmatrix}\r\nx' \\\\\r\ny' \\\\\r\nz' \\\\\r\nw'\r\n\\end{bmatrix}\r\n$\r\n\r\n$ ax + by + cz + dw = x' $\r\n\r\n$ ex + fy + gz + hw = y' $\r\n\r\n$ ix + jy + kz + lw = z' $\r\n\r\n$ mx + ny + oz + pw = w' $\r\n\r\n通过代入 $ x', y', z', w $ 的定义，我们可以解出矩阵的各个元素：\r\n\r\n1. 代入 $ x' = Tx \\* x $ 到 $ ax + by + cz + dw = x' $ 得到 $ a = Tx, b = 0, c = 0, d = 0 $。\r\n2. 代入 $ y' = Ty \\* y $ 到 $ ex + fy + gz + hw = y' $ 得到 $ e = 0, f = Ty, g = 0, h = 0 $。\r\n3. 代入 $ z' = Tz \\* z $ 到 $ ix + jy + kz + lw = z' $ 得到 $ i = 0, j = 0, k = Tz, l = 0 $。\r\n4. 由于 $ w $ 始终为 1, 故 $ mx + ny + oz + pw = w' $ 得到 $ p = 1 $。\r\n\r\n因此，整个平移变换的齐次坐标矩阵是：\r\n\r\n$\r\n\\begin{pmatrix}\r\nTx & 0 & 0 & x_1 \\\\\r\n0 & Ty & 0 & y_1 \\\\\r\n0 & 0 & Tz & z_1 \\\\\r\n0 & 0 & 0 & 1\r\n\\end{pmatrix}\r\n$\r\n\r\n这是一个对称矩阵 列主序与行主序一致\r\n\r\n转换成 js 代码如下\r\n\r\n```js\r\nfunction getScaleMatrix(tx = 1, ty = 1, tz = 1) {\r\n  return new Float32Array([\r\n    tx,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    ty,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    tz,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    1,\r\n  ]);\r\n}\r\n```\r\n"
             ],
             "outputs": []
         },
@@ -807,7 +807,7 @@
         {
             "language": "markdown",
             "source": [
-                "旋转矩阵的推导过程\r\n\r\n![Alt text](image-20.png)\r\n\r\n顶点A (x, y)\r\n\r\n$ x = R * cos(α) $\r\n\r\n$ y = R * sin(α) $\r\n\r\n$ z = 0 $\r\n\r\n顶点A' (x', y')\r\n\r\n$$\r\n\\begin{align*}\r\n&x' = R * \\cos(α + β) \\\\\r\n&\\phantom{x'} = R * ( \\cos(α)*\\cos(β) - \\sin(α)*\\sin(β)) \\\\\r\n&\\phantom{x'} = R*\\cos(α)*\\cos(β) - R*\\sin(α)*\\sin(β)\r\n\\end{align*}\r\n$$\r\n"
+                "旋转矩阵的推导过程\r\n\r\n![Alt text](image-20.png)\r\n\r\n顶点 A (x, y)\r\n\r\n$ x = R \\* cos(α) $\r\n\r\n$ y = R \\* sin(α) $\r\n\r\n$ z = 0 $\r\n\r\n顶点 A' (x', y')\r\n\r\n$$\r\n\\begin{align*}\r\n&x' = R * \\cos(α + β) \\\\\r\n&\\phantom{x'} = R * ( \\cos(α)*\\cos(β) - \\sin(α)*\\sin(β)) \\\\\r\n&\\phantom{x'} = R*\\cos(α)*\\cos(β) - R*\\sin(α)*\\sin(β)\r\n\\end{align*}\r\n$$\r\n"
             ],
             "outputs": []
         },
@@ -907,7 +907,7 @@
         {
             "language": "markdown",
             "source": [
-                "矩阵复合\r\n\r\n矩阵A * 矩阵B 表示先进行B变换再进行A变换\r\n\r\n![矩阵乘法](image-21.png)\r\n\r\n```js\r\n// 矩阵复合函数\r\nfunction mixMatrix(A, B) {\r\n    const result = new Float32Array(16);\r\n\r\n    for (let i = 0; i < 4; i++) {\r\n        result[i] = A[i] * B[0] + A[i + 4] * B[1] + A[i + 8] * B[2] + A[i + 12] * B[3]\r\n        result[i + 4] = A[i] * B[4] + A[i + 4] * B[5] + A[i + 8] * B[6] + A[i + 12] * B[7]\r\n        result[i + 8] = A[i] * B[8] + A[i + 4] * B[9] + A[i + 8] * B[10] + A[i + 12] * B[11]\r\n        result[i + 12] = A[i] * B[12] + A[i + 4] * B[13] + A[i + 8] * B[14] + A[i + 12] * B[15]\r\n    }\r\n\r\n    return result;\r\n}\r\n```\r\n"
+                "矩阵复合\r\n\r\n矩阵 A \\* 矩阵 B 表示先进行 B 变换再进行 A 变换\r\n\r\n![矩阵乘法](image-21.png)\r\n\r\n```js\r\n// 矩阵复合函数\r\nfunction mixMatrix(A, B) {\r\n  const result = new Float32Array(16);\r\n\r\n  for (let i = 0; i < 4; i++) {\r\n    result[i] =\r\n      A[i] * B[0] + A[i + 4] * B[1] + A[i + 8] * B[2] + A[i + 12] * B[3];\r\n    result[i + 4] =\r\n      A[i] * B[4] + A[i + 4] * B[5] + A[i + 8] * B[6] + A[i + 12] * B[7];\r\n    result[i + 8] =\r\n      A[i] * B[8] + A[i + 4] * B[9] + A[i + 8] * B[10] + A[i + 12] * B[11];\r\n    result[i + 12] =\r\n      A[i] * B[12] + A[i + 4] * B[13] + A[i + 8] * B[14] + A[i + 12] * B[15];\r\n  }\r\n\r\n  return result;\r\n}\r\n```\r\n"
             ],
             "outputs": []
         },
@@ -1187,6 +1187,260 @@
             "language": "javascript",
             "source": [
                 "const { display } = require(\"node-kernel\");\r\nconst { v1: uuidv1 } = require(\"uuid\");\r\nconst canvas_id = uuidv1();\r\n// 着色器\r\n// 创建着色器源码\r\nconst VERTEX_SHADER_SOURCE = /*glsl */ `\r\n    // 只传递顶点数据\r\n    attribute vec4 aPosition;\r\n    varying vec4 vPosition;\r\n    void main() {\r\n        vPosition = aPosition;\r\n\r\n        gl_Position = aPosition; // vec4(0.0,0.0,0.0,1.0)\r\n        gl_PointSize = 10.0;\r\n    }\r\n`.replace(/\\n/g, \"\\\\n\");\r\n\r\nconst FRAGMENT_SHADER_SOURCE = /*glsl */ `\r\n    precision lowp float;\r\n    uniform float uHeight;\r\n    varying vec4 vPosition;\r\n\r\n    void main() {\r\n        // 向上卷 vPosition.y > uHeight   uHeight 的取值范围 -1.0 1.0\r\n        // 向下卷 vPosition.y < uHeight   uHeight 的取值范围 -1.0 1.0\r\n        // 向左卷 vPosition.x < uHeight   uHeight 的取值范围 -1.0 1.0\r\n        // 向右卷 vPosition.x > uHeight   uHeight 的取值范围 -1.0 1.0\r\n        // 左下-右上\r\n        // vPosition.x > uHeight && vPosition.y > uHeight\r\n        // uHeight 从 -1.0 到 1.0\r\n\r\n        if (vPosition.y > uHeight) {\r\n            gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\r\n        } else {\r\n            gl_FragColor = vec4(1.0, 0.0, 0.0, 0.0);\r\n        }\r\n    }\r\n`.replace(/\\n/g, \"\\\\n\");\r\n\r\nconst js = /*js*/ `\r\n    const ctx = document.getElementById('${canvas_id}');\r\n    const gl = ctx.getContext('webgl');\r\n\r\n    const program = initShader(gl, \"${VERTEX_SHADER_SOURCE}\", \"${FRAGMENT_SHADER_SOURCE}\");\r\n\r\n    const aPosition = gl.getAttribLocation(program, 'aPosition');\r\n    const uHeight = gl.getUniformLocation(program, 'uHeight');\r\n  \r\n    const points = new Float32Array([\r\n      -1.0, -1.0,\r\n      1.0, -1.0,\r\n      -1.0,  1.0,\r\n      1.0,  1.0,\r\n    ])\r\n  \r\n    const buffer = gl.createBuffer();\r\n  \r\n    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);\r\n  \r\n    gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);\r\n  \r\n    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);\r\n  \r\n    gl.enableVertexAttribArray(aPosition)\r\n    // gl.vertexAttrib2f(aPosition, 0.0, 0.0)\r\n  \r\n    let value = -1;\r\n    function run() {\r\n      value += 0.01;\r\n  \r\n      gl.uniform1f(uHeight, value);\r\n      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);\r\n  \r\n      requestAnimationFrame(run)\r\n    }\r\n    run();\r\n`;\r\nconst html = /*html*/ `\r\n<canvas id=\"${canvas_id}\" width=\"400\" height=\"400\">\r\n    此浏览器不支持canvas\r\n</canvas>\r\n<script>\r\n    { // 限制变量定义域\r\n        ${js}\r\n    }\r\n</script>\r\n`;\r\ndisplay.html(html);\r\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/html",
+                            "value": [
+                                "<style> table, th, tr { text-align: left; }</style>",
+                                "<canvas id=\"084d9210-ab0d-11ee-a296-d94abf417637\" width=\"400\" height=\"400\">",
+                                "    此浏览器不支持canvas",
+                                "</canvas>",
+                                "<script>",
+                                "    { // 限制变量定义域",
+                                "        ",
+                                "    const ctx = document.getElementById('084d9210-ab0d-11ee-a296-d94abf417637');",
+                                "    const gl = ctx.getContext('webgl');",
+                                "",
+                                "    const program = initShader(gl, \"\\n    // 只传递顶点数据\\n    attribute vec4 aPosition;\\n    varying vec4 vPosition;\\n    void main() {\\n        vPosition = aPosition;\\n\\n        gl_Position = aPosition; // vec4(0.0,0.0,0.0,1.0)\\n        gl_PointSize = 10.0;\\n    }\\n\", \"\\n    precision lowp float;\\n    uniform float uHeight;\\n    varying vec4 vPosition;\\n\\n    void main() {\\n        // 向上卷 vPosition.y > uHeight   uHeight 的取值范围 -1.0 1.0\\n        // 向下卷 vPosition.y < uHeight   uHeight 的取值范围 -1.0 1.0\\n        // 向左卷 vPosition.x < uHeight   uHeight 的取值范围 -1.0 1.0\\n        // 向右卷 vPosition.x > uHeight   uHeight 的取值范围 -1.0 1.0\\n        // 左下-右上\\n        // vPosition.x > uHeight && vPosition.y > uHeight\\n        // uHeight 从 -1.0 到 1.0\\n\\n        if (vPosition.y > uHeight) {\\n            gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\\n        } else {\\n            gl_FragColor = vec4(1.0, 0.0, 0.0, 0.0);\\n        }\\n    }\\n\");",
+                                "",
+                                "    const aPosition = gl.getAttribLocation(program, 'aPosition');",
+                                "    const uHeight = gl.getUniformLocation(program, 'uHeight');",
+                                "  ",
+                                "    const points = new Float32Array([",
+                                "      -1.0, -1.0,",
+                                "      1.0, -1.0,",
+                                "      -1.0,  1.0,",
+                                "      1.0,  1.0,",
+                                "    ])",
+                                "  ",
+                                "    const buffer = gl.createBuffer();",
+                                "  ",
+                                "    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);",
+                                "  ",
+                                "    gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);",
+                                "  ",
+                                "    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);",
+                                "  ",
+                                "    gl.enableVertexAttribArray(aPosition)",
+                                "    // gl.vertexAttrib2f(aPosition, 0.0, 0.0)",
+                                "  ",
+                                "    let value = -1;",
+                                "    function run() {",
+                                "      value += 0.01;",
+                                "  ",
+                                "      gl.uniform1f(uHeight, value);",
+                                "      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);",
+                                "  ",
+                                "      requestAnimationFrame(run)",
+                                "    }",
+                                "    run();",
+                                "",
+                                "    }",
+                                "</script>",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "使用 varing 变量来绘制彩色三角形\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const { display } = require(\"node-kernel\");\r\nconst { v1: uuidv1 } = require(\"uuid\");\r\nconst canvas_id = uuidv1();\r\n// 着色器\r\n// 创建着色器源码\r\nconst VERTEX_SHADER_SOURCE = /*glsl */ `\r\n    attribute vec4 aPosition;\r\n\r\n    varying vec4 vColor;\r\n\r\n    void main() {\r\n        vColor = aPosition;\r\n\r\n        gl_Position = aPosition;\r\n    }\r\n`.replace(/\\n/g, \"\\\\n\");\r\n\r\nconst FRAGMENT_SHADER_SOURCE = /*glsl */ `\r\n    precision lowp float;\r\n    varying vec4 vColor;\r\n\r\n    void main() {\r\n        gl_FragColor = vColor;\r\n    }\r\n`.replace(/\\n/g, \"\\\\n\");\r\n\r\nconst js = /*js*/ `\r\n    const ctx = document.getElementById('${canvas_id}');\r\n    const gl = ctx.getContext('webgl');\r\n\r\n    const program = initShader(gl, \"${VERTEX_SHADER_SOURCE}\", \"${FRAGMENT_SHADER_SOURCE}\");\r\n\r\n    const aPosition = gl.getAttribLocation(program, 'aPosition');\r\n\r\n    const points = new Float32Array([\r\n        -0.5, -0.5,\r\n        0.5, -0.5,\r\n        0.0,  0.5,\r\n    ])\r\n  \r\n    const buffer = gl.createBuffer();\r\n\r\n    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);\r\n\r\n    gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);\r\n\r\n    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);\r\n\r\n    gl.enableVertexAttribArray(aPosition)\r\n\r\n    gl.drawArrays(gl.TRIANGLES, 0, 3);\r\n`;\r\nconst html = /*html*/ `\r\n<canvas id=\"${canvas_id}\" width=\"400\" height=\"400\">\r\n    此浏览器不支持canvas\r\n</canvas>\r\n<script>\r\n    { // 限制变量定义域\r\n        ${js}\r\n    }\r\n</script>\r\n`;\r\ndisplay.html(html);\r\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/html",
+                            "value": [
+                                "<style> table, th, tr { text-align: left; }</style>",
+                                "<canvas id=\"de977850-ab0c-11ee-a296-d94abf417637\" width=\"400\" height=\"400\">",
+                                "    此浏览器不支持canvas",
+                                "</canvas>",
+                                "<script>",
+                                "    { // 限制变量定义域",
+                                "        ",
+                                "    const ctx = document.getElementById('de977850-ab0c-11ee-a296-d94abf417637');",
+                                "    const gl = ctx.getContext('webgl');",
+                                "",
+                                "    const program = initShader(gl, \"\\n    attribute vec4 aPosition;\\n\\n    varying vec4 vColor;\\n\\n    void main() {\\n    vColor = aPosition;\\n\\n    gl_Position = aPosition;\\n    }\\n\", \"\\n    precision lowp float;\\n    varying vec4 vColor;\\n\\n    void main() {\\n        gl_FragColor = vColor;\\n    }\\n\");",
+                                "",
+                                "    const aPosition = gl.getAttribLocation(program, 'aPosition');",
+                                "",
+                                "    const points = new Float32Array([",
+                                "        -0.5, -0.5,",
+                                "        0.5, -0.5,",
+                                "        0.0,  0.5,",
+                                "    ])",
+                                "  ",
+                                "    const buffer = gl.createBuffer();",
+                                "",
+                                "    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);",
+                                "",
+                                "    gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);",
+                                "",
+                                "    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);",
+                                "",
+                                "    gl.enableVertexAttribArray(aPosition)",
+                                "",
+                                "    gl.drawArrays(gl.TRIANGLES, 0, 3);",
+                                "",
+                                "    }",
+                                "</script>",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "![Alt text](image-22.png)\r\n\r\n1. 图元装配过程： 将独⽴的顶点坐标装配成几何图形，图形的类别由 gl.drawArrays() 第⼀个参数确定\r\n2. 光栅化：这⼀步是将装配好的图形转换为片元\r\n3. 剔除：对于不透明物体，背⾯对于观察者来说是不可⻅的。那么在渲染过程中，就会将不可⻅的部分剔除， 不参与绘制。节省渲染开销。\r\n4. 裁剪：在可视范围之外的事物是看不到的。图形⽣成后，有的部分可能位于可视范围之外，这⼀部分会被剪裁掉，不参与绘制\r\n\r\n纹理坐标\r\n\r\n![Alt text](image-23.png)\r\n\r\n在 webgl ⾥需要通过纹理坐标和图形顶点坐标的映射关系来确定贴图\r\n\r\n![Alt text](image-24.png)\r\n\r\n创建纹理对象\r\n\r\n纹理对象主要⽤于存储纹理图像数据。\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const { display } = require(\"node-kernel\");\r\nconst { v1: uuidv1 } = require(\"uuid\");\r\nconst canvas_id = uuidv1();\r\n// 着色器\r\n// 创建着色器源码\r\nconst VERTEX_SHADER_SOURCE = /*glsl */ `\r\n    // 只传递顶点数据\r\n    attribute vec4 aPosition;\r\n\r\n    attribute vec4 aTex;\r\n\r\n    varying vec2 vTex;\r\n\r\n    void main() {\r\n        gl_Position = aPosition; // vec4(0.0,0.0,0.0,1.0)\r\n        vTex = vec2(aTex.x, aTex.y);\r\n    }\r\n`.replace(/\\n/g, \"\\\\n\");\r\n\r\nconst FRAGMENT_SHADER_SOURCE = /*glsl */ `\r\n    precision lowp float;\r\n    uniform sampler2D uSampler;\r\n    varying vec2 vTex;\r\n\r\n    void main() {\r\n        gl_FragColor = texture2D(uSampler, vTex);\r\n    }\r\n`.replace(/\\n/g, \"\\\\n\");\r\n\r\nconst js = /*js*/ `\r\n    const ctx = document.getElementById('${canvas_id}');\r\n    const gl = ctx.getContext('webgl');\r\n\r\n    const program = initShader(gl, \"${VERTEX_SHADER_SOURCE}\", \"${FRAGMENT_SHADER_SOURCE}\");\r\n\r\n    const aPosition = gl.getAttribLocation(program, 'aPosition');\r\n    const aTex = gl.getAttribLocation(program, 'aTex');\r\n    const uSampler = gl.getUniformLocation(program, 'uSampler');\r\n\r\n    const points = new Float32Array([\r\n        -0.5,  0.5, 0.0, 1.0,\r\n        -0.5, -0.5, 0.0, 0.0,\r\n        0.5,  0.5, 1.0, 1.0,\r\n        0.5, -0.5, 1.0, 0.0,\r\n    ])\r\n\r\n    const buffer = gl.createBuffer();\r\n    const BYTES = points.BYTES_PER_ELEMENT;\r\n\r\n    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);\r\n\r\n    gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);\r\n\r\n    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, BYTES * 4, 0);\r\n\r\n    gl.enableVertexAttribArray(aPosition)\r\n\r\n    gl.vertexAttribPointer(aTex, 2, gl.FLOAT, false, BYTES * 4, BYTES * 2);\r\n\r\n    gl.enableVertexAttribArray(aTex)\r\n\r\n    const img = new Image();\r\n    img.src = '../../assets/content.png';\r\n    img.onload = function() {\r\n        // 创建纹理对象\r\n        const texture = gl.createTexture(); // 创建纹理对象\r\n        // gl.deletTexture(textrue); // 删除纹理对象的方式\r\n\r\n        // 翻转 图片 Y轴\r\n        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1)\r\n\r\n        // 激活0号纹理单元 Webgl 是通过纹理单元来管理纹理对象，每个纹理单元管理⼀张纹理图像。\r\n        gl.activeTexture(gl.TEXTURE0);\r\n\r\n        /**\r\n         * 绑定纹理对象\r\n         * @param { gl.TEXTURE_2D | gl.TEXTURE_CUBE_MAP } type \r\n         * @param { Texture } texture\r\n         **/ \r\n        gl.bindTexture(gl.TEXTURE_2D, texture);\r\n\r\n        /**\r\n         * 处理放大缩小的逻辑\r\n         * @param { gl.TEXTURE_2D | gl.TEXTURE_CUBE_MAP } type \r\n         * @param {\r\n         *   gl.TEXTURE_MAG_FILTER 放⼤\r\n         *  |gl.TEXTURE_MIN_FILTER 缩⼩\r\n         *  |gl.TEXTURE_WRAP_S 横向（⽔平填充）\r\n         *  |gl.TEXTURE_WRAP_T 纵向（垂直填充）\r\n         * } pname\r\n         * @param {\r\n         *  gl.NEAREST 使用像素颜色值\r\n         * |gl.LINEAR 使用四周的加权平均值\r\n         * |gl.REPEAT 平铺重复\r\n         * |gl.MIRRORED_REPEAT 镜像对称\r\n         * |gl.CLAMP_TO_EDGE 边缘延伸\r\n         * }\r\n         **/ \r\n        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)\r\n        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)\r\n\r\n        // 横向 纵向 平铺的方式\r\n        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)\r\n        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)\r\n\r\n        /**\r\n         * 配置纹理图像\r\n         * @param { gl.TEXTURE_2D | gl.TEXTURE_CUBE_MAP } type\r\n         * @param { 0 } level\r\n         * @param {\r\n         *  gl.RGB\r\n         * |gl.RGBA\r\n         * |gl.ALPHA\r\n         * |gl.LUMINANCE 使用物体表面的 红绿蓝 分量的加权平均值来计算\r\n         * |gl.LUMINANCE_ALPHA\r\n         * } internalformat\r\n         * @param { 同internalformat } format\r\n         * @param {\r\n         *  gl.UNSIGNED_BYTE\r\n         * |gl.UNSIGNED_SHORT_5_6_5\r\n         * |gl.UNSIGNED_SHORT_4_4_4_4\r\n         * |gl.UNSIGNED_SHORT_5_5_5_1\r\n         * } dataType\r\n         * @param { Image } 图片对象\r\n         */\r\n        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img);\r\n\r\n        gl.uniform1i(uSampler, 0);\r\n\r\n        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);\r\n    }\r\n\r\n\r\n`;\r\nconst html = /*html*/ `\r\n<canvas id=\"${canvas_id}\" width=\"400\" height=\"400\">\r\n    此浏览器不支持canvas\r\n</canvas>\r\n<script>\r\n    { // 限制变量定义域\r\n        ${js}\r\n    }\r\n</script>\r\n`;\r\ndisplay.html(html);\r\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/html",
+                            "value": [
+                                "<style> table, th, tr { text-align: left; }</style>",
+                                "<canvas id=\"57205430-ad66-11ee-bcd9-efc65121a518\" width=\"400\" height=\"400\">",
+                                "    此浏览器不支持canvas",
+                                "</canvas>",
+                                "<script>",
+                                "    { // 限制变量定义域",
+                                "        ",
+                                "    const ctx = document.getElementById('57205430-ad66-11ee-bcd9-efc65121a518');",
+                                "    const gl = ctx.getContext('webgl');",
+                                "",
+                                "    const program = initShader(gl, \"\\n    // 只传递顶点数据\\n    attribute vec4 aPosition;\\n\\n    attribute vec4 aTex;\\n\\n    varying vec2 vTex;\\n\\n    void main() {\\n        gl_Position = aPosition; // vec4(0.0,0.0,0.0,1.0)\\n        vTex = vec2(aTex.x, aTex.y);\\n    }\\n\", \"\\n    precision lowp float;\\n    uniform sampler2D uSampler;\\n    varying vec2 vTex;\\n\\n    void main() {\\n        gl_FragColor = texture2D(uSampler, vTex);\\n    }\\n\");",
+                                "",
+                                "    const aPosition = gl.getAttribLocation(program, 'aPosition');",
+                                "    const aTex = gl.getAttribLocation(program, 'aTex');",
+                                "    const uSampler = gl.getUniformLocation(program, 'uSampler');",
+                                "",
+                                "    const points = new Float32Array([",
+                                "        -0.5,  0.5, 0.0, 1.0,",
+                                "        -0.5, -0.5, 0.0, 0.0,",
+                                "        0.5,  0.5, 1.0, 1.0,",
+                                "        0.5, -0.5, 1.0, 0.0,",
+                                "    ])",
+                                "",
+                                "    const buffer = gl.createBuffer();",
+                                "    const BYTES = points.BYTES_PER_ELEMENT;",
+                                "",
+                                "    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);",
+                                "",
+                                "    gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);",
+                                "",
+                                "    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, BYTES * 4, 0);",
+                                "",
+                                "    gl.enableVertexAttribArray(aPosition)",
+                                "",
+                                "    gl.vertexAttribPointer(aTex, 2, gl.FLOAT, false, BYTES * 4, BYTES * 2);",
+                                "",
+                                "    gl.enableVertexAttribArray(aTex)",
+                                "",
+                                "    const img = new Image();",
+                                "    img.src = '../../assets/content.png';",
+                                "    img.onload = function() {",
+                                "        // 创建纹理对象",
+                                "        const texture = gl.createTexture();",
+                                "",
+                                "        // 翻转 图片 Y轴",
+                                "        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1)",
+                                "",
+                                "        // 开启一个纹理单元",
+                                "        gl.activeTexture(gl.TEXTURE0);",
+                                "",
+                                "        // 绑定纹理对象",
+                                "        gl.bindTexture(gl.TEXTURE_2D, texture);",
+                                "",
+                                "        // 处理放大缩小的逻辑",
+                                "        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)",
+                                "        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)",
+                                "",
+                                "        // 横向 纵向 平铺的方式",
+                                "        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)",
+                                "        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)",
+                                "",
+                                "        // 配置纹理图像",
+                                "        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img);",
+                                "",
+                                "        gl.uniform1i(uSampler, 0);",
+                                "",
+                                "        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);",
+                                "    }",
+                                "",
+                                "",
+                                "",
+                                "    }",
+                                "</script>",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "需要进行 Y 轴翻转的原因如图\r\n![Alt text](image-25.png)\r\n"
             ],
             "outputs": []
         }
