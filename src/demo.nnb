@@ -1,0 +1,52 @@
+{
+    "cells": [
+        {
+            "language": "typescript",
+            "source": [
+                "const { renderIframe } = require(\"./display.js\");\r\n\r\nrenderIframe(\r\n  /*html*/ `\r\n        <head></head>\r\n        <body>\r\n            <h1> JavaScript 666</h1>\r\n            <p >这是一个段落</p>\r\n            <button type=\"button\" onclick=\"displayDate()\">显示日期</button>\r\n        </body>\r\n    `,\r\n  /*js*/ `\r\n        function displayDate(){\r\n            document.getElementById(\"demo\").innerHTML= new Date();\r\n        }\r\n    `\r\n);\r\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/html",
+                            "value": [
+                                "<style> table, th, tr { text-align: left; }</style>",
+                                "        <iframe id=\"iframe\" srcdoc=\"",
+                                "        <head></head>",
+                                "        <body>",
+                                "            <h1> JavaScript 666</h1>",
+                                "            <p >这是一个段落</p>",
+                                "            <button type=\"button\" onclick=\"displayDate()\">显示日期</button>",
+                                "        </body>",
+                                "    \"></iframe>",
+                                "        <script>",
+                                "            const iframe = document.getElementById('iframe');",
+                                "            const script = iframe.contentDocument.createElement('script');",
+                                "            script.text = \"",
+                                "        function displayDate(){",
+                                "            document.getElementById(\"demo\").innerHTML= new Date();",
+                                "        }",
+                                "    \";",
+                                "            iframe.contentDocument.head.appendChild(script);",
+                                "        </script>",
+                                "    "
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
