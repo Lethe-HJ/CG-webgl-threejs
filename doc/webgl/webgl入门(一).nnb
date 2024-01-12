@@ -33,13 +33,13 @@
                             "mime": "text/html",
                             "value": [
                                 "<style> table, th, tr { text-align: left; }</style>",
-                                "        <canvas id=\"5c16a450-af7b-11ee-a931-3b583e6a9bd5\" width=\"400\" height=\"400\">",
+                                "        <canvas id=\"326f2c40-b10a-11ee-89c2-59d78a86c420\" width=\"400\" height=\"400\" style=\"border:1px solid grey\">",
                                 "            此浏览器不支持canvas",
                                 "        </canvas>",
                                 "        <script>",
                                 "            { // 限制变量定义域",
                                 "                ",
-                                "        const ctx = document.getElementById('5c16a450-af7b-11ee-a931-3b583e6a9bd5');",
+                                "        const ctx = document.getElementById('326f2c40-b10a-11ee-89c2-59d78a86c420');",
                                 "        const gl = ctx.getContext('webgl');",
                                 "        const vertexShader = gl.createShader(gl.VERTEX_SHADER);",
                                 "        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);",
@@ -118,13 +118,13 @@
                             "mime": "text/html",
                             "value": [
                                 "<style> table, th, tr { text-align: left; }</style>",
-                                "        <canvas id=\"46ee13b0-af7b-11ee-a931-3b583e6a9bd5\" width=\"400\" height=\"400\">",
+                                "        <canvas id=\"2e51b4c0-b10a-11ee-89c2-59d78a86c420\" width=\"400\" height=\"400\" style=\"border:1px solid grey\">",
                                 "            此浏览器不支持canvas",
                                 "        </canvas>",
                                 "        <script>",
                                 "            { // 限制变量定义域",
                                 "                ",
-                                "        const ctx = document.getElementById('46ee13b0-af7b-11ee-a931-3b583e6a9bd5');",
+                                "        const ctx = document.getElementById('2e51b4c0-b10a-11ee-89c2-59d78a86c420');",
                                 "        const gl = ctx.getContext('webgl');",
                                 "        const vertexShader = gl.createShader(gl.VERTEX_SHADER);",
                                 "        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);",
@@ -202,13 +202,13 @@
                             "mime": "text/html",
                             "value": [
                                 "<style> table, th, tr { text-align: left; }</style>",
-                                "        <canvas id=\"125fa3c0-af7b-11ee-a931-3b583e6a9bd5\" width=\"400\" height=\"400\">",
+                                "        <canvas id=\"296cf5a0-b10a-11ee-89c2-59d78a86c420\" width=\"400\" height=\"400\" style=\"border:1px solid grey\">",
                                 "            此浏览器不支持canvas",
                                 "        </canvas>",
                                 "        <script>",
                                 "            { // 限制变量定义域",
                                 "                ",
-                                "        const ctx = document.getElementById('125fa3c0-af7b-11ee-a931-3b583e6a9bd5');",
+                                "        const ctx = document.getElementById('296cf5a0-b10a-11ee-89c2-59d78a86c420');",
                                 "        const gl = ctx.getContext('webgl');",
                                 "        const vertexShader = gl.createShader(gl.VERTEX_SHADER);",
                                 "        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);",
@@ -313,13 +313,13 @@
                             "mime": "text/html",
                             "value": [
                                 "<style> table, th, tr { text-align: left; }</style>",
-                                "        <canvas id=\"ca1b9420-af7a-11ee-a931-3b583e6a9bd5\" width=\"400\" height=\"400\">",
+                                "        <canvas id=\"3841a6c0-b10a-11ee-89c2-59d78a86c420\" width=\"400\" height=\"400\" style=\"border:1px solid grey\">",
                                 "            此浏览器不支持canvas",
                                 "        </canvas>",
                                 "        <script>",
                                 "            { // 限制变量定义域",
                                 "                ",
-                                "        const ctx = document.getElementById('ca1b9420-af7a-11ee-a931-3b583e6a9bd5');",
+                                "        const ctx = document.getElementById('3841a6c0-b10a-11ee-89c2-59d78a86c420');",
                                 "        const gl = ctx.getContext('webgl');",
                                 "        const vertexShader = gl.createShader(gl.VERTEX_SHADER);",
                                 "        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);",
@@ -416,13 +416,13 @@
                             "mime": "text/html",
                             "value": [
                                 "<style> table, th, tr { text-align: left; }</style>",
-                                "        <canvas id=\"7202ef90-af7a-11ee-a931-3b583e6a9bd5\" width=\"400\" height=\"400\">",
+                                "        <canvas id=\"3b049750-b10a-11ee-89c2-59d78a86c420\" width=\"400\" height=\"400\" style=\"border:1px solid grey\">",
                                 "            此浏览器不支持canvas",
                                 "        </canvas>",
                                 "        <script>",
                                 "            { // 限制变量定义域",
                                 "                ",
-                                "        const ctx = document.getElementById('7202ef90-af7a-11ee-a931-3b583e6a9bd5');",
+                                "        const ctx = document.getElementById('3b049750-b10a-11ee-89c2-59d78a86c420');",
                                 "        const gl = ctx.getContext('webgl');",
                                 "        const vertexShader = gl.createShader(gl.VERTEX_SHADER);",
                                 "        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);",
@@ -517,13 +517,13 @@
                             "mime": "text/html",
                             "value": [
                                 "<style> table, th, tr { text-align: left; }</style>",
-                                "        <canvas id=\"61266080-af7a-11ee-a931-3b583e6a9bd5\" width=\"400\" height=\"400\">",
+                                "        <canvas id=\"3ea7d5c0-b10a-11ee-89c2-59d78a86c420\" width=\"400\" height=\"400\" style=\"border:1px solid grey\">",
                                 "            此浏览器不支持canvas",
                                 "        </canvas>",
                                 "        <script>",
                                 "            { // 限制变量定义域",
                                 "                ",
-                                "        const ctx = document.getElementById('61266080-af7a-11ee-a931-3b583e6a9bd5');",
+                                "        const ctx = document.getElementById('3ea7d5c0-b10a-11ee-89c2-59d78a86c420');",
                                 "        const gl = ctx.getContext('webgl');",
                                 "        const vertexShader = gl.createShader(gl.VERTEX_SHADER);",
                                 "        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);",
@@ -605,7 +605,7 @@
         {
             "language": "markdown",
             "source": [
-                "平移矩阵的推导过程\r\n\r\n![矩阵平移](image-16.png)\r\n\r\n首先，定义平移变换的基本公式为：\r\n\r\n$ x' = x + x_1 $\r\n\r\n$ y' = y + y_1 $\r\n\r\n$ z' = z + z_1 $\r\n\r\n$ w = 1 $\r\n\r\n这里 $ w $ 是齐次坐标的一部分，使得变换可以用矩阵乘法表示。\r\n\r\n接着，我们将这些变换映射到齐次坐标系中的矩阵变换中：\r\n\r\n$\r\n\\begin{bmatrix}\r\nx \\\\\r\ny \\\\\r\nz \\\\\r\nw\r\n\\end{bmatrix}\r\n$ \\*\r\n$\r\n\\begin{bmatrix}\r\na & b & c & d \\\\\r\ne & f & g & h \\\\\r\ni & j & k & l \\\\\r\nm & n & o & p\r\n\\end{bmatrix}\r\n$ =\r\n$\r\n\\begin{bmatrix}\r\nx' \\\\\r\ny' \\\\\r\nz' \\\\\r\nw'\r\n\\end{bmatrix}\r\n$\r\n\r\n$ ax + by + cz + dw = x' $\r\n\r\n$ ex + fy + gz + hw = y' $\r\n\r\n$ ix + jy + kz + lw = z' $\r\n\r\n$ mx + ny + oz + pw = w' $\r\n\r\n通过代入 $ x', y', z', w $ 的定义，我们可以解出矩阵的各个元素：\r\n\r\n1. 代入 $ x' = x + x_1 $ 到 $ ax + by + cz + dw = x' $ 得到 $ a = 1, b = 0, c = 0, d = x_1 $。\r\n2. 代入 $ y' = y + y_1 $ 到 $ ex + fy + gz + hw = y' $ 得到 $ e = 0, f = 1, g = 0, h = y_1 $。\r\n3. 代入 $ z' = z + z_1 $ 到 $ ix + jy + kz + lw = z' $ 得到 $ i = 0, j = 0, k = 1, l = z_1 $。\r\n4. 由于 $ w $ 始终为 1，所以 $ mx + ny + oz + pw = w' $ 得到 $ 0x + 0y + 0z + 1w = 1 $。\r\n\r\n因此，整个平移变换的齐次坐标矩阵是：\r\n\r\n$\r\n\\begin{pmatrix}\r\n1 & 0 & 0 & x_1 \\\\\r\n0 & 1 & 0 & y_1 \\\\\r\n0 & 0 & 1 & z_1 \\\\\r\n0 & 0 & 0 & 1\r\n\\end{pmatrix}\r\n$\r\n\r\n在数学中矩阵的表示是行主序的 就如上面得到的矩阵一样\r\n\r\n但是在 webgl 中因为一些历史问题需要换成列主序\r\n\r\n行主序换成列主序 具体做法是交换矩阵的行和列 即矩阵转置\r\n\r\n转置后的列主序矩阵如下\r\n\r\n$\r\n\\begin{pmatrix}\r\n1 & 0 & 0 & 0 \\\\\r\n0 & 1 & 0 & 0 \\\\\r\n0 & 0 & 1 & 0 \\\\\r\nx_1 & y_1 & z_1 & 1\r\n\\end{pmatrix}\r\n$\r\n\r\n转换成 js 代码如下\r\n\r\n```js\r\nfunction getTranslateMatrix(x = 0, y = 0, z = 0) {\r\n  return new Float32Array([\r\n    1.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    1.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    1.0,\r\n    0.0,\r\n    x,\r\n    y,\r\n    z,\r\n    1,\r\n  ]);\r\n}\r\n```\r\n"
+                "平移矩阵的推导过程\r\n\r\n![矩阵平移](image-16.png)\r\n\r\n首先，定义平移变换的基本公式为：\r\n\r\n$ x' = x + x_1 $\r\n\r\n$ y' = y + y_1 $\r\n\r\n$ z' = z + z_1 $\r\n\r\n$ w = 1 $\r\n\r\n这里 $ w $ 是齐次坐标的一部分，使得变换可以用矩阵乘法表示。\r\n\r\n接着，我们将这些变换映射到齐次坐标系中的矩阵变换中：\r\n\r\n$\r\n\\begin{bmatrix}\r\nx \\\\\r\ny \\\\\r\nz \\\\\r\nw\r\n\\end{bmatrix}\r\n$ *\r\n$\r\n\\begin{bmatrix}\r\na & b & c & d \\\\\r\ne & f & g & h \\\\\r\ni & j & k & l \\\\\r\nm & n & o & p\r\n\\end{bmatrix}\r\n$ =\r\n$\r\n\\begin{bmatrix}\r\nx' \\\\\r\ny' \\\\\r\nz' \\\\\r\nw'\r\n\\end{bmatrix}\r\n$\r\n\r\n$ ax + by + cz + dw = x' $\r\n\r\n$ ex + fy + gz + hw = y' $\r\n\r\n$ ix + jy + kz + lw = z' $\r\n\r\n$ mx + ny + oz + pw = w' $\r\n\r\n通过代入 $ x', y', z', w $ 的定义，我们可以解出矩阵的各个元素：\r\n\r\n1. 代入 $ x' = x + x_1 $ 到 $ ax + by + cz + dw = x' $ 得到 $ a = 1, b = 0, c = 0, d = x_1 $。\r\n2. 代入 $ y' = y + y_1 $ 到 $ ex + fy + gz + hw = y' $ 得到 $ e = 0, f = 1, g = 0, h = y_1 $。\r\n3. 代入 $ z' = z + z_1 $ 到 $ ix + jy + kz + lw = z' $ 得到 $ i = 0, j = 0, k = 1, l = z_1 $。\r\n4. 由于 $ w $ 始终为 1，所以 $ mx + ny + oz + pw = w' $ 得到 $ 0x + 0y + 0z + 1w = 1 $。\r\n\r\n因此，整个平移变换的齐次坐标矩阵是：\r\n\r\n$\r\n\\begin{pmatrix}\r\n1 & 0 & 0 & x_1 \\\\\r\n0 & 1 & 0 & y_1 \\\\\r\n0 & 0 & 1 & z_1 \\\\\r\n0 & 0 & 0 & 1\r\n\\end{pmatrix}\r\n$\r\n\r\n在数学中矩阵的表示是行主序的 就如上面得到的矩阵一样\r\n\r\n但是在 webgl 中因为一些历史问题需要换成列主序\r\n\r\n行主序换成列主序 具体做法是交换矩阵的行和列 即矩阵转置\r\n\r\n转置后的列主序矩阵如下\r\n\r\n$\r\n\\begin{pmatrix}\r\n1 & 0 & 0 & 0 \\\\\r\n0 & 1 & 0 & 0 \\\\\r\n0 & 0 & 1 & 0 \\\\\r\nx_1 & y_1 & z_1 & 1\r\n\\end{pmatrix}\r\n$\r\n\r\n转换成 js 代码如下\r\n\r\n```js\r\nfunction getTranslateMatrix(x = 0, y = 0, z = 0) {\r\n  return new Float32Array([\r\n    1.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    1.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    1.0,\r\n    0.0,\r\n    x,\r\n    y,\r\n    z,\r\n    1,\r\n  ]);\r\n}\r\n```\r\n"
             ],
             "outputs": []
         },
@@ -619,9 +619,110 @@
         {
             "language": "javascript",
             "source": [
-                "const { display } = require(\"node-kernel\");\r\nconst { v1: uuidv1 } = require(\"uuid\");\r\nconst canvas_id = uuidv1();\r\n// 着色器\r\n// 创建着色器源码\r\nconst vertex_code = /*glsl */ `\r\n    attribute vec4 aPosition;\r\n    uniform mat4 mat;\r\n    void main() {\r\n      gl_Position = mat * aPosition;\r\n      gl_PointSize = 10.0;\r\n    }\r\n`;\r\n\r\nconst fragment_code = /*glsl */ `\r\n    void main() {\r\n      gl_FragColor = vec4(1.0,0.0,0.0,1.0);\r\n    }\r\n`;\r\n\r\nconst js_code = /*js*/ `\r\n    const ctx = document.getElementById('${canvas_id}');\r\n    const gl = ctx.getContext('webgl');\r\n\r\n    const program = initShader(gl, \"${vertex_code}\", \"${fragment_code}\");\r\n\r\n    const aPosition = gl.getAttribLocation(program, 'aPosition');\r\n    const mat = gl.getUniformLocation(program, 'mat');\r\n  \r\n    const points = new Float32Array([\r\n    -0.5, -0.5,\r\n    0.5, -0.5,\r\n    0.0,  0.5,\r\n    ])\r\n  \r\n    const buffer = gl.createBuffer();\r\n  \r\n    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);\r\n  \r\n    gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);\r\n  \r\n    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);\r\n  \r\n    gl.enableVertexAttribArray(aPosition)\r\n  \r\n    let x = -1;\r\n    function animation() {\r\n    x += 0.01;\r\n    if (x > 1) {\r\n      x = -1;\r\n    }\r\n  \r\n    const matrix = getTranslateMatrix(x, x);\r\n    gl.uniformMatrix4fv(mat, false, matrix);\r\n    gl.drawArrays(gl.TRIANGLES, 0, 3);\r\n  \r\n    requestAnimationFrame(animation);\r\n    }\r\n  \r\n    animation();\r\n`;\r\nconst html = /*html*/ `\r\n    <canvas id=\"${canvas_id}\" width=\"400\" height=\"400\">\r\n    此浏览器不支持canvas\r\n    </canvas>\r\n    <script>\r\n      // 平移矩阵\r\n      function getTranslateMatrix(x = 0,y = 0,z = 0) {\r\n        return new Float32Array([\r\n          1.0,0.0,0.0,0.0,\r\n          0.0,1.0,0.0,0.0,\r\n          0.0,0.0,1.0,0.0,\r\n            x,  y,  z,  1,\r\n        ])\r\n      } \r\n      { // 限制变量定义域\r\n        ${js}\r\n      }\r\n    </script>\r\n`;\r\ndisplay.html(html);\r\n"
+                "const vertex_code = /*glsl */ `\r\n  attribute vec4 aPosition;\r\n  uniform mat4 mat;\r\n  void main() {\r\n    gl_Position = mat * aPosition;\r\n    gl_PointSize = 10.0;\r\n  }\r\n`;\r\n\r\nconst fragment_code = /*glsl */ `\r\n  void main() {\r\n    gl_FragColor = vec4(1.0,0.0,0.0,1.0);\r\n  }\r\n`;\r\n\r\nconst js_code = /*js*/ `\r\n  const aPosition = gl.getAttribLocation(program, 'aPosition');\r\n  const mat = gl.getUniformLocation(program, 'mat');\r\n\r\n  const points = new Float32Array([\r\n    -0.5, -0.5,\r\n    0.5, -0.5,\r\n    0.0,  0.5,\r\n  ])\r\n\r\n  const buffer = gl.createBuffer();\r\n\r\n  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);\r\n\r\n  gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);\r\n\r\n  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);\r\n\r\n  gl.enableVertexAttribArray(aPosition)\r\n\r\n  let x = -1;\r\n  function animation() {\r\n    x += 0.01;\r\n    if (x > 1) {\r\n      x = -1;\r\n    }\r\n\r\n    const matrix = getTranslateMatrix(x, x);\r\n    gl.uniformMatrix4fv(mat, false, matrix);\r\n    gl.drawArrays(gl.TRIANGLES, 0, 3);\r\n  \r\n    requestAnimationFrame(animation);\r\n  }\r\n  animation();\r\n`;\r\nconst { renderWebgl, declareFunction } = require(\"../../src/display.js\");\r\ndeclareFunction(/*js */ `\r\n      // 平移矩阵\r\n      function getTranslateMatrix(x = 0,y = 0,z = 0) {\r\n        return new Float32Array([\r\n          1.0,0.0,0.0,0.0,\r\n          0.0,1.0,0.0,0.0,\r\n          0.0,0.0,1.0,0.0,\r\n            x,  y,  z,  1,\r\n        ])\r\n      }\r\n`);\r\nrenderWebgl(vertex_code, fragment_code, js_code);\r\n"
             ],
-            "outputs": []
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/html",
+                            "value": [
+                                "<style> table, th, tr { text-align: left; }</style>",
+                                "        <script>",
+                                "            ",
+                                "      // 平移矩阵",
+                                "      function getTranslateMatrix(x = 0,y = 0,z = 0) {",
+                                "        return new Float32Array([",
+                                "          1.0,0.0,0.0,0.0,",
+                                "          0.0,1.0,0.0,0.0,",
+                                "          0.0,0.0,1.0,0.0,",
+                                "            x,  y,  z,  1,",
+                                "        ])",
+                                "      }",
+                                "",
+                                "        </script>",
+                                "    ",
+                                "        <canvas id=\"9377e990-b10b-11ee-a80e-0926303e1540\" width=\"400\" height=\"400\" style=\"border:1px solid grey\">",
+                                "            此浏览器不支持canvas",
+                                "        </canvas>",
+                                "        <script>",
+                                "            { // 限制变量定义域",
+                                "                ",
+                                "        const ctx = document.getElementById('9377e990-b10b-11ee-a80e-0926303e1540');",
+                                "        const gl = ctx.getContext('webgl');",
+                                "        const vertexShader = gl.createShader(gl.VERTEX_SHADER);",
+                                "        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);",
+                                "    ",
+                                "        gl.shaderSource(vertexShader,  \"\\n  attribute vec4 aPosition;\\n  uniform mat4 mat;\\n  void main() {\\n    gl_Position = mat * aPosition;\\n    gl_PointSize = 10.0;\\n  }\\n\"); // 指定顶点着色器的源码",
+                                "        gl.shaderSource(fragmentShader,  \"\\n  void main() {\\n    gl_FragColor = vec4(1.0,0.0,0.0,1.0);\\n  }\\n\"); // 指定片元着色器的源码",
+                                "    ",
+                                "        // 编译着色器",
+                                "        gl.compileShader(vertexShader);",
+                                "        gl.compileShader(fragmentShader);",
+                                "    ",
+                                "        // 创建一个程序对象",
+                                "        const program = gl.createProgram();",
+                                "    ",
+                                "        gl.attachShader(program, vertexShader);",
+                                "        gl.attachShader(program, fragmentShader);",
+                                "    ",
+                                "        gl.linkProgram(program);",
+                                "    ",
+                                "        gl.useProgram(program);",
+                                "    ",
+                                "  const aPosition = gl.getAttribLocation(program, 'aPosition');",
+                                "  const mat = gl.getUniformLocation(program, 'mat');",
+                                "",
+                                "  const points = new Float32Array([",
+                                "    -0.5, -0.5,",
+                                "    0.5, -0.5,",
+                                "    0.0,  0.5,",
+                                "  ])",
+                                "",
+                                "  const buffer = gl.createBuffer();",
+                                "",
+                                "  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);",
+                                "",
+                                "  gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);",
+                                "",
+                                "  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);",
+                                "",
+                                "  gl.enableVertexAttribArray(aPosition)",
+                                "",
+                                "  let x = -1;",
+                                "  function animation() {",
+                                "    x += 0.01;",
+                                "    if (x > 1) {",
+                                "      x = -1;",
+                                "    }",
+                                "",
+                                "    const matrix = getTranslateMatrix(x, x);",
+                                "    gl.uniformMatrix4fv(mat, false, matrix);",
+                                "    gl.drawArrays(gl.TRIANGLES, 0, 3);",
+                                "  ",
+                                "    requestAnimationFrame(animation);",
+                                "  }",
+                                "  animation();",
+                                "",
+                                "            }",
+                                "        </script>",
+                                "    "
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
         },
         {
             "language": "markdown",
@@ -633,7 +734,7 @@
         {
             "language": "markdown",
             "source": [
-                "缩放矩阵推导过程\r\n\r\n![Alt text](image-19.png)\r\n\r\n首先，定义平移变换的基本公式为：\r\n\r\n$ x' = Tx \\* x $\r\n\r\n$ y' = Ty \\* y $\r\n\r\n$ z' = Tz \\* z $\r\n\r\n$ w = 1 $\r\n\r\n这里 $ w $ 是齐次坐标的一部分，使得变换可以用矩阵乘法表示。\r\n\r\n接着，我们将这些变换映射到齐次坐标系中的矩阵变换中：\r\n\r\n$\r\n\\begin{bmatrix}\r\nx \\\\\r\ny \\\\\r\nz \\\\\r\nw\r\n\\end{bmatrix}\r\n$ \\*\r\n$\r\n\\begin{bmatrix}\r\na & b & c & d \\\\\r\ne & f & g & h \\\\\r\ni & j & k & l \\\\\r\nm & n & o & p\r\n\\end{bmatrix}\r\n$ =\r\n$\r\n\\begin{bmatrix}\r\nx' \\\\\r\ny' \\\\\r\nz' \\\\\r\nw'\r\n\\end{bmatrix}\r\n$\r\n\r\n$ ax + by + cz + dw = x' $\r\n\r\n$ ex + fy + gz + hw = y' $\r\n\r\n$ ix + jy + kz + lw = z' $\r\n\r\n$ mx + ny + oz + pw = w' $\r\n\r\n通过代入 $ x', y', z', w $ 的定义，我们可以解出矩阵的各个元素：\r\n\r\n1. 代入 $ x' = Tx \\* x $ 到 $ ax + by + cz + dw = x' $ 得到 $ a = Tx, b = 0, c = 0, d = 0 $。\r\n2. 代入 $ y' = Ty \\* y $ 到 $ ex + fy + gz + hw = y' $ 得到 $ e = 0, f = Ty, g = 0, h = 0 $。\r\n3. 代入 $ z' = Tz \\* z $ 到 $ ix + jy + kz + lw = z' $ 得到 $ i = 0, j = 0, k = Tz, l = 0 $。\r\n4. 由于 $ w $ 始终为 1, 故 $ mx + ny + oz + pw = w' $ 得到 $ p = 1 $。\r\n\r\n因此，整个平移变换的齐次坐标矩阵是：\r\n\r\n$\r\n\\begin{pmatrix}\r\nTx & 0 & 0 & x_1 \\\\\r\n0 & Ty & 0 & y_1 \\\\\r\n0 & 0 & Tz & z_1 \\\\\r\n0 & 0 & 0 & 1\r\n\\end{pmatrix}\r\n$\r\n\r\n这是一个对称矩阵 列主序与行主序一致\r\n\r\n转换成 js 代码如下\r\n\r\n```js\r\nfunction getScaleMatrix(tx = 1, ty = 1, tz = 1) {\r\n  return new Float32Array([\r\n    tx,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    ty,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    tz,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    1,\r\n  ]);\r\n}\r\n```\r\n"
+                "缩放矩阵推导过程\r\n\r\n![Alt text](image-19.png)\r\n\r\n首先，定义平移变换的基本公式为：\r\n\r\n$ x' = Tx * x $\r\n\r\n$ y' = Ty * y $\r\n\r\n$ z' = Tz * z $\r\n\r\n$ w = 1 $\r\n\r\n这里 $ w $ 是齐次坐标的一部分，使得变换可以用矩阵乘法表示。\r\n\r\n接着，我们将这些变换映射到齐次坐标系中的矩阵变换中：\r\n\r\n$\r\n\\begin{bmatrix}\r\nx \\\\\r\ny \\\\\r\nz \\\\\r\nw\r\n\\end{bmatrix}\r\n$ *\r\n$\r\n\\begin{bmatrix}\r\na & b & c & d \\\\\r\ne & f & g & h \\\\\r\ni & j & k & l \\\\\r\nm & n & o & p\r\n\\end{bmatrix}\r\n$ =\r\n$\r\n\\begin{bmatrix}\r\nx' \\\\\r\ny' \\\\\r\nz' \\\\\r\nw'\r\n\\end{bmatrix}\r\n$\r\n\r\n$ ax + by + cz + dw = x' $\r\n\r\n$ ex + fy + gz + hw = y' $\r\n\r\n$ ix + jy + kz + lw = z' $\r\n\r\n$ mx + ny + oz + pw = w' $\r\n\r\n通过代入 $ x', y', z', w $ 的定义，我们可以解出矩阵的各个元素：\r\n\r\n1. 代入 $ x' = Tx * x $ 到 $ ax + by + cz + dw = x' $ 得到 $ a = Tx, b = 0, c = 0, d = 0 $。\r\n2. 代入 $ y' = Ty * y $ 到 $ ex + fy + gz + hw = y' $ 得到 $ e = 0, f = Ty, g = 0, h = 0 $。\r\n3. 代入 $ z' = Tz * z $ 到 $ ix + jy + kz + lw = z' $ 得到 $ i = 0, j = 0, k = Tz, l = 0 $。\r\n4. 由于 $ w $ 始终为 1, 故 $ mx + ny + oz + pw = w' $ 得到 $ p = 1 $。\r\n\r\n因此，整个平移变换的齐次坐标矩阵是：\r\n\r\n$\r\n\\begin{pmatrix}\r\nTx & 0 & 0 & x_1 \\\\\r\n0 & Ty & 0 & y_1 \\\\\r\n0 & 0 & Tz & z_1 \\\\\r\n0 & 0 & 0 & 1\r\n\\end{pmatrix}\r\n$\r\n\r\n这是一个对称矩阵 列主序与行主序一致\r\n"
             ],
             "outputs": []
         },
@@ -649,12 +750,115 @@
             "source": [
                 "// 着色器\r\n// 创建着色器源码\r\nconst vertex_code = /*glsl */ `\r\n    attribute vec4 aPosition;\r\n    uniform mat4 mat;\r\n    void main() {\r\n      gl_Position = mat * aPosition;\r\n      gl_PointSize = 10.0;\r\n    }\r\n`;\r\n\r\nconst fragment_code = /*glsl */ `\r\n    void main() {\r\n      gl_FragColor = vec4(1.0,0.0,0.0,1.0);\r\n    }\r\n`;\r\n\r\nconst js_code = /*js*/ `\r\n    const aPosition = gl.getAttribLocation(program, 'aPosition');\r\n    const mat = gl.getUniformLocation(program, 'mat');\r\n  \r\n    const points = new Float32Array([\r\n      -0.5, -0.5,\r\n      0.5, -0.5,\r\n      0.0,  0.5,\r\n    ])\r\n  \r\n    const buffer = gl.createBuffer();\r\n  \r\n    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);\r\n  \r\n    gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);\r\n  \r\n    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);\r\n  \r\n    gl.enableVertexAttribArray(aPosition)\r\n  \r\n    let x = 0.1;\r\n    function animation() {\r\n        x += 0.01;\r\n        if (x > 1.5) {\r\n            x = 0.1;\r\n        }\r\n    \r\n        const matrix = getScaleMatrix(x, x);\r\n        // 参数 location transpose array\r\n        gl.uniformMatrix4fv(mat, false, matrix);\r\n        gl.drawArrays(gl.TRIANGLES, 0, 3);\r\n    \r\n        requestAnimationFrame(animation);\r\n    }\r\n  \r\n    animation();\r\n`;\r\nconst { renderWebgl, declareFunction } = require(\"../../src/display.js\");\r\ndeclareFunction(/*js */ `\r\n    // 缩放矩阵\r\n    function getScaleMatrix(tx = 1, ty = 1, tz = 1) {\r\n        return new Float32Array([\r\n            tx, 0.0, 0.0, 0.0,\r\n            0.0, ty, 0.0, 0.0,\r\n            0.0, 0.0, tz, 0.0,\r\n            0.0, 0.0, 0.0, 1,\r\n        ])\r\n    }\r\n`);\r\nrenderWebgl(vertex_code, fragment_code, js_code);\r\n"
             ],
-            "outputs": []
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/html",
+                            "value": [
+                                "<style> table, th, tr { text-align: left; }</style>",
+                                "        <script>",
+                                "            ",
+                                "    // 缩放矩阵",
+                                "    function getScaleMatrix(tx = 1, ty = 1, tz = 1) {",
+                                "        return new Float32Array([",
+                                "            tx, 0.0, 0.0, 0.0,",
+                                "            0.0, ty, 0.0, 0.0,",
+                                "            0.0, 0.0, tz, 0.0,",
+                                "            0.0, 0.0, 0.0, 1,",
+                                "        ])",
+                                "    }",
+                                "",
+                                "        </script>",
+                                "    ",
+                                "        <canvas id=\"24011a40-b10c-11ee-b5c4-f3694e49a98a\" width=\"400\" height=\"400\" style=\"border:1px solid grey\">",
+                                "            此浏览器不支持canvas",
+                                "        </canvas>",
+                                "        <script>",
+                                "            { // 限制变量定义域",
+                                "                ",
+                                "        const ctx = document.getElementById('24011a40-b10c-11ee-b5c4-f3694e49a98a');",
+                                "        const gl = ctx.getContext('webgl');",
+                                "        const vertexShader = gl.createShader(gl.VERTEX_SHADER);",
+                                "        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);",
+                                "    ",
+                                "        gl.shaderSource(vertexShader,  \"\\n    attribute vec4 aPosition;\\n    uniform mat4 mat;\\n    void main() {\\n      gl_Position = mat * aPosition;\\n      gl_PointSize = 10.0;\\n    }\\n\"); // 指定顶点着色器的源码",
+                                "        gl.shaderSource(fragmentShader,  \"\\n    void main() {\\n      gl_FragColor = vec4(1.0,0.0,0.0,1.0);\\n    }\\n\"); // 指定片元着色器的源码",
+                                "    ",
+                                "        // 编译着色器",
+                                "        gl.compileShader(vertexShader);",
+                                "        gl.compileShader(fragmentShader);",
+                                "    ",
+                                "        // 创建一个程序对象",
+                                "        const program = gl.createProgram();",
+                                "    ",
+                                "        gl.attachShader(program, vertexShader);",
+                                "        gl.attachShader(program, fragmentShader);",
+                                "    ",
+                                "        gl.linkProgram(program);",
+                                "    ",
+                                "        gl.useProgram(program);",
+                                "    ",
+                                "    const aPosition = gl.getAttribLocation(program, 'aPosition');",
+                                "    const mat = gl.getUniformLocation(program, 'mat');",
+                                "  ",
+                                "    const points = new Float32Array([",
+                                "      -0.5, -0.5,",
+                                "      0.5, -0.5,",
+                                "      0.0,  0.5,",
+                                "    ])",
+                                "  ",
+                                "    const buffer = gl.createBuffer();",
+                                "  ",
+                                "    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);",
+                                "  ",
+                                "    gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);",
+                                "  ",
+                                "    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);",
+                                "  ",
+                                "    gl.enableVertexAttribArray(aPosition)",
+                                "  ",
+                                "    let x = 0.1;",
+                                "    function animation() {",
+                                "        x += 0.01;",
+                                "        if (x > 1.5) {",
+                                "            x = 0.1;",
+                                "        }",
+                                "    ",
+                                "        const matrix = getScaleMatrix(x, x);",
+                                "        // 参数 location transpose array",
+                                "        gl.uniformMatrix4fv(mat, false, matrix);",
+                                "        gl.drawArrays(gl.TRIANGLES, 0, 3);",
+                                "    ",
+                                "        requestAnimationFrame(animation);",
+                                "    }",
+                                "  ",
+                                "    animation();",
+                                "",
+                                "            }",
+                                "        </script>",
+                                "    "
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
         },
         {
             "language": "markdown",
             "source": [
-                "旋转矩阵的推导过程\r\n\r\n![Alt text](image-20.png)\r\n\r\n顶点 A (x, y)\r\n\r\n$ x = R \\* cos(α) $\r\n\r\n$ y = R \\* sin(α) $\r\n\r\n$ z = 0 $\r\n\r\n顶点 A' (x', y')\r\n\r\n$$\r\n\\begin{align*}\r\n&x' = R * \\cos(α + β) \\\\\r\n&\\phantom{x'} = R * ( \\cos(α)*\\cos(β) - \\sin(α)*\\sin(β)) \\\\\r\n&\\phantom{x'} = R*\\cos(α)*\\cos(β) - R*\\sin(α)*\\sin(β)\r\n\\end{align*}\r\n$$\r\n"
+                "### 2.4 图形旋转\r\n旋转矩阵的推导过程\r\n\r\n![Alt text](image-20.png)\r\n\r\n顶点 A (x, y)\r\n\r\n$ x = R * cos(α) $\r\n\r\n$ y = R * sin(α) $\r\n\r\n$ z = 0 $\r\n\r\n顶点 A' (x', y')\r\n\r\n$$\r\n\\begin{align*}\r\n&x' = R * \\cos(α + β) \\\\\r\n&\\phantom{x'} = R * ( \\cos(α)*\\cos(β) - \\sin(α)*\\sin(β)) \\\\\r\n&\\phantom{x'} = R*\\cos(α)*\\cos(β) - R*\\sin(α)*\\sin(β)\r\n\\end{align*}\r\n$$\r\n"
             ],
             "outputs": []
         },
@@ -668,23 +872,284 @@
         {
             "language": "javascript",
             "source": [
-                "const { display } = require(\"node-kernel\");\r\nconst { v1: uuidv1 } = require(\"uuid\");\r\nconst canvas_id = uuidv1();\r\n// 着色器\r\n// 创建着色器源码\r\nconst vertex_code = /*glsl */ `\r\n    attribute vec4 aPosition;\r\n    uniform mat4 mat;\r\n    void main() {\r\n        gl_Position = mat * aPosition;\r\n        gl_PointSize = 10.0;\r\n    }\r\n`;\r\n\r\nconst fragment_code = /*glsl */ `\r\n    void main() {\r\n        gl_FragColor = vec4(1.0,0.0,0.0,1.0);\r\n    }\r\n`;\r\n\r\nconst js_code = /*js*/ `\r\n    const ctx = document.getElementById('${canvas_id}');\r\n    const gl = ctx.getContext('webgl');\r\n\r\n    const program = initShader(gl, \"${vertex_code}\", \"${fragment_code}\");\r\n\r\n    const aPosition = gl.getAttribLocation(program, 'aPosition');\r\n    const mat = gl.getUniformLocation(program, 'mat');\r\n\r\n    const points = new Float32Array([\r\n        -0.5, -0.5,\r\n        0.5, -0.5,\r\n        0.0,  0.5,\r\n    ])\r\n    \r\n    const buffer = gl.createBuffer();\r\n    \r\n    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);\r\n    \r\n    gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);\r\n    \r\n    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);\r\n    \r\n    gl.enableVertexAttribArray(aPosition)\r\n    \r\n    let x = 0;\r\n    function animation() {\r\n        x += 0.01;\r\n    \r\n        const matrix = getRotateMatrix(x);\r\n        // gl.vertexAttrib1f(aTranslate, x);\r\n        gl.uniformMatrix4fv(mat, false, matrix);\r\n        gl.drawArrays(gl.TRIANGLES, 0, 3);\r\n    \r\n        requestAnimationFrame(animation);\r\n    }\r\n    \r\n    animation()\r\n    \r\n`;\r\nconst html = /*html*/ `\r\n    <canvas id=\"${canvas_id}\" width=\"400\" height=\"400\">\r\n    此浏览器不支持canvas\r\n    </canvas>\r\n    <script>\r\n        // 绕z轴旋转的旋转矩阵\r\n        function getRotateMatrix(deg) {\r\n            return new Float32Array([\r\n            Math.cos(deg)  ,Math.sin(deg) ,0.0,0.0,\r\n            -Math.sin(deg)  ,Math.cos(deg) ,0.0,0.0,\r\n            0.0,            0.0,            1.0,0.0,\r\n            0.0,            0.0,            0.0, 1,\r\n            ])\r\n        }\r\n        { // 限制变量定义域\r\n            ${js}\r\n        }\r\n    </script>\r\n`;\r\ndisplay.html(html);\r\n"
+                "const vertex_code = /*glsl */ `\r\n  attribute vec4 aPosition;\r\n  uniform mat4 mat;\r\n  void main() {\r\n    gl_Position = mat * aPosition;\r\n    gl_PointSize = 10.0;\r\n  }\r\n`;\r\n\r\nconst fragment_code = /*glsl */ `\r\n  void main() {\r\n    gl_FragColor = vec4(1.0,0.0,0.0,1.0);\r\n  }\r\n`;\r\n\r\nconst js_code = /*js*/ `\r\n  const aPosition = gl.getAttribLocation(program, 'aPosition');\r\n  const mat = gl.getUniformLocation(program, 'mat');\r\n\r\n  const points = new Float32Array([\r\n    -0.5, -0.5,\r\n    0.5, -0.5,\r\n    0.0,  0.5,\r\n  ])\r\n  \r\n  const buffer = gl.createBuffer();\r\n  \r\n  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);\r\n  \r\n  gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);\r\n  \r\n  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);\r\n  \r\n  gl.enableVertexAttribArray(aPosition)\r\n  \r\n  let x = 0;\r\n  function animation() {\r\n    x += 0.01;\r\n\r\n    const matrix = getRotateMatrix(x);\r\n    // gl.vertexAttrib1f(aTranslate, x);\r\n    gl.uniformMatrix4fv(mat, false, matrix);\r\n    gl.drawArrays(gl.TRIANGLES, 0, 3);\r\n\r\n    requestAnimationFrame(animation);\r\n  }\r\n  \r\n  animation()\r\n    \r\n`;\r\n\r\nconst { renderWebgl, declareFunction } = require(\"../../src/display.js\");\r\ndeclareFunction(/*js */ `\r\n  // 绕z轴旋转的旋转矩阵\r\n  function getRotateMatrix(deg) {\r\n    return new Float32Array([\r\n    Math.cos(deg)  ,Math.sin(deg) ,0.0,0.0,\r\n    -Math.sin(deg)  ,Math.cos(deg) ,0.0,0.0,\r\n    0.0,            0.0,            1.0,0.0,\r\n    0.0,            0.0,            0.0, 1,\r\n    ])\r\n  }\r\n`);\r\n\r\nrenderWebgl(vertex_code, fragment_code, js_code);\r\n"
             ],
-            "outputs": []
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/html",
+                            "value": [
+                                "<style> table, th, tr { text-align: left; }</style>",
+                                "        <script>",
+                                "            ",
+                                "    // 缩放矩阵",
+                                "    function getScaleMatrix(tx = 1, ty = 1, tz = 1) {",
+                                "        return new Float32Array([",
+                                "            tx, 0.0, 0.0, 0.0,",
+                                "            0.0, ty, 0.0, 0.0,",
+                                "            0.0, 0.0, tz, 0.0,",
+                                "            0.0, 0.0, 0.0, 1,",
+                                "        ])",
+                                "    }",
+                                "",
+                                "        </script>",
+                                "    ",
+                                "",
+                                "        <script>",
+                                "            ",
+                                "  // 绕z轴旋转的旋转矩阵",
+                                "  function getRotateMatrix(deg) {",
+                                "    return new Float32Array([",
+                                "    Math.cos(deg)  ,Math.sin(deg) ,0.0,0.0,",
+                                "    -Math.sin(deg)  ,Math.cos(deg) ,0.0,0.0,",
+                                "    0.0,            0.0,            1.0,0.0,",
+                                "    0.0,            0.0,            0.0, 1,",
+                                "    ])",
+                                "  }",
+                                "",
+                                "        </script>",
+                                "    ",
+                                "        <canvas id=\"1b2a1ce0-b10d-11ee-b5c4-f3694e49a98a\" width=\"400\" height=\"400\" style=\"border:1px solid grey\">",
+                                "            此浏览器不支持canvas",
+                                "        </canvas>",
+                                "        <script>",
+                                "            { // 限制变量定义域",
+                                "                ",
+                                "        const ctx = document.getElementById('1b2a1ce0-b10d-11ee-b5c4-f3694e49a98a');",
+                                "        const gl = ctx.getContext('webgl');",
+                                "        const vertexShader = gl.createShader(gl.VERTEX_SHADER);",
+                                "        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);",
+                                "    ",
+                                "        gl.shaderSource(vertexShader,  \"\\n  attribute vec4 aPosition;\\n  uniform mat4 mat;\\n  void main() {\\n    gl_Position = mat * aPosition;\\n    gl_PointSize = 10.0;\\n  }\\n\"); // 指定顶点着色器的源码",
+                                "        gl.shaderSource(fragmentShader,  \"\\n  void main() {\\n    gl_FragColor = vec4(1.0,0.0,0.0,1.0);\\n  }\\n\"); // 指定片元着色器的源码",
+                                "    ",
+                                "        // 编译着色器",
+                                "        gl.compileShader(vertexShader);",
+                                "        gl.compileShader(fragmentShader);",
+                                "    ",
+                                "        // 创建一个程序对象",
+                                "        const program = gl.createProgram();",
+                                "    ",
+                                "        gl.attachShader(program, vertexShader);",
+                                "        gl.attachShader(program, fragmentShader);",
+                                "    ",
+                                "        gl.linkProgram(program);",
+                                "    ",
+                                "        gl.useProgram(program);",
+                                "    ",
+                                "  const aPosition = gl.getAttribLocation(program, 'aPosition');",
+                                "  const mat = gl.getUniformLocation(program, 'mat');",
+                                "",
+                                "  const points = new Float32Array([",
+                                "    -0.5, -0.5,",
+                                "    0.5, -0.5,",
+                                "    0.0,  0.5,",
+                                "  ])",
+                                "  ",
+                                "  const buffer = gl.createBuffer();",
+                                "  ",
+                                "  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);",
+                                "  ",
+                                "  gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);",
+                                "  ",
+                                "  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);",
+                                "  ",
+                                "  gl.enableVertexAttribArray(aPosition)",
+                                "  ",
+                                "  let x = 0;",
+                                "  function animation() {",
+                                "    x += 0.01;",
+                                "",
+                                "    const matrix = getRotateMatrix(x);",
+                                "    // gl.vertexAttrib1f(aTranslate, x);",
+                                "    gl.uniformMatrix4fv(mat, false, matrix);",
+                                "    gl.drawArrays(gl.TRIANGLES, 0, 3);",
+                                "",
+                                "    requestAnimationFrame(animation);",
+                                "  }",
+                                "  ",
+                                "  animation()",
+                                "    ",
+                                "",
+                                "            }",
+                                "        </script>",
+                                "    "
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
         },
         {
             "language": "markdown",
             "source": [
-                "矩阵复合\r\n\r\n矩阵 A \\* 矩阵 B 表示先进行 B 变换再进行 A 变换\r\n\r\n![矩阵乘法](image-21.png)\r\n\r\n```js\r\n// 矩阵复合函数\r\nfunction mixMatrix(A, B) {\r\n  const result = new Float32Array(16);\r\n\r\n  for (let i = 0; i < 4; i++) {\r\n    result[i] =\r\n      A[i] * B[0] + A[i + 4] * B[1] + A[i + 8] * B[2] + A[i + 12] * B[3];\r\n    result[i + 4] =\r\n      A[i] * B[4] + A[i + 4] * B[5] + A[i + 8] * B[6] + A[i + 12] * B[7];\r\n    result[i + 8] =\r\n      A[i] * B[8] + A[i + 4] * B[9] + A[i + 8] * B[10] + A[i + 12] * B[11];\r\n    result[i + 12] =\r\n      A[i] * B[12] + A[i + 4] * B[13] + A[i + 8] * B[14] + A[i + 12] * B[15];\r\n  }\r\n\r\n  return result;\r\n}\r\n```\r\n"
+                "矩阵复合\r\n\r\n矩阵 A * 矩阵 B 表示先进行 B 变换再进行 A 变换\r\n\r\n![矩阵乘法](image-21.png)"
             ],
             "outputs": []
         },
         {
             "language": "javascript",
             "source": [
-                "// 着色器\r\n// 创建着色器源码\r\nconst vertex_code = /*glsl */ `\r\n    attribute vec4 aPosition;\r\n    uniform mat4 mat;\r\n    void main() {\r\n    gl_Position = mat * aPosition;\r\n    }\r\n`;\r\n\r\nconst fragment_code = /*glsl */ `\r\n    void main() {\r\n        gl_FragColor = vec4(1.0,0.0,0.0,1.0);\r\n    }\r\n`;\r\n\r\nconst js_code = /*js*/ `\r\n\r\n    function mixMatrix(A, B) {\r\n        const result = new Float32Array(16);\r\n    \r\n        for (let i = 0; i < 4; i++) {\r\n        result[i] = A[i] * B[0] + A[i + 4] * B[1] + A[i + 8] * B[2] + A[i + 12] * B[3]\r\n        result[i + 4] = A[i] * B[4] + A[i + 4] * B[5] + A[i + 8] * B[6] + A[i + 12] * B[7]\r\n        result[i + 8] = A[i] * B[8] + A[i + 4] * B[9] + A[i + 8] * B[10] + A[i + 12] * B[11]\r\n        result[i + 12] = A[i] * B[12] + A[i + 4] * B[13] + A[i + 8] * B[14] + A[i + 12] * B[15]\r\n        }\r\n    \r\n        return result;\r\n    }\r\n\r\n    const ctx = document.getElementById('${canvas_id}');\r\n    const gl = ctx.getContext('webgl');\r\n\r\n    const program = initShader(gl, \"${vertex_code}\", \"${fragment_code}\");\r\n\r\n    const aPosition = gl.getAttribLocation(program, 'aPosition');\r\n    const mat = gl.getUniformLocation(program, 'mat');\r\n    const points = new Float32Array([\r\n        -0.5, -0.5,\r\n        0.5, -0.5,\r\n        0.0,  0.5,\r\n    ])\r\n    \r\n    const buffer = gl.createBuffer();\r\n    \r\n    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);\r\n    \r\n    gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);\r\n    \r\n    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);\r\n    \r\n    gl.enableVertexAttribArray(aPosition)\r\n    \r\n    let deg = 0;\r\n    let translateX = -1;\r\n    let scaleX = 0.1;\r\n    function animation() {\r\n        deg += 0.01;\r\n        translateX += 0.01;\r\n        scaleX += 0.01;\r\n        \r\n        if (translateX > 1) {\r\n            translateX = -1;\r\n        }\r\n        \r\n        if (scaleX > 1.5) {\r\n            scaleX = 0.1;\r\n        }\r\n        \r\n        const translate = getTranslateMatrix(translateX);\r\n        const scale = getScaleMatrix(scaleX);\r\n        const rotate = getRotateMatrix(deg);\r\n        \r\n        const matrix = mixMatrix(mixMatrix(translate, scale), rotate);\r\n        gl.uniformMatrix4fv(mat, false, matrix);\r\n        gl.drawArrays(gl.TRIANGLES, 0, 3);\r\n        \r\n        requestAnimationFrame(animation);\r\n    }\r\n    \r\n    animation()\r\n`;\r\nconst { renderWebgl } = require(\"../../src/display.js\");\r\nrenderWebgl(vertex_code, fragment_code, js_code);\r\n"
+                "// 着色器\r\n// 创建着色器源码\r\nconst vertex_code = /*glsl */ `\r\n    attribute vec4 aPosition;\r\n    uniform mat4 mat;\r\n    void main() {\r\n    gl_Position = mat * aPosition;\r\n    }\r\n`;\r\n\r\nconst fragment_code = /*glsl */ `\r\n    void main() {\r\n        gl_FragColor = vec4(1.0,0.0,0.0,1.0);\r\n    }\r\n`;\r\n\r\nconst js_code = /*js*/ `\r\n    const aPosition = gl.getAttribLocation(program, 'aPosition');\r\n    const mat = gl.getUniformLocation(program, 'mat');\r\n    const points = new Float32Array([\r\n        -0.5, -0.5,\r\n        0.5, -0.5,\r\n        0.0,  0.5,\r\n    ])\r\n    \r\n    const buffer = gl.createBuffer();\r\n    \r\n    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);\r\n    \r\n    gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);\r\n    \r\n    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);\r\n    \r\n    gl.enableVertexAttribArray(aPosition)\r\n    \r\n    let deg = 0;\r\n    let translateX = -1;\r\n    let scaleX = 0.1;\r\n    function animation() {\r\n        deg += 0.01;\r\n        translateX += 0.01;\r\n        scaleX += 0.01;\r\n        \r\n        if (translateX > 1) {\r\n            translateX = -1;\r\n        }\r\n        \r\n        if (scaleX > 1.5) {\r\n            scaleX = 0.1;\r\n        }\r\n        \r\n        const translate = getTranslateMatrix(translateX);\r\n        const scale = getScaleMatrix(scaleX);\r\n        const rotate = getRotateMatrix(deg);\r\n        \r\n        const matrix = mixMatrix(mixMatrix(translate, scale), rotate);\r\n        gl.uniformMatrix4fv(mat, false, matrix);\r\n        gl.drawArrays(gl.TRIANGLES, 0, 3);\r\n        \r\n        requestAnimationFrame(animation);\r\n    }\r\n    \r\n    animation()\r\n`;\r\nconst { renderWebgl } = require(\"../../src/display.js\");\r\ndeclareFunction(/*js */ `\r\n    function mixMatrix(A, B) {\r\n        const result = new Float32Array(16);\r\n        for (let i = 0; i < 4; i++) {\r\n            result[i] = A[i] * B[0] + A[i + 4] * B[1] + A[i + 8] * B[2] + A[i + 12] * B[3]\r\n            result[i + 4] = A[i] * B[4] + A[i + 4] * B[5] + A[i + 8] * B[6] + A[i + 12] * B[7]\r\n            result[i + 8] = A[i] * B[8] + A[i + 4] * B[9] + A[i + 8] * B[10] + A[i + 12] * B[11]\r\n            result[i + 12] = A[i] * B[12] + A[i + 4] * B[13] + A[i + 8] * B[14] + A[i + 12] * B[15]\r\n        }\r\n        return result;\r\n    }\r\n`);\r\nrenderWebgl(vertex_code, fragment_code, js_code);\r\n"
             ],
-            "outputs": []
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/html",
+                            "value": [
+                                "<style> table, th, tr { text-align: left; }</style>",
+                                "        <script>",
+                                "            ",
+                                "    // 缩放矩阵",
+                                "    function getScaleMatrix(tx = 1, ty = 1, tz = 1) {",
+                                "        return new Float32Array([",
+                                "            tx, 0.0, 0.0, 0.0,",
+                                "            0.0, ty, 0.0, 0.0,",
+                                "            0.0, 0.0, tz, 0.0,",
+                                "            0.0, 0.0, 0.0, 1,",
+                                "        ])",
+                                "    }",
+                                "",
+                                "        </script>",
+                                "    ",
+                                "",
+                                "        <script>",
+                                "            ",
+                                "  // 绕z轴旋转的旋转矩阵",
+                                "  function getRotateMatrix(deg) {",
+                                "    return new Float32Array([",
+                                "    Math.cos(deg)  ,Math.sin(deg) ,0.0,0.0,",
+                                "    -Math.sin(deg)  ,Math.cos(deg) ,0.0,0.0,",
+                                "    0.0,            0.0,            1.0,0.0,",
+                                "    0.0,            0.0,            0.0, 1,",
+                                "    ])",
+                                "  }",
+                                "",
+                                "        </script>",
+                                "    ",
+                                "",
+                                "        <script>",
+                                "            ",
+                                "    function mixMatrix(A, B) {",
+                                "        const result = new Float32Array(16);",
+                                "        for (let i = 0; i < 4; i++) {",
+                                "            result[i] = A[i] * B[0] + A[i + 4] * B[1] + A[i + 8] * B[2] + A[i + 12] * B[3]",
+                                "            result[i + 4] = A[i] * B[4] + A[i + 4] * B[5] + A[i + 8] * B[6] + A[i + 12] * B[7]",
+                                "            result[i + 8] = A[i] * B[8] + A[i + 4] * B[9] + A[i + 8] * B[10] + A[i + 12] * B[11]",
+                                "            result[i + 12] = A[i] * B[12] + A[i + 4] * B[13] + A[i + 8] * B[14] + A[i + 12] * B[15]",
+                                "        }",
+                                "        return result;",
+                                "    }",
+                                "",
+                                "        </script>",
+                                "    ",
+                                "        <canvas id=\"82bf7cf0-b10e-11ee-b5c4-f3694e49a98a\" width=\"400\" height=\"400\" style=\"border:1px solid grey\">",
+                                "            此浏览器不支持canvas",
+                                "        </canvas>",
+                                "        <script>",
+                                "            { // 限制变量定义域",
+                                "                ",
+                                "        const ctx = document.getElementById('82bf7cf0-b10e-11ee-b5c4-f3694e49a98a');",
+                                "        const gl = ctx.getContext('webgl');",
+                                "        const vertexShader = gl.createShader(gl.VERTEX_SHADER);",
+                                "        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);",
+                                "    ",
+                                "        gl.shaderSource(vertexShader,  \"\\n    attribute vec4 aPosition;\\n    uniform mat4 mat;\\n    void main() {\\n    gl_Position = mat * aPosition;\\n    }\\n\"); // 指定顶点着色器的源码",
+                                "        gl.shaderSource(fragmentShader,  \"\\n    void main() {\\n        gl_FragColor = vec4(1.0,0.0,0.0,1.0);\\n    }\\n\"); // 指定片元着色器的源码",
+                                "    ",
+                                "        // 编译着色器",
+                                "        gl.compileShader(vertexShader);",
+                                "        gl.compileShader(fragmentShader);",
+                                "    ",
+                                "        // 创建一个程序对象",
+                                "        const program = gl.createProgram();",
+                                "    ",
+                                "        gl.attachShader(program, vertexShader);",
+                                "        gl.attachShader(program, fragmentShader);",
+                                "    ",
+                                "        gl.linkProgram(program);",
+                                "    ",
+                                "        gl.useProgram(program);",
+                                "    ",
+                                "    const aPosition = gl.getAttribLocation(program, 'aPosition');",
+                                "    const mat = gl.getUniformLocation(program, 'mat');",
+                                "    const points = new Float32Array([",
+                                "        -0.5, -0.5,",
+                                "        0.5, -0.5,",
+                                "        0.0,  0.5,",
+                                "    ])",
+                                "    ",
+                                "    const buffer = gl.createBuffer();",
+                                "    ",
+                                "    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);",
+                                "    ",
+                                "    gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);",
+                                "    ",
+                                "    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);",
+                                "    ",
+                                "    gl.enableVertexAttribArray(aPosition)",
+                                "    ",
+                                "    let deg = 0;",
+                                "    let translateX = -1;",
+                                "    let scaleX = 0.1;",
+                                "    function animation() {",
+                                "        deg += 0.01;",
+                                "        translateX += 0.01;",
+                                "        scaleX += 0.01;",
+                                "        ",
+                                "        if (translateX > 1) {",
+                                "            translateX = -1;",
+                                "        }",
+                                "        ",
+                                "        if (scaleX > 1.5) {",
+                                "            scaleX = 0.1;",
+                                "        }",
+                                "        ",
+                                "        const translate = getTranslateMatrix(translateX);",
+                                "        const scale = getScaleMatrix(scaleX);",
+                                "        const rotate = getRotateMatrix(deg);",
+                                "        ",
+                                "        const matrix = mixMatrix(mixMatrix(translate, scale), rotate);",
+                                "        gl.uniformMatrix4fv(mat, false, matrix);",
+                                "        gl.drawArrays(gl.TRIANGLES, 0, 3);",
+                                "        ",
+                                "        requestAnimationFrame(animation);",
+                                "    }",
+                                "    ",
+                                "    animation()",
+                                "",
+                                "            }",
+                                "        </script>",
+                                "    "
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
         },
         {
             "language": "markdown",

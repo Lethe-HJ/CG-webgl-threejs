@@ -88,7 +88,7 @@ function renderWebgl(vertex, fragment, js) {
     `;
     js = pre_js + js;
     let html = /*html*/ `
-        <canvas id="${canvas_id}" width="400" height="400">
+        <canvas id="${canvas_id}" width="400" height="400" style="border:1px solid grey">
             此浏览器不支持canvas
         </canvas>
         <script>
@@ -98,7 +98,7 @@ function renderWebgl(vertex, fragment, js) {
         </script>
     `;
     debugger
-    html += global_scripts.join('\n');
+    html = global_scripts.join('\n') + html;
     display.html(html);
 }
 
@@ -129,7 +129,7 @@ function runJsInWeb(js) {
 
 const global_scripts = [];
 
-function declareFunction() {
+function declareFunction(js) {
     global_scripts.push(/*html*/ `
         <script>
             ${js}
