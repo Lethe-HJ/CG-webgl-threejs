@@ -1,0 +1,18 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "由相似三角形得出\n\n$ x' = \\frac{n}{f}* x $\n\n$ y' = \\frac{n}{f}* y $\n\n$\n\\begin{bmatrix}\n\\frac{n}{f} & 0 & 0 \\\\\n0 & \\frac{n}{f} & 0 \\\\\n? & ? & ?\n\\end{bmatrix}\n$ *\n$\n\\begin{bmatrix}\nx \\\\\ny \\\\\nz\n\\end{bmatrix}\n$ =\n$\n\\begin{bmatrix}\n\\frac{n}{f} * x \\\\\n\\frac{n}{f} * y \\\\\n?\n\\end{bmatrix}\n$\n\n按照 齐次坐标的概念\n$\n\\begin{bmatrix}\nx \\\\\ny \\\\\nz \\\\\n1\n\\end{bmatrix}\n$\n与\n$\n\\begin{bmatrix}\nk*x \\\\\nk*y \\\\\nk*z \\\\\nk\n\\end{bmatrix}\n$\n是等价的\n\n$\n\\begin{bmatrix}\n\\frac{n}{f} * x \\\\\n\\frac{n}{f} * y \\\\\n? \\\\\n1\n\\end{bmatrix}\n$ =>\n$\n\\begin{bmatrix}\nn * x \\\\\nn * y \\\\\n? \\\\\nf\n\\end{bmatrix}\n$\n\n即\n\n$\n\\begin{bmatrix}\nn & 0 & 0 & 0\\\\\n0 &n & 0 & 0\\\\\n? & ? & ? & ?\\\\ \n0 & 0 & -1 & 0\n\\end{bmatrix}\n$ *\n$\n\\begin{bmatrix}\nx \\\\\ny \\\\\nz \\\\\n1 \n\\end{bmatrix}\n$ =\n$\n\\begin{bmatrix}\nn * x \\\\\nn * y \\\\\n? \\\\\nf\n\\end{bmatrix}\n$\n\n接下来我们看第三行\n\n按照正常的4*4矩阵\n$\n\\begin{bmatrix}\na & b & c & d \\\\\ne & f & g & h \\\\\ni & j & k & l \\\\\nm & n & o & p\n\\end{bmatrix}\n$\n\n我们假设第三行为\n$ i*x+j*y+k*z+l=z' $\n\n易知 i=0 j=0\n因为需要将梯形映射到长方体 所以z分量应该不变\n将z=-f 和z=-n 分别带入上式 可得\n$ k = b + f $\n\n$ d = n * f $\n\n从而梯形空间转向长方体空间的转换矩阵为\n\n$\n\\begin{bmatrix}\nn & 0 & 0 & 0\\\\\n0 &n & 0 & 0\\\\\n0 & 0 & n+f & nf\\\\ \n0 & 0 & -1 & 0\n\\end{bmatrix}\n$\n\n再利用前面的正射投影的矩阵得到透视投影矩阵\n\n$\n\\begin{bmatrix}\nn & 0 & 0 & 0\\\\\n0 &n & 0 & 0\\\\\n0 & 0 & n+f & nf\\\\ \n0 & 0 & -1 & 0\n\\end{bmatrix}\n$ * \n\n= \n$\n\\begin{bmatrix}\n\\frac{2n}{r-1} & 0 & 0 & 0\\\\\n0 & \\frac{2n}{t-b} & 0 & 0\\\\\n0 & 0 & \\frac{n+f}{n-f} & 2\\frac{nf}{n-f}\\\\ \n0 & 0 & -1 & 0\n\\end{bmatrix}\n$\n\n其中\n$ t = n * tan(\\frac{α}{2}) $\n\n$ b = -t $\n\n$ r = n * aspect * tan(\\frac{α}{2}) $\n\n$ l = -r $\n\n用上述变量进行替换得到最终的透视投影矩阵\n\n$\n\\begin{bmatrix}\n\\frac{1}{aspect * tan(\\frac{α}{2})} & 0 & 0 & 0\\\\\n0 & \\frac{1}{tan(\\frac{α}{2})} & 0 & 0\\\\\n0 & 0 & \\frac{n+f}{n-f} & 2\\frac{nf}{n-f}\\\\ \n0 & 0 & -1 & 0\n\\end{bmatrix}\n$"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                ""
+            ],
+            "outputs": []
+        }
+    ]
+}
