@@ -1465,7 +1465,7 @@
         {
             "language": "javascript",
             "source": [
-                "const vertex_code = /*glsl */ `\r\n  attribute vec4 aPosition;\r\n  attribute vec4 aTex;\r\n  varying vec2 vTex;\r\n  void main() {\r\n    gl_Position = aPosition; // vec4(0.0,0.0,0.0,1.0)\r\n    vTex = vec2(aTex.x, aTex.y);\r\n  }\r\n`;\r\n\r\nconst fragment_code = /*glsl */ `\r\n  precision lowp float;\r\n  uniform sampler2D uSampler;\r\n  varying vec2 vTex;\r\n  void main() {\r\n    gl_FragColor = texture2D(uSampler, vTex);\r\n  }\r\n`;\r\n\r\nconst js_code = /*js*/ `\r\n  const aPosition = gl.getAttribLocation(program, 'aPosition');\r\n  const aTex = gl.getAttribLocation(program, 'aTex');\r\n  const uSampler = gl.getUniformLocation(program, 'uSampler');\r\n\r\n  const points = new Float32Array([\r\n    -0.5,  0.5, 0.0, 1.0,\r\n    -0.5, -0.5, 0.0, 0.0,\r\n    0.5,  0.5, 1.0, 1.0,\r\n    0.5, -0.5, 1.0, 0.0,\r\n  ])\r\n\r\n  const buffer = gl.createBuffer();\r\n  const BYTES = points.BYTES_PER_ELEMENT;\r\n  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);\r\n  gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);\r\n  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, BYTES * 4, 0);\r\n  gl.enableVertexAttribArray(aPosition)\r\n  gl.vertexAttribPointer(aTex, 2, gl.FLOAT, false, BYTES * 4, BYTES * 2);\r\n  gl.enableVertexAttribArray(aTex)\r\n  const img = new Image();\r\n  img.src = '../../assets/content.png';\r\n  img.onload = function() {\r\n    // 创建纹理对象\r\n    const texture = gl.createTexture(); // 创建纹理对象\r\n    // gl.deletTexture(textrue); // 删除纹理对象的方式\r\n\r\n    // 翻转 图片 Y轴\r\n    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1)\r\n\r\n    // 激活0号纹理单元 Webgl 是通过纹理单元来管理纹理对象，每个纹理单元管理⼀张纹理图像。\r\n    gl.activeTexture(gl.TEXTURE0);\r\n\r\n    /**\r\n     * 绑定纹理对象\r\n     * @param { gl.TEXTURE_2D | gl.TEXTURE_CUBE_MAP } type \r\n     * @param { Texture } texture\r\n     **/ \r\n    gl.bindTexture(gl.TEXTURE_2D, texture);\r\n\r\n    /**\r\n     * 处理放大缩小的逻辑\r\n     * @param { gl.TEXTURE_2D | gl.TEXTURE_CUBE_MAP } type \r\n     * @param {\r\n     *   gl.TEXTURE_MAG_FILTER 放⼤\r\n     *  |gl.TEXTURE_MIN_FILTER 缩⼩\r\n     *  |gl.TEXTURE_WRAP_S 横向（⽔平填充）\r\n     *  |gl.TEXTURE_WRAP_T 纵向（垂直填充）\r\n     * } pname\r\n     * @param {\r\n     *  gl.NEAREST 使用像素颜色值\r\n     * |gl.LINEAR 使用四周的加权平均值\r\n     * |gl.REPEAT 平铺重复\r\n     * |gl.MIRRORED_REPEAT 镜像对称\r\n     * |gl.CLAMP_TO_EDGE 边缘延伸\r\n     * }\r\n     **/ \r\n    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)\r\n    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)\r\n\r\n    // 横向 纵向 平铺的方式\r\n    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)\r\n    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)\r\n\r\n    /**\r\n     * 配置纹理图像\r\n     * @param { gl.TEXTURE_2D | gl.TEXTURE_CUBE_MAP } type\r\n     * @param { 0 } level\r\n     * @param {\r\n     *  gl.RGB\r\n     * |gl.RGBA\r\n     * |gl.ALPHA\r\n     * |gl.LUMINANCE 使用物体表面的 红绿蓝 分量的加权平均值来计算\r\n     * |gl.LUMINANCE_ALPHA\r\n     * } internalformat\r\n     * @param { 同internalformat } format\r\n     * @param {\r\n     *  gl.UNSIGNED_BYTE\r\n     * |gl.UNSIGNED_SHORT_5_6_5\r\n     * |gl.UNSIGNED_SHORT_4_4_4_4\r\n     * |gl.UNSIGNED_SHORT_5_5_5_1\r\n     * } dataType\r\n     * @param { Image } 图片对象\r\n     */\r\n    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img);\r\n    gl.uniform1i(uSampler, 0);\r\n    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);\r\n  }\r\n`;\r\nconst { renderWebgl } = require(\"../../src/display.js\");\r\nrenderWebgl(vertex_code, fragment_code, js_code);\r\n"
+                "const vertex_code = /*glsl */ `\r\n  attribute vec4 aPosition;\r\n  attribute vec4 aTex;\r\n  varying vec2 vTex;\r\n  void main() {\r\n    gl_Position = aPosition; // vec4(0.0,0.0,0.0,1.0)\r\n    vTex = vec2(aTex.x, aTex.y);\r\n  }\r\n`;\r\n\r\nconst fragment_code = /*glsl */ `\r\n  precision lowp float;\r\n  uniform sampler2D uSampler;\r\n  varying vec2 vTex;\r\n  void main() {\r\n    gl_FragColor = texture2D(uSampler, vTex);\r\n  }\r\n`;\r\n\r\nconst js_code = /*js*/ `\r\n  const aPosition = gl.getAttribLocation(program, 'aPosition');\r\n  const aTex = gl.getAttribLocation(program, 'aTex');\r\n  const uSampler = gl.getUniformLocation(program, 'uSampler');\r\n\r\n  const points = new Float32Array([\r\n    -0.5,  0.5, 0.0, 1.0,\r\n    -0.5, -0.5, 0.0, 0.0,\r\n    0.5,  0.5, 1.0, 1.0,\r\n    0.5, -0.5, 1.0, 0.0,\r\n  ])\r\n\r\n  const buffer = gl.createBuffer();\r\n  const BYTES = points.BYTES_PER_ELEMENT;\r\n  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);\r\n  gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);\r\n  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, BYTES * 4, 0);\r\n  gl.enableVertexAttribArray(aPosition)\r\n  gl.vertexAttribPointer(aTex, 2, gl.FLOAT, false, BYTES * 4, BYTES * 2);\r\n  gl.enableVertexAttribArray(aTex)\r\n  const img = new Image();\r\n  img.src = '../../assets/content.png';\r\n  img.onload = function() {\r\n    const texture = gl.createTexture(); // 创建纹理对象\r\n    // gl.deletTexture(textrue); // 删除纹理对象的方式\r\n    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // 翻转 图片 Y轴\r\n    gl.activeTexture(gl.TEXTURE0); // 激活0号纹理单元 Webgl 是通过纹理单元来管理纹理对象,每个纹理单元管理⼀张纹理图像\r\n\r\n    /**\r\n     * 绑定纹理对象\r\n     * @param { gl.TEXTURE_2D | gl.TEXTURE_CUBE_MAP } type \r\n     * @param { Texture } texture\r\n     **/ \r\n    gl.bindTexture(gl.TEXTURE_2D, texture);\r\n\r\n    /**\r\n     * 处理放大缩小的逻辑\r\n     * @param { gl.TEXTURE_2D | gl.TEXTURE_CUBE_MAP } type \r\n     * @param {\r\n     *   gl.TEXTURE_MAG_FILTER 放⼤\r\n     *  |gl.TEXTURE_MIN_FILTER 缩⼩\r\n     *  |gl.TEXTURE_WRAP_S 横向（⽔平填充）\r\n     *  |gl.TEXTURE_WRAP_T 纵向（垂直填充）\r\n     * } pname\r\n     * @param {\r\n     *  gl.NEAREST 使用像素颜色值\r\n     * |gl.LINEAR 使用四周的加权平均值\r\n     * |gl.REPEAT 平铺重复\r\n     * |gl.MIRRORED_REPEAT 镜像对称\r\n     * |gl.CLAMP_TO_EDGE 边缘延伸\r\n     * }\r\n     **/ \r\n    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)\r\n    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)\r\n\r\n    // 横向 纵向 平铺的方式\r\n    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)\r\n    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)\r\n\r\n    /**\r\n     * 配置纹理图像\r\n     * @param { gl.TEXTURE_2D | gl.TEXTURE_CUBE_MAP } type\r\n     * @param { 0 } level\r\n     * @param {\r\n     *  gl.RGB\r\n     * |gl.RGBA\r\n     * |gl.ALPHA\r\n     * |gl.LUMINANCE 使用物体表面的 红绿蓝 分量的加权平均值来计算\r\n     * |gl.LUMINANCE_ALPHA\r\n     * } internalformat\r\n     * @param { 同internalformat } format\r\n     * @param {\r\n     *  gl.UNSIGNED_BYTE\r\n     * |gl.UNSIGNED_SHORT_5_6_5\r\n     * |gl.UNSIGNED_SHORT_4_4_4_4\r\n     * |gl.UNSIGNED_SHORT_5_5_5_1\r\n     * } dataType\r\n     * @param { Image } 图片对象\r\n     */\r\n    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img);\r\n    gl.uniform1i(uSampler, 0);\r\n    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);\r\n  }\r\n`;\r\nconst { renderWebgl } = require(\"../../src/display.js\");\r\nrenderWebgl(vertex_code, fragment_code, js_code);\r\n"
             ],
             "outputs": []
         },
@@ -1717,6 +1717,69 @@
                     ]
                 }
             ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 2 glsl语言基础\r\n\r\n### 2.1 特性\r\n大小写敏感\r\n强制分号\r\n强类型语言\r\n变量不能以gl_,webgl_,_webgl_开头\r\n浮点数1必须要表示为1.0\r\n### 2.2 类型转换函数\r\nint()\r\nfloat()\r\nbool()\r\n\r\n### 2.3 运算符\r\n\r\n![运算符](2024-01-13-15-05-31.png)\r\n\r\n### 2.4 矢量和矩阵\r\n\r\n`vec2` `vec3` `vec4` 用来表示具有 2，3，4 个浮点数元素的矢量\r\n`ivec2` `ivec3` `ivec4` 用来表示具有 2，3，4 个整型元素的矢量\r\n`bvec2` `bvec3` `bvec4` 用来表示具有 2，3，4 个布尔值元素的矢量\r\n使用`x y z w`等属性来访问顶点坐标的分量        \r\n使用`s t p q`等属性来访问纹理坐标的分量        \r\n这些属性也可以通过混合的方式取值\r\n例如:\r\n\r\n```glsl\r\nvec4 position = vec4(0.1, 0.2, 0.3, 1.0);\r\nposition.x; // 0.1\r\npositon.xz; // vec2(0.1, 0.3)\r\npositon.xyz; // vec2(0.1, 0.2, 0.3)\r\n```\r\n\r\n`mat2` `mat3` `mat4` 用来表示具有2 * 2， 3 * 3， 4 * 4 的浮点数元素的矩阵\r\n\r\n```glsl\r\nmat4 m = mat4(\r\n    1.0, 5.0,  9.0, 13.0,\r\n    2.0, 6.0, 10.0, 14.0,\r\n    3.0, 7.0, 11.0, 15.0,\r\n    4.0, 8.0, 12.0, 16.0,\r\n); // 注意 输入参数必须是列主序\r\n```\r\n\r\n上面的代码表示的是如下的矩阵\r\n\r\n\r\n$\r\n\\begin{bmatrix}\r\n1.0 & 2.0 & 3.0 & 4.0 \\\\\r\n5.0 & 6.0 & 7.0 & 8.0 \\\\\r\n9.0 & 10.0 & 11.0 & 12.0 \\\\\r\n13.0 & 14.0 & 15.0 & 16.0\r\n\\end{bmatrix}\r\n$\r\n\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 2.5 纹理取样器\r\n\r\n纹理取样器只能声明为uniform变量\r\n\r\n`sampler2D` 二维纹理\r\n\r\n`samplerCube` 立方体纹理\r\n\r\n声明例子\r\n\r\n```glsl\r\nuniform sampler2D uSampler;\r\nuniform samplerCube uSamplerCube;\r\n\r\n```"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 2.6 分支与循环\r\n\r\n`if else` `switch case` `for` `while` `do while` `continue` `break`的使用方式与js相同\r\n`discard` 在片元着色器中表示放弃当前片元直接处理下一个片元"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 2.7 函数\r\n\r\n```glsl\r\nfloat getFloat(){\r\n    return 1.1;\r\n}\r\n```\r\n\r\nglsl的常用的内置函数如下\r\n\r\n角度函数\r\n`radians` 角度转弧度\r\n`degress` 弧度转角度\r\n\r\n三角函数\r\n`sin` 正弦\r\n`cos` 余弦\r\n`tan` 正切\r\n`asin` 反正弦\r\n`acos` 反余弦\r\n`atan` 反正切\r\n\r\n指数函数\r\n`pow` 次方\r\n`exp` 自然对数\r\n`log` 对数\r\n`sqrt` 开平方\r\n`inversesqrt` 开平方的倒数\r\n\r\n通用函数\r\n`abs` 绝对值\r\n`min` 最小值\r\n`max` 最大值\r\n`mod` 取余数\r\n`sign` 取符号\r\n`floor` 向下取整\r\n`ceil` 向上取整\r\n`clamp` 限定范围\r\n`fract` 取小数部分\r\n\r\n几何函数\r\n`length(x)` 计算向量x的长度\r\n`distance(x, y)` 计算向量x,y之间的距离\r\n`dot(x, y)` 计算向量xy之间的点积\r\n`cross(x, y)` 计算向量xy的叉积\r\n`normalize(x)` 返回同向的单位向量\r\n\r\n矢量函数\r\n`any` 矢量的任意一个元素满足条件\r\n`all` 矢量的所有元素均满足条件\r\n`not` 逐元素布尔取反\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 2.8 存储限定词\r\n\r\n变量类型词\r\n`const` 常量\r\n\r\n存储类型词\r\nattribute 顶点着色器中的全局变量 表示逐顶点信息\r\nuniform 只读 两个着色器中都可 强调一致性 用于存储影响所有顶点的数据 例如变换矩阵等\r\nvarying 用于存储从顶点着色器传递给片元着色器的数据\r\n\r\n精度限定词\r\n`mediump float f` 限定变量f的精度 不推荐\r\n`precision mediump float` 限定着色器的默认精度\r\n其中 可选的精度枚举有 `highp mediump lowp`\r\n注意: 片元着色器中的float类型需要设置默认精度"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## 3 3D基础\r\n\r\n![](2024-01-13-16-20-57.png)\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 3.1 正射投影\r\n\r\n\r\n正射投影是所有的物体投影线都垂直于最终的绘图表面\r\n\r\n![](2024-01-13-16-25-37.png)\r\n\r\n先尝试将x转换到x'\r\n对于左右区间 有`-1 < x' < 1` 以及`l < x < r`\r\n将x的不等式的左右两边也转化成 (-1, 1)  具体过程如下\r\n\r\n![](2024-01-13-16-36-19.png)\r\n\r\n从而得到x与x'的关系\r\n\r\n对于上下区间 远近区间也类似处理 可以得到y与y'的关系 以及z与z'的关系\r\n\r\n![](2024-01-13-16-44-20.png)"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 3.2 透视投影\r\n\r\n![](2024-01-13-16-48-14.png)\r\n\r\n先将透视投影的棱台映射为长方体\r\n\r\n![](2024-01-13-16-49-54.png)\r\n\r\n![](2024-01-13-16-50-12.png)\r\n\r\n\r\n由相似三角形得出\r\n\r\n$ x' = \\frac{n}{f}* x $\r\n\r\n$ y' = \\frac{n}{f}* y $\r\n\r\n$\r\n\\begin{bmatrix}\r\n\\frac{n}{f} & 0 & 0 \\\\\r\n0 & \\frac{n}{f} & 0 \\\\\r\n? & ? & ?\r\n\\end{bmatrix}\r\n$ *\r\n$\r\n\\begin{bmatrix}\r\nx \\\\\r\ny \\\\\r\nz\r\n\\end{bmatrix}\r\n$ =\r\n$\r\n\\begin{bmatrix}\r\n\\frac{n}{f} * x \\\\\r\n\\frac{n}{f} * y \\\\\r\n?\r\n\\end{bmatrix}\r\n$\r\n\r\n按照 齐次坐标的概念\r\n$\r\n\\begin{bmatrix}\r\nx \\\\\r\ny \\\\\r\nz \\\\\r\n1\r\n\\end{bmatrix}\r\n$\r\n与\r\n$\r\n\\begin{bmatrix}\r\nk*x \\\\\r\nk*y \\\\\r\nk*z \\\\\r\nk\r\n\\end{bmatrix}\r\n$\r\n是等价的\r\n\r\n$\r\n\\begin{bmatrix}\r\n\\frac{n}{f} * x \\\\\r\n\\frac{n}{f} * y \\\\\r\n? \\\\\r\n1\r\n\\end{bmatrix}\r\n$ =>\r\n$\r\n\\begin{bmatrix}\r\nn * x \\\\\r\nn * y \\\\\r\n? \\\\\r\nf\r\n\\end{bmatrix}\r\n$\r\n\r\n即\r\n\r\n$\r\n\\begin{bmatrix}\r\nn & 0 & 0 & 0\\\\\r\n0 &n & 0 & 0\\\\\r\n? & ? & ? & ?\\\\ \r\n0 & 0 & -1 & 0\r\n\\end{bmatrix}\r\n$ *\r\n$\r\n\\begin{bmatrix}\r\nx \\\\\r\ny \\\\\r\nz \\\\\r\n1 \r\n\\end{bmatrix}\r\n$ =\r\n$\r\n\\begin{bmatrix}\r\nn * x \\\\\r\nn * y \\\\\r\n? \\\\\r\nf\r\n\\end{bmatrix}\r\n$\r\n\r\n接下来我们看第三行\r\n\r\n按照正常的4*4矩阵\r\n$\r\n\\begin{bmatrix}\r\na & b & c & d \\\\\r\ne & f & g & h \\\\\r\ni & j & k & l \\\\\r\nm & n & o & p\r\n\\end{bmatrix}\r\n$\r\n\r\n我们假设第三行为\r\n$ i*x+j*y+k*z+l=z' $\r\n\r\n易知 i=0 j=0\r\n因为需要将梯形映射到长方体 所以z分量应该不变\r\n将z=-f 和z=-n 分别带入上式 可得\r\n$ k = b + f $\r\n\r\n$ d = n * f $\r\n\r\n从而梯形空间转向长方体空间的转换矩阵为\r\n\r\n$\r\n\\begin{bmatrix}\r\nn & 0 & 0 & 0\\\\\r\n0 &n & 0 & 0\\\\\r\n0 & 0 & n+f & nf\\\\ \r\n0 & 0 & -1 & 0\r\n\\end{bmatrix}\r\n$\r\n\r\n再利用前面的正射投影的矩阵得到透视投影矩阵\r\n\r\n$\r\n\\begin{bmatrix}\r\nn & 0 & 0 & 0\\\\\r\n0 &n & 0 & 0\\\\\r\n0 & 0 & n+f & nf\\\\ \r\n0 & 0 & -1 & 0\r\n\\end{bmatrix}\r\n$ * \r\n\r\n= \r\n$\r\n\\begin{bmatrix}\r\n\\frac{2n}{r-1} & 0 & 0 & 0\\\\\r\n0 & \\frac{2n}{t-b} & 0 & 0\\\\\r\n0 & 0 & \\frac{n+f}{n-f} & 2\\frac{nf}{n-f}\\\\ \r\n0 & 0 & -1 & 0\r\n\\end{bmatrix}\r\n$\r\n\r\n其中\r\n$ t = n * tan(\\frac{α}{2}) $\r\n\r\n$ b = -t $\r\n\r\n$ r = n * aspect * tan(\\frac{α}{2}) $\r\n\r\n$ l = -r $\r\n\r\n用上述变量进行替换得到最终的透视投影矩阵\r\n\r\n$\r\n\\begin{bmatrix}\r\n\\frac{1}{aspect * tan(\\frac{α}{2})} & 0 & 0 & 0\\\\\r\n0 & \\frac{1}{tan(\\frac{α}{2})} & 0 & 0\\\\\r\n0 & 0 & \\frac{n+f}{n-f} & 2\\frac{nf}{n-f}\\\\ \r\n0 & 0 & -1 & 0\r\n\\end{bmatrix}\r\n$"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "vscode插件推荐\r\n\r\nGLSL lint\r\nShader languages support for VS Code\r\nglsl-canvas"
+            ],
+            "outputs": []
         }
     ]
 }
