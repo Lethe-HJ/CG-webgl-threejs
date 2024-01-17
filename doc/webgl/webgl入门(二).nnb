@@ -10,7 +10,7 @@
         {
             "language": "javascript",
             "source": [
-                "const vertex_code = /*glsl */ `\n    attribute vec4 aPosition;\n    uniform mat4 mat;\n    void main() {\n        gl_Position = mat * aPosition;\n        gl_PointSize = 10.0;\n    }\n  `; // 顶点着色器\n\nconst fragment_code = /*glsl */ `\n    void main() {\n        gl_FragColor = vec4(1.0,0.0,0.0,1.0);\n    }\n  `; // 片元着色器\n\nconst js_code = /*js*/ `\n    const aPosition = gl.getAttribLocation(program, \"aPosition\");\n    const mat = gl.getUniformLocation(program, \"mat\");\n\n    const points = new Float32Array([-0.5, -0.5, 0.5, -0.5, 0.0, 0.5]);\n\n    const buffer = gl.createBuffer();\n\n    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);\n\n    gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);\n\n    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);\n\n    gl.enableVertexAttribArray(aPosition);\n\n    let eyey = -0.1;\n    function animation() {\n    eyey += 0.01;\n    if (eyey > 1) {\n        eyey = -0.1;\n    }\n\n    const vm = getViewMatrix(0.0, eyey, 0.2, 0.0, 0.0, 0.0, 0.0, 0.6, 0.0);\n    const ortho = getOrtho(-1, 1, 1, -1, 0, 20);\n    // const matrix = getTranslateMatrix(x, x);\n    // gl.vertexAttrib1f(aTranslate, x);\n    gl.uniformMatrix4fv(mat, false, mixMatrix(vm, ortho));\n    gl.drawArrays(gl.TRIANGLES, 0, 3);\n\n    requestAnimationFrame(animation);\n}\n`;\nanimation();\n\nconst { renderWebgl } = require(\"../../src/display.js\");\n\n\nrenderWebgl(vertex_code, fragment_code, js_code);\n"
+                ""
             ],
             "outputs": [
                 {
