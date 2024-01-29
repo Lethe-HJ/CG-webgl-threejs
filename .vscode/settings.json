@@ -1,8 +1,14 @@
 {
     "cSpell.words": [
+        "Directinal",
+        "eyex",
+        "eyey",
+        "eyez",
         "glsl",
+        "GLTF",
         "importmap",
         "lowp",
+        "Raycaster",
         "threejs",
         "uuidv",
         "webgl"
