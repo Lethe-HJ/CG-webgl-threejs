@@ -1,0 +1,649 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "## 1. 初识 webgl 与 canvas\r\n\r\n### 1.1 介绍 canvas\r\n\r\n`<canvas></canvas>`   是 HTML5 新增的一个 DOM 元素\r\n用途：显示 二维 和 三维 的图像\r\n二维图形可以使用 （ Canvas API 或 WebGL API）绘制\r\n三维图形使用 WebGL API 绘制\r\n\r\ncanvas api 绘图主要通过 `CanvasRenderingContext2D` 接口完成 `canvas.getContext('2d')`\r\n\r\nWebGL API 绘图主要通过 `WebGLRenderingContext` 接口完成 `canvas.getContext('webgl')` 或 `canvas.getContext('webgl2')`\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "gl.clearColor 与 gl.clear\r\n\r\n`gl.clearColor(r,g,b,a)` 指定清空 `<canvas>` 的颜⾊，接收四个参数（取值区间为 0.0~1.0）\r\n`gl.clear(buffer)`\r\n\r\nbuffer\r\n\r\n- `gl.COLOR_BUFFER_BIT` 清空颜色缓存 搭配`gl.clearColor(r,g,b,a)`使用\r\n- `gl.DEPTH_BUFFER_BIT` 清空深度缓冲区 搭配`gl.clearDepth(1.0)`使用\r\n- `gl.STENCIL_BUFFER_BIT` 清空模板缓冲区 搭配`gl.clearStencil(0)`使用\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 1.3 示例 画一个点\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const vertex_code = /*glsl */ `\r\n  // 必须要存在 main 函数\r\n  void main() {\r\n    // 要绘制的点的坐标\r\n    gl_Position = vec4(0.0,0.0,0.0,1.0); // (x/w, y/w, z/w)\r\n    // 点的大小\r\n    gl_PointSize = 30.0;\r\n  }\r\n`; // 顶点着色器\r\n\r\nconst fragment_code = /*glsl */ `\r\n  void main() {\r\n    gl_FragColor = vec4(1.0,0.0,0.0,1.0);\r\n  }\r\n`; // 片元着色器\r\n\r\nconst js_code = /*js*/ `\r\n    gl.attachShader(program, vertexShader)\r\n    gl.attachShader(program, fragmentShader)\r\n    gl.linkProgram(program)\r\n    gl.useProgram(program)\r\n    gl.drawArrays(gl.POINTS, 0, 1);\r\n`;\r\nconst { renderWebgl } = require(\"../../src/display.js\");\r\nrenderWebgl(vertex_code, fragment_code, js_code);"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/html",
+                            "value": [
+                                "<style> table, th, tr { text-align: left; }</style>",
+                                "        <canvas id=\"9d0b72e0-bf31-11ee-b233-ebd3926c94ae\" width=\"400\" height=\"400\" style=\"border:1px solid grey\">",
+                                "            此浏览器不支持canvas",
+                                "        </canvas>",
+                                "        <script>",
+                                "            { // 限制变量定义域",
+                                "                ",
+                                "        const ctx = document.getElementById('9d0b72e0-bf31-11ee-b233-ebd3926c94ae');",
+                                "        const gl = ctx.getContext('webgl');",
+                                "        const vertexShader = gl.createShader(gl.VERTEX_SHADER);",
+                                "        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);",
+                                "    ",
+                                "        gl.shaderSource(vertexShader,  \"\\n  // 必须要存在 main 函数\\n  void main() {\\n    // 要绘制的点的坐标\\n    gl_Position = vec4(0.0,0.0,0.0,1.0); // (x/w, y/w, z/w)\\n    // 点的大小\\n    gl_PointSize = 30.0;\\n  }\\n\"); // 指定顶点着色器的源码",
+                                "        gl.shaderSource(fragmentShader,  \"\\n  void main() {\\n    gl_FragColor = vec4(1.0,0.0,0.0,1.0);\\n  }\\n\"); // 指定片元着色器的源码",
+                                "    ",
+                                "        // 编译着色器",
+                                "        gl.compileShader(vertexShader);",
+                                "        gl.compileShader(fragmentShader);",
+                                "    ",
+                                "        // 创建一个程序对象",
+                                "        const program = gl.createProgram();",
+                                "    ",
+                                "        gl.attachShader(program, vertexShader);",
+                                "        gl.attachShader(program, fragmentShader);",
+                                "    ",
+                                "        gl.linkProgram(program);",
+                                "    ",
+                                "        gl.useProgram(program);",
+                                "    ",
+                                "    gl.attachShader(program, vertexShader)",
+                                "    gl.attachShader(program, fragmentShader)",
+                                "    gl.linkProgram(program)",
+                                "    gl.useProgram(program)",
+                                "    gl.drawArrays(gl.POINTS, 0, 1);",
+                                "",
+                                "            }",
+                                "        </script>",
+                                "    "
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 1.3 示例 画一个点\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 1.4 canvas 坐标系示意图\r\n\r\n![canvas坐标系示意图](./img/image-9.png)\r\n\r\n### 1.5 webgl 三维坐标系示意图\r\n\r\n![webgl三维坐标系示意图](./img/image-10.png)\r\n\r\n### 1.6 右手坐标系\r\n\r\n![右手坐标系](./img/image-12.png)\r\n\r\n### 1.7 webgl 的绘图区域\r\n\r\n![绘图区域](./img/image-11.png)\r\n\r\n关于旋转方向 如下图所示的方向规定为相对于该旋转轴的旋转正方向\r\n\r\n![关于旋转方向](./img/image-13.png)\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 1.8 示例 画一个移动的点\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const vertex_code = /*glsl */ `\r\n  attribute vec4 aPosition;\r\n  void main() {\r\n    gl_Position = aPosition; \r\n    gl_PointSize = 30.0;\r\n  }\r\n`;\r\n\r\nconst fragment_code = /*glsl */ `\r\n  void main() {\r\n    gl_FragColor = vec4(1.0,0.0,0.0,1.0);\r\n  }\r\n`;\r\n\r\nconst js_code = /*js*/ `\r\n    const aPosition = gl.getAttribLocation(program, 'aPosition');\r\n    let x = 0;\r\n    setInterval(() => {\r\n        x+=0.1;\r\n        if(x>1.0) x=0;\r\n        gl.vertexAttrib1f(aPosition, x);\r\n        gl.drawArrays(gl.POINTS, 0, 1);\r\n    }, 200);\r\n`;\r\nconst { renderWebgl } = require(\"../../src/display.js\");\r\nrenderWebgl(vertex_code, fragment_code, js_code);\r\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/html",
+                            "value": [
+                                "<style> table, th, tr { text-align: left; }</style>",
+                                "        <canvas id=\"99ca2a90-bf31-11ee-b233-ebd3926c94ae\" width=\"400\" height=\"400\" style=\"border:1px solid grey\">",
+                                "            此浏览器不支持canvas",
+                                "        </canvas>",
+                                "        <script>",
+                                "            { // 限制变量定义域",
+                                "                ",
+                                "        const ctx = document.getElementById('99ca2a90-bf31-11ee-b233-ebd3926c94ae');",
+                                "        const gl = ctx.getContext('webgl');",
+                                "        const vertexShader = gl.createShader(gl.VERTEX_SHADER);",
+                                "        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);",
+                                "    ",
+                                "        gl.shaderSource(vertexShader,  \"\\n  attribute vec4 aPosition;\\n  void main() {\\n    gl_Position = aPosition; \\n    gl_PointSize = 30.0;\\n  }\\n\"); // 指定顶点着色器的源码",
+                                "        gl.shaderSource(fragmentShader,  \"\\n  void main() {\\n    gl_FragColor = vec4(1.0,0.0,0.0,1.0);\\n  }\\n\"); // 指定片元着色器的源码",
+                                "    ",
+                                "        // 编译着色器",
+                                "        gl.compileShader(vertexShader);",
+                                "        gl.compileShader(fragmentShader);",
+                                "    ",
+                                "        // 创建一个程序对象",
+                                "        const program = gl.createProgram();",
+                                "    ",
+                                "        gl.attachShader(program, vertexShader);",
+                                "        gl.attachShader(program, fragmentShader);",
+                                "    ",
+                                "        gl.linkProgram(program);",
+                                "    ",
+                                "        gl.useProgram(program);",
+                                "    ",
+                                "    const aPosition = gl.getAttribLocation(program, 'aPosition');",
+                                "    let x = 0;",
+                                "    setInterval(() => {",
+                                "        x+=0.1;",
+                                "        if(x>1.0) x=0;",
+                                "        gl.vertexAttrib1f(aPosition, x);",
+                                "        gl.drawArrays(gl.POINTS, 0, 1);",
+                                "    }, 200);",
+                                "",
+                                "            }",
+                                "        </script>",
+                                "    "
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "注意: attribute 变量只能在顶点着色器中使用，不能在片元着色器中使用\r\n\r\n`gl.vertexAttrib1f(location, v0)`\r\n\r\n`gl.vertexAttrib2f(location, v0, v1)`\r\n\r\n`gl.vertexAttrib3f(location, v0, v1, v2)`\r\n\r\n`gl.vertexAttrib4f(location, v0, v1, v2, v3)`\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 1.9 示例 通过鼠标点击绘制不同颜色的点\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const vertex_code = /*glsl */ `\r\n  uniform vec4 uPosition;\r\n  attribute vec4 aPosition;\r\n  void main() {\r\n    gl_Position = aPosition; // vec4(0.0,0.0,0.0,1.0)\r\n    gl_PointSize = 10.0;\r\n  }\r\n`; // 顶点着色器\r\n\r\nconst fragment_code = /*glsl */ `\r\n  precision mediump float;\r\n  uniform vec2 uColor;\r\n  void main() {\r\n    gl_FragColor = vec4(uColor.r, uColor.g, 0.0,1.0); // vec4\r\n  }\r\n`; // 片元着色器\r\n\r\nconst js_code = /*js*/ `\r\n  const aPosition = gl.getAttribLocation(program, 'aPosition');\r\n  const uColor = gl.getUniformLocation(program, 'uColor')\r\n  const points = []\r\n  ctx.onclick = function(ev) {\r\n    const x = ev.clientX\r\n    const y = ev.clientY\r\n    const domPosition = ev.target.getBoundingClientRect();\r\n    const domx = x - domPosition.left\r\n    const domy = y - domPosition.top;\r\n    const halfWidth = ctx.offsetWidth / 2\r\n    const halfHeight = ctx.offsetHeight / 2\r\n    const clickX = (domx - halfWidth) / halfWidth\r\n    const clickY = (halfHeight - domy) / halfHeight\r\n    points.push({ clickX, clickY });\r\n    for (let i = 0; i < points.length; i++) {\r\n      gl.vertexAttrib2f(aPosition, points[i].clickX, points[i].clickY)\r\n      gl.uniform2f(uColor, points[i].clickX, points[i].clickY)\r\n      gl.drawArrays(gl.POINTS, 0, 1);\r\n    }\r\n  }\r\n`;\r\nconst { renderWebgl } = require(\"../../src/display.js\");\r\nrenderWebgl(vertex_code, fragment_code, js_code);\r\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/html",
+                            "value": [
+                                "<style> table, th, tr { text-align: left; }</style>",
+                                "        <canvas id=\"96bc0030-bf31-11ee-b233-ebd3926c94ae\" width=\"400\" height=\"400\" style=\"border:1px solid grey\">",
+                                "            此浏览器不支持canvas",
+                                "        </canvas>",
+                                "        <script>",
+                                "            { // 限制变量定义域",
+                                "                ",
+                                "        const ctx = document.getElementById('96bc0030-bf31-11ee-b233-ebd3926c94ae');",
+                                "        const gl = ctx.getContext('webgl');",
+                                "        const vertexShader = gl.createShader(gl.VERTEX_SHADER);",
+                                "        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);",
+                                "    ",
+                                "        gl.shaderSource(vertexShader,  \"\\n  uniform vec4 uPosition;\\n  attribute vec4 aPosition;\\n  void main() {\\n    gl_Position = aPosition; // vec4(0.0,0.0,0.0,1.0)\\n    gl_PointSize = 10.0;\\n  }\\n\"); // 指定顶点着色器的源码",
+                                "        gl.shaderSource(fragmentShader,  \"\\n  precision mediump float;\\n  uniform vec2 uColor;\\n  void main() {\\n    gl_FragColor = vec4(uColor.r, uColor.g, 0.0,1.0); // vec4\\n  }\\n\"); // 指定片元着色器的源码",
+                                "    ",
+                                "        // 编译着色器",
+                                "        gl.compileShader(vertexShader);",
+                                "        gl.compileShader(fragmentShader);",
+                                "    ",
+                                "        // 创建一个程序对象",
+                                "        const program = gl.createProgram();",
+                                "    ",
+                                "        gl.attachShader(program, vertexShader);",
+                                "        gl.attachShader(program, fragmentShader);",
+                                "    ",
+                                "        gl.linkProgram(program);",
+                                "    ",
+                                "        gl.useProgram(program);",
+                                "    ",
+                                "  const aPosition = gl.getAttribLocation(program, 'aPosition');",
+                                "  const uColor = gl.getUniformLocation(program, 'uColor')",
+                                "  const points = []",
+                                "  ctx.onclick = function(ev) {",
+                                "    const x = ev.clientX",
+                                "    const y = ev.clientY",
+                                "    const domPosition = ev.target.getBoundingClientRect();",
+                                "    const domx = x - domPosition.left",
+                                "    const domy = y - domPosition.top;",
+                                "    const halfWidth = ctx.offsetWidth / 2",
+                                "    const halfHeight = ctx.offsetHeight / 2",
+                                "    const clickX = (domx - halfWidth) / halfWidth",
+                                "    const clickY = (halfHeight - domy) / halfHeight",
+                                "    points.push({ clickX, clickY });",
+                                "    for (let i = 0; i < points.length; i++) {",
+                                "      gl.vertexAttrib2f(aPosition, points[i].clickX, points[i].clickY)",
+                                "      gl.uniform2f(uColor, points[i].clickX, points[i].clickY)",
+                                "      gl.drawArrays(gl.POINTS, 0, 1);",
+                                "    }",
+                                "  }",
+                                "",
+                                "            }",
+                                "        </script>",
+                                "    "
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "`gl.uniform1f(location, v0)`\r\n\r\n`gl.uniform2f(location, v0, v1)`\r\n\r\n`gl.uniform3f(location, v0, v1, v2)`\r\n\r\n`gl.uniform4f(location, v0, v1, v2, v3)`\r\n\r\n参数介绍:\r\n\r\n    location:\r\n      指定 uniform变量的存储位置\r\n    v0,v1,v2,v3：\r\n      传入的四个分量的值\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 2.0 示例 使用缓冲区绘制点\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "多缓冲区\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const vertex_code = /*glsl */ `\r\n  attribute vec4 aPosition;\r\n  attribute float aPointSize;\r\n  void main() {\r\n    gl_Position = aPosition;\r\n    gl_PointSize = aPointSize;\r\n  }\r\n`;\r\n\r\nconst fragment_code = /*glsl */ `\r\n  void main() {\r\n    gl_FragColor = vec4(1.0,0.0,0.0,1.0);\r\n  }\r\n`;\r\n\r\nconst js_code = /*js*/ `\r\n  const aPosition = gl.getAttribLocation(program, 'aPosition');\r\n  const aPointSize = gl.getAttribLocation(program, 'aPointSize');\r\n  const points = new Float32Array([\r\n    -0.5, -0.5,\r\n    0.5, -0.5,\r\n    0.0,  0.5,\r\n  ]);\r\n  const buffer = gl.createBuffer();\r\n  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);\r\n  gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);\r\n  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);\r\n  gl.enableVertexAttribArray(aPosition);\r\n  const size = new Float32Array([\r\n    10.0, // 10.0\r\n    20.0, // 20.0\r\n    30.0, // 30.0\r\n  ]);\r\n  const sizeBuffer = gl.createBuffer();\r\n  gl.bindBuffer(gl.ARRAY_BUFFER, sizeBuffer);\r\n  gl.bufferData(gl.ARRAY_BUFFER, size, gl.STATIC_DRAW);\r\n  gl.vertexAttribPointer(aPointSize, 1, gl.FLOAT, false, 0, 0);\r\n  gl.enableVertexAttribArray(aPointSize);\r\n  gl.drawArrays(gl.POINTS, 0, 3);\r\n`;\r\nconst { renderWebgl } = require(\"../../src/display.js\");\r\nrenderWebgl(vertex_code, fragment_code, js_code);\r\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/html",
+                            "value": [
+                                "<style> table, th, tr { text-align: left; }</style>",
+                                "        <canvas id=\"7dbcc510-bf31-11ee-b233-ebd3926c94ae\" width=\"400\" height=\"400\" style=\"border:1px solid grey\">",
+                                "            此浏览器不支持canvas",
+                                "        </canvas>",
+                                "        <script>",
+                                "            { // 限制变量定义域",
+                                "                ",
+                                "        const ctx = document.getElementById('7dbcc510-bf31-11ee-b233-ebd3926c94ae');",
+                                "        const gl = ctx.getContext('webgl');",
+                                "        const vertexShader = gl.createShader(gl.VERTEX_SHADER);",
+                                "        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);",
+                                "    ",
+                                "        gl.shaderSource(vertexShader,  \"\\n  attribute vec4 aPosition;\\n  attribute float aPointSize;\\n  void main() {\\n    gl_Position = aPosition;\\n    gl_PointSize = aPointSize;\\n  }\\n\"); // 指定顶点着色器的源码",
+                                "        gl.shaderSource(fragmentShader,  \"\\n  void main() {\\n    gl_FragColor = vec4(1.0,0.0,0.0,1.0);\\n  }\\n\"); // 指定片元着色器的源码",
+                                "    ",
+                                "        // 编译着色器",
+                                "        gl.compileShader(vertexShader);",
+                                "        gl.compileShader(fragmentShader);",
+                                "    ",
+                                "        // 创建一个程序对象",
+                                "        const program = gl.createProgram();",
+                                "    ",
+                                "        gl.attachShader(program, vertexShader);",
+                                "        gl.attachShader(program, fragmentShader);",
+                                "    ",
+                                "        gl.linkProgram(program);",
+                                "    ",
+                                "        gl.useProgram(program);",
+                                "    ",
+                                "  const aPosition = gl.getAttribLocation(program, 'aPosition');",
+                                "  const aPointSize = gl.getAttribLocation(program, 'aPointSize');",
+                                "  const points = new Float32Array([",
+                                "    -0.5, -0.5,",
+                                "    0.5, -0.5,",
+                                "    0.0,  0.5,",
+                                "  ]);",
+                                "  const buffer = gl.createBuffer();",
+                                "  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);",
+                                "  gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);",
+                                "  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);",
+                                "  gl.enableVertexAttribArray(aPosition);",
+                                "  const size = new Float32Array([",
+                                "    10.0, // 10.0",
+                                "    20.0, // 20.0",
+                                "    30.0, // 30.0",
+                                "  ]);",
+                                "  const sizeBuffer = gl.createBuffer();",
+                                "  gl.bindBuffer(gl.ARRAY_BUFFER, sizeBuffer);",
+                                "  gl.bufferData(gl.ARRAY_BUFFER, size, gl.STATIC_DRAW);",
+                                "  gl.vertexAttribPointer(aPointSize, 1, gl.FLOAT, false, 0, 0);",
+                                "  gl.enableVertexAttribArray(aPointSize);",
+                                "  gl.drawArrays(gl.POINTS, 0, 3);",
+                                "",
+                                "            }",
+                                "        </script>",
+                                "    "
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "数据偏移\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const vertex_code = /*glsl */ `\r\n  attribute vec4 aPosition;\r\n  attribute float aPointSize;\r\n  void main() {\r\n    gl_Position = aPosition;\r\n    gl_PointSize = aPointSize;\r\n  }\r\n`;\r\n\r\nconst fragment_code = /*glsl */ `\r\n  void main() {\r\n    gl_FragColor = vec4(1.0,0.0,0.0,1.0);\r\n  }\r\n`;\r\n\r\nconst js_code = /*js*/ `\r\n  const aPosition = gl.getAttribLocation(program, 'aPosition');\r\n  const aPointSize = gl.getAttribLocation(program, 'aPointSize');\r\n  const points = new Float32Array([\r\n    -0.5, -0.5, 10.0, // 10.0\r\n    0.5, -0.5, 20.0, // 20.0\r\n    0.0,  0.5, 30.0, // 30.0\r\n  ]);\r\n  const buffer = gl.createBuffer();\r\n  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);\r\n  gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);\r\n  const BYTES = points.BYTES_PER_ELEMENT;\r\n  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, BYTES * 3, 0);\r\n  gl.enableVertexAttribArray(aPosition)\r\n  gl.vertexAttribPointer(aPointSize, 1, gl.FLOAT, false, BYTES * 3, BYTES * 2);\r\n  gl.enableVertexAttribArray(aPointSize)\r\n  gl.drawArrays(gl.POINTS, 0, 3);\r\n`;\r\nconst { renderWebgl } = require(\"../../src/display.js\");\r\nrenderWebgl(vertex_code, fragment_code, js_code);"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/html",
+                            "value": [
+                                "<style> table, th, tr { text-align: left; }</style>",
+                                "        <canvas id=\"7c442ed0-bf31-11ee-b233-ebd3926c94ae\" width=\"400\" height=\"400\" style=\"border:1px solid grey\">",
+                                "            此浏览器不支持canvas",
+                                "        </canvas>",
+                                "        <script>",
+                                "            { // 限制变量定义域",
+                                "                ",
+                                "        const ctx = document.getElementById('7c442ed0-bf31-11ee-b233-ebd3926c94ae');",
+                                "        const gl = ctx.getContext('webgl');",
+                                "        const vertexShader = gl.createShader(gl.VERTEX_SHADER);",
+                                "        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);",
+                                "    ",
+                                "        gl.shaderSource(vertexShader,  \"\\n  attribute vec4 aPosition;\\n  attribute float aPointSize;\\n  void main() {\\n    gl_Position = aPosition;\\n    gl_PointSize = aPointSize;\\n  }\\n\"); // 指定顶点着色器的源码",
+                                "        gl.shaderSource(fragmentShader,  \"\\n  void main() {\\n    gl_FragColor = vec4(1.0,0.0,0.0,1.0);\\n  }\\n\"); // 指定片元着色器的源码",
+                                "    ",
+                                "        // 编译着色器",
+                                "        gl.compileShader(vertexShader);",
+                                "        gl.compileShader(fragmentShader);",
+                                "    ",
+                                "        // 创建一个程序对象",
+                                "        const program = gl.createProgram();",
+                                "    ",
+                                "        gl.attachShader(program, vertexShader);",
+                                "        gl.attachShader(program, fragmentShader);",
+                                "    ",
+                                "        gl.linkProgram(program);",
+                                "    ",
+                                "        gl.useProgram(program);",
+                                "    ",
+                                "  const aPosition = gl.getAttribLocation(program, 'aPosition');",
+                                "  const aPointSize = gl.getAttribLocation(program, 'aPointSize');",
+                                "  const points = new Float32Array([",
+                                "    -0.5, -0.5, 10.0, // 10.0",
+                                "    0.5, -0.5, 20.0, // 20.0",
+                                "    0.0,  0.5, 30.0, // 30.0",
+                                "  ]);",
+                                "  const buffer = gl.createBuffer();",
+                                "  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);",
+                                "  gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);",
+                                "  const BYTES = points.BYTES_PER_ELEMENT;",
+                                "  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, BYTES * 3, 0);",
+                                "  gl.enableVertexAttribArray(aPosition)",
+                                "  gl.vertexAttribPointer(aPointSize, 1, gl.FLOAT, false, BYTES * 3, BYTES * 2);",
+                                "  gl.enableVertexAttribArray(aPointSize)",
+                                "  gl.drawArrays(gl.POINTS, 0, 3);",
+                                "",
+                                "            }",
+                                "        </script>",
+                                "    "
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "缓冲区对象是 WebGL 系统中的一块内存区域，可以一次性地向缓冲区对象中填充大量的顶点数据，然后将这些数据保存在其中，供顶点着色器使用\r\n在 webgl 中，需要处理⼤量的相同类型数据，所以引入类型化数组，这样程序就可以预知到数组中的数据类型， 提⾼性能。\r\n\r\n类型化数组类型\r\n\r\n- Int8Array: 8 位整型\r\n- UInt8Array: 8 位无符号整型\r\n- Int16Array: 16 位整型\r\n- UInt16Array:16 位无符号整型\r\n- Int32Array:32 位整型\r\n- UInt32Array:32 位无符号整型\r\n- Float32Array: 单精度 32 位浮点型\r\n- Float64Array: 双精度 64 位浮点型\r\n\r\n#### 缓冲区对象相关的 api\r\n\r\n`gl.createBuffer` 创建缓冲区对象\r\n\r\n`gl.bindBuffer(target, buffer)` 绑定缓冲区对象\r\n\r\n- buffer: 已经创建好的缓冲区对象\r\n- target：可以是如下两种\r\n  - gl. ARRAY_BUFFER: 表示缓冲区存储的是顶点的数据\r\n  - gl. ELEMENT_ARRAY_BUFFER: 表示缓冲区存储的是顶点的索引值\r\n\r\n`gl.bufferData(target, data, type)` 写入数据到缓冲区\r\n\r\n- target: 类型同 gl.bindBuffer 中的 target\r\n- data: 写⼊缓冲区的顶点数据，如程序中的 points\r\n- type: 表示如何使⽤缓冲区对象中的数据，分为以下⼏类\r\n  - gl. STATIC_DRAW: 写⼊⼀次，多次绘制\r\n  - gl. STREAM_DRAW: 写⼊⼀次，绘制若干次\r\n  - gl. DYNAMIC_DRAW: 写⼊多次，绘制多次\r\n\r\n`gl.vertexAttribPointer(location, size, type, normalized, stride, offset)` 分配缓冲区对象给 location 这个 attribute 变量 并指定数据格式等细节\r\n\r\n- location: attribute 变量的存储位置\r\n- size: 指定每个顶点所使⽤数据的个数\r\n- type: 指定数据格式\r\n  - gl. FLOAT：浮点型\r\n  - gl. UNSIGNED_BYTE：⽆符号字节\r\n  - gl. SHORT：短整型\r\n  - gl. UNSIGNED_SHORT：无符号短整型\r\n  - gl. INT：整型\r\n  - gl. UNSIGNED_INT：无符号整型\r\n- normalized: 表示是否将数据归⼀化到 [0, 1] [-1, 1] 这个区间\r\n- stride：两个相邻顶点之间的字节数\r\n- offset：数据偏移量\r\n\r\n`gl.enableVertexAttribArray(location)` 启用 attribute 变量\r\n\r\n- location: attribute 变量的存储地址\r\n\r\n`gl.disableVertexAttribArray(aPosition)` 禁⽤ attribute 变量\r\n\r\n#### 缓冲区使用流程\r\n\r\n1. 创建顶点数据\r\n2. 创建缓冲区对象\r\n3. 绑定缓冲区对象\r\n4. 写入数据到缓冲区\r\n5. 分配缓冲区对象给一个 attribute 变量\r\n6. 启用这个 attribute 变量\r\n\r\n缓冲区执行过程\r\n\r\n![缓冲区执行过程](./img/image-14.png)\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 2.1 画正方形\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const vertex_code = /*glsl */ `\r\n  attribute vec4 aPosition;\r\n  void main() {\r\n    gl_Position = aPosition; // vec4(0.0,0.0,0.0,1.0)\r\n    gl_PointSize = 10.0;\r\n  }\r\n`;\r\n\r\nconst fragment_code = /*glsl */ `\r\n  void main() {\r\n    gl_FragColor = vec4(1.0,0.0,0.0,1.0);\r\n  }\r\n`;\r\n\r\nconst js_code = /*js*/ `\r\n  const aPosition = gl.getAttribLocation(program, 'aPosition');\r\n  const aPointSize = gl.getAttribLocation(program, 'aPointSize');\r\n  const points = new Float32Array([\r\n    -0.5, -0.5,\r\n    0.5, -0.5,\r\n    -0.5,  0.5,\r\n    0.5,  0.5,\r\n  ]);\r\n  const buffer = gl.createBuffer();\r\n  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);\r\n  gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);\r\n  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);\r\n  gl.enableVertexAttribArray(aPosition)\r\n  // gl.vertexAttrib2f(aPosition, 0.0, 0.0)\r\n  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);\r\n`;\r\nconst { renderWebgl } = require(\"../../src/display.js\");\r\nrenderWebgl(vertex_code, fragment_code, js_code);\r\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/html",
+                            "value": [
+                                "<style> table, th, tr { text-align: left; }</style>",
+                                "        <canvas id=\"81cecae0-bf31-11ee-b233-ebd3926c94ae\" width=\"400\" height=\"400\" style=\"border:1px solid grey\">",
+                                "            此浏览器不支持canvas",
+                                "        </canvas>",
+                                "        <script>",
+                                "            { // 限制变量定义域",
+                                "                ",
+                                "        const ctx = document.getElementById('81cecae0-bf31-11ee-b233-ebd3926c94ae');",
+                                "        const gl = ctx.getContext('webgl');",
+                                "        const vertexShader = gl.createShader(gl.VERTEX_SHADER);",
+                                "        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);",
+                                "    ",
+                                "        gl.shaderSource(vertexShader,  \"\\n  attribute vec4 aPosition;\\n  void main() {\\n    gl_Position = aPosition; // vec4(0.0,0.0,0.0,1.0)\\n    gl_PointSize = 10.0;\\n  }\\n\"); // 指定顶点着色器的源码",
+                                "        gl.shaderSource(fragmentShader,  \"\\n  void main() {\\n    gl_FragColor = vec4(1.0,0.0,0.0,1.0);\\n  }\\n\"); // 指定片元着色器的源码",
+                                "    ",
+                                "        // 编译着色器",
+                                "        gl.compileShader(vertexShader);",
+                                "        gl.compileShader(fragmentShader);",
+                                "    ",
+                                "        // 创建一个程序对象",
+                                "        const program = gl.createProgram();",
+                                "    ",
+                                "        gl.attachShader(program, vertexShader);",
+                                "        gl.attachShader(program, fragmentShader);",
+                                "    ",
+                                "        gl.linkProgram(program);",
+                                "    ",
+                                "        gl.useProgram(program);",
+                                "    ",
+                                "  const aPosition = gl.getAttribLocation(program, 'aPosition');",
+                                "  const aPointSize = gl.getAttribLocation(program, 'aPointSize');",
+                                "  const points = new Float32Array([",
+                                "    -0.5, -0.5,",
+                                "    0.5, -0.5,",
+                                "    -0.5,  0.5,",
+                                "    0.5,  0.5,",
+                                "  ]);",
+                                "  const buffer = gl.createBuffer();",
+                                "  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);",
+                                "  gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);",
+                                "  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);",
+                                "  gl.enableVertexAttribArray(aPosition)",
+                                "  // gl.vertexAttrib2f(aPosition, 0.0, 0.0)",
+                                "  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);",
+                                "",
+                                "            }",
+                                "        </script>",
+                                "    "
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "三种不同三角形图元\r\n\r\n![gl. TRIANGLE_STRIP](./img/image-15.png)\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 2.8 示例 使用 varing 变量来绘制彩色三角形\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const vertex_code = /*glsl */ `\r\n  attribute vec4 aPosition;\r\n  varying vec4 vColor;\r\n  void main() {\r\n    vColor = aPosition;\r\n    gl_Position = aPosition;\r\n  }\r\n`;\r\n\r\nconst fragment_code = /*glsl */ `\r\n  precision lowp float;\r\n  varying vec4 vColor;\r\n\r\n  void main() {\r\n    gl_FragColor = vColor;\r\n  }\r\n`;\r\n\r\nconst js_code = /*js*/ `\r\n  const aPosition = gl.getAttribLocation(program, 'aPosition');\r\n  const points = new Float32Array([\r\n    -0.5, -0.5,\r\n    0.5, -0.5,\r\n    0.0,  0.5,\r\n  ])\r\n  const buffer = gl.createBuffer();\r\n  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);\r\n  gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);\r\n  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);\r\n  gl.enableVertexAttribArray(aPosition)\r\n  gl.drawArrays(gl.TRIANGLES, 0, 3);\r\n`;\r\n\r\nconst { renderWebgl } = require(\"../../src/display.js\");\r\nrenderWebgl(vertex_code, fragment_code, js_code);\r\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/html",
+                            "value": [
+                                "<style> table, th, tr { text-align: left; }</style>",
+                                "        <canvas id=\"bb9f3520-bf31-11ee-b233-ebd3926c94ae\" width=\"400\" height=\"400\" style=\"border:1px solid grey\">",
+                                "            此浏览器不支持canvas",
+                                "        </canvas>",
+                                "        <script>",
+                                "            { // 限制变量定义域",
+                                "                ",
+                                "        const ctx = document.getElementById('bb9f3520-bf31-11ee-b233-ebd3926c94ae');",
+                                "        const gl = ctx.getContext('webgl');",
+                                "        const vertexShader = gl.createShader(gl.VERTEX_SHADER);",
+                                "        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);",
+                                "    ",
+                                "        gl.shaderSource(vertexShader,  \"\\n  attribute vec4 aPosition;\\n  varying vec4 vColor;\\n  void main() {\\n    vColor = aPosition;\\n    gl_Position = aPosition;\\n  }\\n\"); // 指定顶点着色器的源码",
+                                "        gl.shaderSource(fragmentShader,  \"\\n  precision lowp float;\\n  varying vec4 vColor;\\n\\n  void main() {\\n    gl_FragColor = vColor;\\n  }\\n\"); // 指定片元着色器的源码",
+                                "    ",
+                                "        // 编译着色器",
+                                "        gl.compileShader(vertexShader);",
+                                "        gl.compileShader(fragmentShader);",
+                                "    ",
+                                "        // 创建一个程序对象",
+                                "        const program = gl.createProgram();",
+                                "    ",
+                                "        gl.attachShader(program, vertexShader);",
+                                "        gl.attachShader(program, fragmentShader);",
+                                "    ",
+                                "        gl.linkProgram(program);",
+                                "    ",
+                                "        gl.useProgram(program);",
+                                "    ",
+                                "  const aPosition = gl.getAttribLocation(program, 'aPosition');",
+                                "  const points = new Float32Array([",
+                                "    -0.5, -0.5,",
+                                "    0.5, -0.5,",
+                                "    0.0,  0.5,",
+                                "  ])",
+                                "  const buffer = gl.createBuffer();",
+                                "  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);",
+                                "  gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);",
+                                "  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);",
+                                "  gl.enableVertexAttribArray(aPosition)",
+                                "  gl.drawArrays(gl.TRIANGLES, 0, 3);",
+                                "",
+                                "            }",
+                                "        </script>",
+                                "    "
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 2.9 webgl绘制流程\r\n\r\n![Alt text](./img/image-22.png)\r\n\r\n1. 图元装配过程： 将独⽴的顶点坐标装配成几何图形，图形的类别由 gl.drawArrays() 第⼀个参数确定\r\n2. 光栅化：这⼀步是将装配好的图形转换为片元\r\n3. 剔除：对于不透明物体，背⾯对于观察者来说是不可⻅的。那么在渲染过程中，就会将不可⻅的部分剔除， 不参与绘制。节省渲染开销。\r\n4. 裁剪：在可视范围之外的事物是看不到的。图形⽣成后，有的部分可能位于可视范围之外，这⼀部分会被剪裁掉，不参与绘制\r\n\r\n"
+            ],
+            "outputs": []
+        }
+    ]
+}

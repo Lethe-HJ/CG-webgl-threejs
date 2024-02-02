@@ -1,0 +1,292 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "### 1 示例 百叶窗特效\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "const vertex_code = /*glsl */ `\r\n  attribute vec4 aPosition;\r\n  varying vec4 vPosition;\r\n  void main() {\r\n    vPosition = aPosition;\r\n    gl_Position = aPosition; // vec4(0.0,0.0,0.0,1.0)\r\n    gl_PointSize = 10.0;\r\n  }\r\n`;\r\n\r\nconst fragment_code = /*glsl */ `\r\n  precision lowp float;\r\n  uniform float uHeight;\r\n  varying vec4 vPosition;\r\n  uniform float list[5]; // 声明一个数组变量\r\n\r\n  void main() {\r\n    for(int i = 0; i < 5; i++) {\r\n      if (vPosition.y > list[i + 1] && vPosition.y < list[i]) {\r\n        if (vPosition.y > uHeight - float(i) * 0.5) {\r\n          gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\r\n        }\r\n      }\r\n    }\r\n  }\r\n`;\r\n\r\nconst js_code = /*js*/ `\r\n  const aPosition = gl.getAttribLocation(program, 'aPosition');\r\n  const uHeight = gl.getUniformLocation(program, 'uHeight');\r\n  const uList = gl.getUniformLocation(program,'list');\r\n\r\n  gl.uniform1fv(uList, [1.0, 0.5, 0.0, -0.5, -1.0]);\r\n  const points = new Float32Array([\r\n    -1.0, -1.0,\r\n    1.0, -1.0,\r\n    -1.0,  1.0,\r\n    1.0,  1.0,\r\n  ])\r\n  \r\n  const buffer = gl.createBuffer();\r\n\r\n  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);\r\n\r\n  gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);\r\n\r\n  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);\r\n\r\n  gl.enableVertexAttribArray(aPosition)\r\n  // gl.vertexAttrib2f(aPosition, 0.0, 0.0)\r\n\r\n  let value = 1;\r\n  function run() {\r\n    value -= 0.01;\r\n\r\n    gl.uniform1f(uHeight, value);\r\n    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);\r\n\r\n    requestAnimationFrame(run)\r\n  }\r\n  run();\r\n`;\r\nconst { renderWebgl } = require(\"../../src/display.js\");\r\nrenderWebgl(vertex_code, fragment_code, js_code);\r\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/html",
+                            "value": [
+                                "<style> table, th, tr { text-align: left; }</style>",
+                                "        <canvas id=\"723bf9e0-bf31-11ee-a6c0-b1d9d1362f8a\" width=\"400\" height=\"400\" style=\"border:1px solid grey\">",
+                                "            此浏览器不支持canvas",
+                                "        </canvas>",
+                                "        <script>",
+                                "            { // 限制变量定义域",
+                                "                ",
+                                "        const ctx = document.getElementById('723bf9e0-bf31-11ee-a6c0-b1d9d1362f8a');",
+                                "        const gl = ctx.getContext('webgl');",
+                                "        const vertexShader = gl.createShader(gl.VERTEX_SHADER);",
+                                "        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);",
+                                "    ",
+                                "        gl.shaderSource(vertexShader,  \"\\n  attribute vec4 aPosition;\\n  varying vec4 vPosition;\\n  void main() {\\n    vPosition = aPosition;\\n    gl_Position = aPosition; // vec4(0.0,0.0,0.0,1.0)\\n    gl_PointSize = 10.0;\\n  }\\n\"); // 指定顶点着色器的源码",
+                                "        gl.shaderSource(fragmentShader,  \"\\n  precision lowp float;\\n  uniform float uHeight;\\n  varying vec4 vPosition;\\n  uniform float list[5]; // 声明一个数组变量\\n\\n  void main() {\\n    for(int i = 0; i < 5; i++) {\\n      if (vPosition.y > list[i + 1] && vPosition.y < list[i]) {\\n        if (vPosition.y > uHeight - float(i) * 0.5) {\\n          gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\\n        }\\n      }\\n    }\\n  }\\n\"); // 指定片元着色器的源码",
+                                "    ",
+                                "        // 编译着色器",
+                                "        gl.compileShader(vertexShader);",
+                                "        gl.compileShader(fragmentShader);",
+                                "    ",
+                                "        // 创建一个程序对象",
+                                "        const program = gl.createProgram();",
+                                "    ",
+                                "        gl.attachShader(program, vertexShader);",
+                                "        gl.attachShader(program, fragmentShader);",
+                                "    ",
+                                "        gl.linkProgram(program);",
+                                "    ",
+                                "        gl.useProgram(program);",
+                                "    ",
+                                "  const aPosition = gl.getAttribLocation(program, 'aPosition');",
+                                "  const uHeight = gl.getUniformLocation(program, 'uHeight');",
+                                "  const uList = gl.getUniformLocation(program,'list');",
+                                "",
+                                "  gl.uniform1fv(uList, [1.0, 0.5, 0.0, -0.5, -1.0]);",
+                                "  const points = new Float32Array([",
+                                "    -1.0, -1.0,",
+                                "    1.0, -1.0,",
+                                "    -1.0,  1.0,",
+                                "    1.0,  1.0,",
+                                "  ])",
+                                "  ",
+                                "  const buffer = gl.createBuffer();",
+                                "",
+                                "  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);",
+                                "",
+                                "  gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);",
+                                "",
+                                "  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);",
+                                "",
+                                "  gl.enableVertexAttribArray(aPosition)",
+                                "  // gl.vertexAttrib2f(aPosition, 0.0, 0.0)",
+                                "",
+                                "  let value = 1;",
+                                "  function run() {",
+                                "    value -= 0.01;",
+                                "",
+                                "    gl.uniform1f(uHeight, value);",
+                                "    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);",
+                                "",
+                                "    requestAnimationFrame(run)",
+                                "  }",
+                                "  run();",
+                                "",
+                                "            }",
+                                "        </script>",
+                                "    "
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 2 示例 淡入淡出特效\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const vertex_code = /*glsl */ `\r\n  attribute vec4 aPosition;\r\n  void main() {\r\n    gl_Position = aPosition; // vec4(0.0,0.0,0.0,1.0)\r\n    gl_PointSize = 10.0;\r\n  }\r\n`;\r\n\r\nconst fragment_code = /*glsl */ `\r\n  precision lowp float;\r\n  uniform float uOpacity;\r\n  void main() {\r\n    gl_FragColor = vec4(1.0,0.0,0.0,uOpacity);\r\n  }\r\n`;\r\n\r\nconst js_code = /*js*/ `\r\n  const aPosition = gl.getAttribLocation(program, 'aPosition');\r\n  const uOpacity = gl.getUniformLocation(program, 'uOpacity');\r\n\r\n  const points = new Float32Array([\r\n    -1.0, -1.0,\r\n    1.0, -1.0,\r\n    -1.0,  1.0,\r\n    1.0,  1.0,\r\n  ])\r\n\r\n  const buffer = gl.createBuffer();\r\n\r\n  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);\r\n\r\n  gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);\r\n\r\n  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);\r\n\r\n  gl.enableVertexAttribArray(aPosition)\r\n  // gl.vertexAttrib2f(aPosition, 0.0, 0.0)\r\n\r\n  let value = 0;\r\n  function run() {\r\n    value += 0.01;\r\n    gl.uniform1f(uOpacity, value);\r\n    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);\r\n    requestAnimationFrame(run)\r\n  }\r\n  run();\r\n`;\r\nconst { renderWebgl } = require(\"../../src/display.js\");\r\nrenderWebgl(vertex_code, fragment_code, js_code);\r\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/html",
+                            "value": [
+                                "<style> table, th, tr { text-align: left; }</style>",
+                                "        <canvas id=\"6d938070-bf31-11ee-a6c0-b1d9d1362f8a\" width=\"400\" height=\"400\" style=\"border:1px solid grey\">",
+                                "            此浏览器不支持canvas",
+                                "        </canvas>",
+                                "        <script>",
+                                "            { // 限制变量定义域",
+                                "                ",
+                                "        const ctx = document.getElementById('6d938070-bf31-11ee-a6c0-b1d9d1362f8a');",
+                                "        const gl = ctx.getContext('webgl');",
+                                "        const vertexShader = gl.createShader(gl.VERTEX_SHADER);",
+                                "        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);",
+                                "    ",
+                                "        gl.shaderSource(vertexShader,  \"\\n  attribute vec4 aPosition;\\n  void main() {\\n    gl_Position = aPosition; // vec4(0.0,0.0,0.0,1.0)\\n    gl_PointSize = 10.0;\\n  }\\n\"); // 指定顶点着色器的源码",
+                                "        gl.shaderSource(fragmentShader,  \"\\n  precision lowp float;\\n  uniform float uOpacity;\\n  void main() {\\n    gl_FragColor = vec4(1.0,0.0,0.0,uOpacity);\\n  }\\n\"); // 指定片元着色器的源码",
+                                "    ",
+                                "        // 编译着色器",
+                                "        gl.compileShader(vertexShader);",
+                                "        gl.compileShader(fragmentShader);",
+                                "    ",
+                                "        // 创建一个程序对象",
+                                "        const program = gl.createProgram();",
+                                "    ",
+                                "        gl.attachShader(program, vertexShader);",
+                                "        gl.attachShader(program, fragmentShader);",
+                                "    ",
+                                "        gl.linkProgram(program);",
+                                "    ",
+                                "        gl.useProgram(program);",
+                                "    ",
+                                "  const aPosition = gl.getAttribLocation(program, 'aPosition');",
+                                "  const uOpacity = gl.getUniformLocation(program, 'uOpacity');",
+                                "",
+                                "  const points = new Float32Array([",
+                                "    -1.0, -1.0,",
+                                "    1.0, -1.0,",
+                                "    -1.0,  1.0,",
+                                "    1.0,  1.0,",
+                                "  ])",
+                                "",
+                                "  const buffer = gl.createBuffer();",
+                                "",
+                                "  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);",
+                                "",
+                                "  gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);",
+                                "",
+                                "  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);",
+                                "",
+                                "  gl.enableVertexAttribArray(aPosition)",
+                                "  // gl.vertexAttrib2f(aPosition, 0.0, 0.0)",
+                                "",
+                                "  let value = 0;",
+                                "  function run() {",
+                                "    value += 0.01;",
+                                "    gl.uniform1f(uOpacity, value);",
+                                "    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);",
+                                "    requestAnimationFrame(run)",
+                                "  }",
+                                "  run();",
+                                "",
+                                "            }",
+                                "        </script>",
+                                "    "
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const vertex_code = /*glsl */ `\r\n  attribute vec4 aPosition;\r\n  varying vec4 vPosition;\r\n  void main() {\r\n    vPosition = aPosition;\r\n\r\n    gl_Position = aPosition; // vec4(0.0,0.0,0.0,1.0)\r\n    gl_PointSize = 10.0;\r\n  }\r\n`;\r\n\r\nconst fragment_code = /*glsl */ `\r\n  precision lowp float;\r\n  uniform float uHeight;\r\n  varying vec4 vPosition;\r\n\r\n  void main() {\r\n    // 向上卷 vPosition.y > uHeight   uHeight 的取值范围 -1.0 1.0\r\n    // 向下卷 vPosition.y < uHeight   uHeight 的取值范围 -1.0 1.0\r\n    // 向左卷 vPosition.x < uHeight   uHeight 的取值范围 -1.0 1.0\r\n    // 向右卷 vPosition.x > uHeight   uHeight 的取值范围 -1.0 1.0\r\n    // 左下-右上\r\n    // vPosition.x > uHeight && vPosition.y > uHeight\r\n    // uHeight 从 -1.0 到 1.0\r\n\r\n    if (vPosition.y > uHeight) {\r\n      gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\r\n    } else {\r\n      gl_FragColor = vec4(1.0, 0.0, 0.0, 0.0);\r\n    }\r\n  }\r\n`;\r\n\r\nconst js_code = /*js*/ `\r\n  const aPosition = gl.getAttribLocation(program, 'aPosition');\r\n  const uHeight = gl.getUniformLocation(program, 'uHeight');\r\n\r\n  const points = new Float32Array([\r\n    -1.0, -1.0,\r\n    1.0, -1.0,\r\n    -1.0,  1.0,\r\n    1.0,  1.0,\r\n  ])\r\n\r\n  const buffer = gl.createBuffer();\r\n\r\n  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);\r\n\r\n  gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);\r\n\r\n  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);\r\n\r\n  gl.enableVertexAttribArray(aPosition)\r\n  // gl.vertexAttrib2f(aPosition, 0.0, 0.0)\r\n  \r\n  let value = -1;\r\n  function run() {\r\n    value += 0.01;\r\n    gl.uniform1f(uHeight, value);\r\n    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);\r\n    requestAnimationFrame(run)\r\n  }\r\n  run();\r\n`;\r\n\r\nconst { renderWebgl } = require(\"../../src/display.js\");\r\nrenderWebgl(vertex_code, fragment_code, js_code);\r\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/html",
+                            "value": [
+                                "<style> table, th, tr { text-align: left; }</style>",
+                                "        <canvas id=\"69458310-bf31-11ee-a6c0-b1d9d1362f8a\" width=\"400\" height=\"400\" style=\"border:1px solid grey\">",
+                                "            此浏览器不支持canvas",
+                                "        </canvas>",
+                                "        <script>",
+                                "            { // 限制变量定义域",
+                                "                ",
+                                "        const ctx = document.getElementById('69458310-bf31-11ee-a6c0-b1d9d1362f8a');",
+                                "        const gl = ctx.getContext('webgl');",
+                                "        const vertexShader = gl.createShader(gl.VERTEX_SHADER);",
+                                "        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);",
+                                "    ",
+                                "        gl.shaderSource(vertexShader,  \"\\n  attribute vec4 aPosition;\\n  varying vec4 vPosition;\\n  void main() {\\n    vPosition = aPosition;\\n\\n    gl_Position = aPosition; // vec4(0.0,0.0,0.0,1.0)\\n    gl_PointSize = 10.0;\\n  }\\n\"); // 指定顶点着色器的源码",
+                                "        gl.shaderSource(fragmentShader,  \"\\n  precision lowp float;\\n  uniform float uHeight;\\n  varying vec4 vPosition;\\n\\n  void main() {\\n    // 向上卷 vPosition.y > uHeight   uHeight 的取值范围 -1.0 1.0\\n    // 向下卷 vPosition.y < uHeight   uHeight 的取值范围 -1.0 1.0\\n    // 向左卷 vPosition.x < uHeight   uHeight 的取值范围 -1.0 1.0\\n    // 向右卷 vPosition.x > uHeight   uHeight 的取值范围 -1.0 1.0\\n    // 左下-右上\\n    // vPosition.x > uHeight && vPosition.y > uHeight\\n    // uHeight 从 -1.0 到 1.0\\n\\n    if (vPosition.y > uHeight) {\\n      gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\\n    } else {\\n      gl_FragColor = vec4(1.0, 0.0, 0.0, 0.0);\\n    }\\n  }\\n\"); // 指定片元着色器的源码",
+                                "    ",
+                                "        // 编译着色器",
+                                "        gl.compileShader(vertexShader);",
+                                "        gl.compileShader(fragmentShader);",
+                                "    ",
+                                "        // 创建一个程序对象",
+                                "        const program = gl.createProgram();",
+                                "    ",
+                                "        gl.attachShader(program, vertexShader);",
+                                "        gl.attachShader(program, fragmentShader);",
+                                "    ",
+                                "        gl.linkProgram(program);",
+                                "    ",
+                                "        gl.useProgram(program);",
+                                "    ",
+                                "  const aPosition = gl.getAttribLocation(program, 'aPosition');",
+                                "  const uHeight = gl.getUniformLocation(program, 'uHeight');",
+                                "",
+                                "  const points = new Float32Array([",
+                                "    -1.0, -1.0,",
+                                "    1.0, -1.0,",
+                                "    -1.0,  1.0,",
+                                "    1.0,  1.0,",
+                                "  ])",
+                                "",
+                                "  const buffer = gl.createBuffer();",
+                                "",
+                                "  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);",
+                                "",
+                                "  gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);",
+                                "",
+                                "  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);",
+                                "",
+                                "  gl.enableVertexAttribArray(aPosition)",
+                                "  // gl.vertexAttrib2f(aPosition, 0.0, 0.0)",
+                                "  ",
+                                "  let value = -1;",
+                                "  function run() {",
+                                "    value += 0.01;",
+                                "    gl.uniform1f(uHeight, value);",
+                                "    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);",
+                                "    requestAnimationFrame(run)",
+                                "  }",
+                                "  run();",
+                                "",
+                                "            }",
+                                "        </script>",
+                                "    "
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,39 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "## 2 glsl语言基础\r\n\r\n### 2.1 特性\r\n大小写敏感\r\n强制分号\r\n强类型语言\r\n变量不能以gl_,webgl_,_webgl_开头\r\n浮点数1必须要表示为1.0\r\n### 2.2 类型转换函数\r\nint()\r\nfloat()\r\nbool()\r\n\r\n### 2.3 运算符\r\n\r\n![运算符](./img/2024-01-13-15-05-31.png)\r\n\r\n### 2.4 矢量和矩阵\r\n\r\n`vec2` `vec3` `vec4` 用来表示具有 2，3，4 个浮点数元素的矢量\r\n`ivec2` `ivec3` `ivec4` 用来表示具有 2，3，4 个整型元素的矢量\r\n`bvec2` `bvec3` `bvec4` 用来表示具有 2，3，4 个布尔值元素的矢量\r\n使用`x y z w`等属性来访问顶点坐标的分量        \r\n使用`s t p q`等属性来访问纹理坐标的分量        \r\n这些属性也可以通过混合的方式取值\r\n例如:\r\n\r\n```glsl\r\nvec4 position = vec4(0.1, 0.2, 0.3, 1.0);\r\nposition.x; // 0.1\r\npositon.xz; // vec2(0.1, 0.3)\r\npositon.xyz; // vec2(0.1, 0.2, 0.3)\r\n```\r\n\r\n`mat2` `mat3` `mat4` 用来表示具有2 * 2， 3 * 3， 4 * 4 的浮点数元素的矩阵\r\n\r\n```glsl\r\nmat4 m = mat4(\r\n    1.0, 5.0,  9.0, 13.0,\r\n    2.0, 6.0, 10.0, 14.0,\r\n    3.0, 7.0, 11.0, 15.0,\r\n    4.0, 8.0, 12.0, 16.0,\r\n); // 注意 输入参数必须是列主序\r\n```\r\n\r\n上面的代码表示的是如下的矩阵\r\n\r\n\r\n$\r\n\\begin{bmatrix}\r\n1.0 & 2.0 & 3.0 & 4.0 \\\\\r\n5.0 & 6.0 & 7.0 & 8.0 \\\\\r\n9.0 & 10.0 & 11.0 & 12.0 \\\\\r\n13.0 & 14.0 & 15.0 & 16.0\r\n\\end{bmatrix}\r\n$\r\n\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 2.5 纹理取样器\r\n\r\n纹理取样器只能声明为uniform变量\r\n\r\n`sampler2D` 二维纹理\r\n\r\n`samplerCube` 立方体纹理\r\n\r\n声明例子\r\n\r\n```glsl\r\nuniform sampler2D uSampler;\r\nuniform samplerCube uSamplerCube;\r\n\r\n```"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 2.6 分支与循环\r\n\r\n`if else` `switch case` `for` `while` `do while` `continue` `break`的使用方式与js相同\r\n`discard` 在片元着色器中表示放弃当前片元直接处理下一个片元"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 2.7 函数\r\n\r\n```glsl\r\nfloat getFloat(){\r\n    return 1.1;\r\n}\r\n```\r\n\r\nglsl的常用的内置函数如下\r\n\r\n角度函数\r\n`radians` 角度转弧度\r\n`degress` 弧度转角度\r\n\r\n三角函数\r\n`sin` 正弦\r\n`cos` 余弦\r\n`tan` 正切\r\n`asin` 反正弦\r\n`acos` 反余弦\r\n`atan` 反正切\r\n\r\n指数函数\r\n`pow` 次方\r\n`exp` 自然对数\r\n`log` 对数\r\n`sqrt` 开平方\r\n`inversesqrt` 开平方的倒数\r\n\r\n通用函数\r\n`abs` 绝对值\r\n`min` 最小值\r\n`max` 最大值\r\n`mod` 取余数\r\n`sign` 取符号\r\n`floor` 向下取整\r\n`ceil` 向上取整\r\n`clamp` 限定范围\r\n`fract` 取小数部分\r\n\r\n几何函数\r\n`length(x)` 计算向量x的长度\r\n`distance(x, y)` 计算向量x,y之间的距离\r\n`dot(x, y)` 计算向量xy之间的点积\r\n`cross(x, y)` 计算向量xy的叉积\r\n`normalize(x)` 返回同向的单位向量\r\n\r\n矢量函数\r\n`any` 矢量的任意一个元素满足条件\r\n`all` 矢量的所有元素均满足条件\r\n`not` 逐元素布尔取反\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 2.8 存储限定词\r\n\r\n变量类型词\r\n`const` 常量\r\n\r\n存储类型词\r\nattribute 顶点着色器中的全局变量 表示逐顶点信息\r\nuniform 只读 两个着色器中都可 强调一致性 用于存储影响所有顶点的数据 例如变换矩阵等\r\nvarying 用于存储从顶点着色器传递给片元着色器的数据\r\n\r\n精度限定词\r\n`mediump float f` 限定变量f的精度 不推荐\r\n`precision mediump float` 限定着色器的默认精度\r\n其中 可选的精度枚举有 `highp mediump lowp`\r\n注意: 片元着色器中的float类型需要设置默认精度"
+            ],
+            "outputs": []
+        }
+    ]
+}
