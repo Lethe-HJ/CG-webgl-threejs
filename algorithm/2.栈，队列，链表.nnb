@@ -1,0 +1,86 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "# 1. 栈\r\n\r\n![alt text](image-1.png)\r\n\r\n特点:\r\n1. 后进先出\r\n\r\n\r\n```js\r\nconst queue = [];\r\nqueue.push(1);\r\nqueue.push(2);\r\nconst item1 = queue.shift();\r\nconst item2 = queue.shift();\r\n\r\n```"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 题目 有效的括号(20)\r\n\r\n**给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串 s ，判断字符串是否有效。**\r\n\r\n有效字符串需满足：\r\n\r\n左括号必须用相同类型的右括号闭合。\r\n左括号必须以正确的顺序闭合。\r\n每个右括号都有一个对应的相同类型的左括号。\r\n \r\n\r\n示例 1：\r\n\r\n输入：s = \"()\"\r\n输出：true\r\n示例 2：\r\n\r\n输入：s = \"()[]{}\"\r\n输出：true\r\n示例 3：\r\n\r\n输入：s = \"(]\"\r\n输出：false\r\n \r\n\r\n提示：\r\n\r\n1 <= s.length <= 104\r\ns 仅由括号 '()[]{}' 组成"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const baket_map = {\r\n    \")\": \"(\",\r\n    \"]\": \"[\",\r\n    \"}\": \"{\",\r\n};\r\n\r\n/**\r\n * @param {string} s\r\n * @return {boolean}\r\n */\r\nvar isValid = function (s) {\r\n    if (s.length % 2 === 1) return false;\r\n    const queue = [];\r\n    let i = 0,\r\n        key;\r\n    while (i < s.length) {\r\n        key = baket_map[s[i]];\r\n        if (!key) queue.push(s[i]);\r\n        else if (queue[queue.length - 1] === key) queue.pop();\r\n        else return false;\r\n        i += 1;\r\n    }\r\n    return queue.length === 0;\r\n};\r\n\r\nconsole.assert(isValid(\"()\") === true);\r\nconsole.assert(isValid(\"()[]{}\") === true);\r\nconsole.assert(isValid(\"(]\") === false);\r\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "# 2. 队列\r\n\r\n![alt text](image-5.png)\r\n\r\n特点: 先进先出\r\n\r\n```js\r\nconst queue = [];\r\nqueue.push(1);\r\nqueue.push(2);\r\nconst item1 = queue.shift();\r\nconst item2 = queue.shift();\r\n```"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 题目 最近的请求次数(933)\r\n\r\n**写一个 RecentCounter 类来计算特定时间范围内最近的请求。**\r\n\r\n**请你实现 RecentCounter 类：**\r\n\r\n**RecentCounter() 初始化计数器，请求数为 0 。**\r\n\r\n**int ping(int t) 在时间 t 添加一个新请求，其中 t 表示以毫秒为单位的某个时间，**\r\n\r\n**并返回过去 3000 毫秒内发生的所有请求数（包括新请求）。确切地说，返回在 [t-3000, t] 内发生的请求数。**\r\n\r\n**保证 每次对 ping 的调用都使用比之前更大的 t 值。**\r\n\r\n示例 1：\r\n\r\n> 输入：\r\n>\r\n> [\"RecentCounter\", \"ping\", \"ping\", \"ping\", \"ping\"]\r\n>\r\n> [[], [1], [100], [3001], [3002]]\r\n>\r\n> 输出：\r\n>\r\n> [null, 1, 2, 3, 3]\r\n>\r\n> 解释：\r\n> RecentCounter recentCounter = new RecentCounter();\r\n>\r\n> recentCounter.ping(1); // requests = [1]，范围是 [-2999,1]，返回 1\r\n>\r\n> recentCounter.ping(100); // requests = [1, 100]，范围是 [-2900,100]，返回 2\r\n>\r\n> recentCounter.ping(3001); // requests = [1, 100, 3001]，范围是 [1,3001]，返回 3\r\n>\r\n> recentCounter.ping(3002); // requests = [1, 100, 3001, 3002]，范围是 [2,3002]，返回 3\r\n\r\n提示：\r\n\r\n1 <= t <= 109\r\n保证每次对 ping 调用所使用的 t 值都 严格递增\r\n至多调用 ping 方法 104 次\r\n\r\n```js\r\nvar RecentCounter = function () {\r\n  this.q = [];\r\n};\r\n\r\n/**\r\n * @param {number} t\r\n * @return {number}\r\n */\r\nRecentCounter.prototype.ping = function (t) {\r\n  this.q.push(t);\r\n  while (this.q[0] < t - 3000) this.q.shift();\r\n};\r\n```\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "# 3. 链表\r\n\r\n![alt text](image-6.png)\r\n\r\n特点: \r\n\r\n存储空间不连续\r\n\r\n链表与数组的区别\r\n\r\n数组： 增删非首尾元素时往往需要移动元素\r\n链表： 增删非首尾元素时不需要移动元素，只需要更改next指向\r\n\r\n\r\n```js\r\n// 构造链表\r\nconst a = { val: 'a' };\r\nconst b = { val: 'b' };\r\nconst c = { val: 'c' };\r\nconst d = { val: 'd' };\r\na.next = b;\r\nb.next = c;\r\nc.next = d;\r\n\r\n// 遍历链表\r\nlet p = a;\r\nwhile(p) {\r\n    console.log(p.val);\r\n    p = p.next;\r\n}\r\n\r\n// 插入\r\nconst e = { val: 'e' };\r\nc.next = e;\r\ne.next = d;\r\n\r\n// 删除\r\nc.next = d;\r\n\r\n```"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 题目 删除链表中的节点(237)\r\n \r\n\r\n有一个单链表的 head，我们想删除它其中的一个节点 node。\r\n\r\n给你一个需要删除的节点 node 。你将 无法访问 第一个节点  head。\r\n\r\n链表的所有值都是 唯一的，并且保证给定的节点 node 不是链表中的最后一个节点。\r\n\r\n删除给定的节点。注意，删除节点并不是指从内存中删除它。这里的意思是：\r\n\r\n给定节点的值不应该存在于链表中。\r\n链表中的节点数应该减少 1。\r\nnode 前面的所有值顺序相同。\r\nnode 后面的所有值顺序相同。\r\n\r\n提示：\r\n\r\n链表中节点的数目范围是 [2, 1000]\r\n-1000 <= Node.val <= 1000\r\n链表中每个节点的值都是 唯一 的\r\n需要删除的节点 node 是 链表中的节点 ，且 不是末尾节点\r\n\r\n\r\n```js\r\n/**\r\n * Definition for singly-linked list.\r\n * function ListNode(val) {\r\n *     this.val = val;\r\n *     this.next = null;\r\n * }\r\n */\r\n/**\r\n * @param {ListNode} node\r\n * @return {void} Do not return anything, modify node in-place instead.\r\n */\r\nvar deleteNode = function(node) {\r\n    node.val = node.next.val;\r\n    node.next = node.next.next;\r\n};\r\n```"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 题目 反转链表(206)\r\n\r\n> 给你单链表的头节点 head ，请你反转链表，并返回反转后的链表。\r\n\r\n示例 1：\r\n\r\n输入：head = [1,2,3,4,5]\r\n输出：[5,4,3,2,1]\r\n示例 2：\r\n\r\n输入：head = [1,2]\r\n输出：[2,1]\r\n示例 3：\r\n\r\n输入：head = []\r\n输出：[]\r\n\r\n提示：\r\n\r\n链表中节点的数目范围是 [0, 5000]\r\n-5000 <= Node.val <= 5000\r\n\r\n进阶：链表可以选用迭代或递归方式完成反转。你能否用两种方法解决这道题？\r\n\r\n```js\r\n/**\r\n * Definition for singly-linked list.\r\n * function ListNode(val, next) {\r\n *     this.val = (val===undefined ? 0 : val)\r\n *     this.next = (next===undefined ? null : next)\r\n * }\r\n */\r\n/**\r\n * @param {ListNode} head\r\n * @return {ListNode}\r\n */\r\nvar reverseList = function (head) {\r\n  let p1 = head;\r\n  let p2 = null;\r\n  while (p1) {\r\n    const tmp = p1.next;\r\n    p1.next = p2;\r\n    p2 = p1;\r\n    p1 = tmp;\r\n  }\r\n  return p2;\r\n};\r\n```\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 题目 两数相加(2)\r\n\r\n给你两个 非空 的链表，表示两个非负的整数。它们每位数字都是按照 逆序 的方式存储的，并且每个节点只能存储 一位 数字。\r\n\r\n请你将两个数相加，并以相同形式返回一个表示和的链表。\r\n\r\n你可以假设除了数字 0 之外，这两个数都不会以 0 开头。\r\n\r\n示例 1：\r\n输入：l1 = [2,4,3], l2 = [5,6,4]\r\n输出：[7,0,8]\r\n解释：342 + 465 = 807.\r\n\r\n示例 2：\r\n\r\n输入：l1 = [0], l2 = [0]\r\n输出：[0]\r\n示例 3：\r\n\r\n输入：l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]\r\n输出：[8,9,9,9,0,0,0,1]\r\n\r\n```js\r\n/**\r\n * Definition for singly-linked list.\r\n * function ListNode(val, next) {\r\n *     this.val = (val===undefined ? 0 : val)\r\n *     this.next = (next===undefined ? null : next)\r\n * }\r\n */\r\n/**\r\n * @param {ListNode} l1\r\n * @param {ListNode} l2\r\n * @return {ListNode}\r\n */\r\nvar addTwoNumbers = function (l1, l2) {\r\n    let carry = 0;\r\n    let res = new ListNode();\r\n    const head = res;\r\n    while (l1 || l2) {\r\n        const l1Val = l1 ? l1.val : 0;\r\n        const l2Val = l2 ? l2.val : 0;\r\n        const value = l1Val + l2Val + carry;\r\n        res.next = new ListNode(value % 10);\r\n        carry = Math.floor(value / 10);\r\n        res = res.next;\r\n        if (l1) l1 = l1.next;\r\n        if (l2) l2 = l2.next;\r\n    }\r\n    if (q) res.next = new ListNode(carry, null);\r\n    return head.next;\r\n};\r\n```\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 题目 删除排序链表中的重复元素(83)\r\n\r\n给定一个已排序的链表的头 head ， 删除所有重复的元素，使每个元素只出现一次 。返回 已排序的链表 。\r\n\r\n \r\n\r\n示例 1：\r\n\r\n\r\n输入：head = [1,1,2]\r\n输出：[1,2]\r\n示例 2：\r\n\r\n\r\n输入：head = [1,1,2,3,3]\r\n输出：[1,2,3]\r\n \r\n\r\n提示：\r\n\r\n链表中节点数目在范围 [0, 300] 内\r\n-100 <= Node.val <= 100\r\n题目数据保证链表已经按升序 排列\r\n\r\n```js\r\n/**\r\n * Definition for singly-linked list.\r\n * function ListNode(val, next) {\r\n *     this.val = (val===undefined ? 0 : val)\r\n *     this.next = (next===undefined ? null : next)\r\n * }\r\n */\r\n/**\r\n * @param {ListNode} head\r\n * @return {ListNode}\r\n */\r\nvar deleteDuplicates = function (head) {\r\n    let p = head;\r\n    while (p && p.next) {\r\n        if (p.val === p.next.val) {\r\n            p.next = p.next.next\r\n        } else {\r\n            p = p.next\r\n        }\r\n        \r\n    }\r\n    return head;\r\n};\r\n```"
+            ],
+            "outputs": []
+        }
+    ]
+}
