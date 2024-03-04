@@ -8,9 +8,11 @@
         "GLTF",
         "importmap",
         "lowp",
+        "Microtasks",
         "Raycaster",
         "threejs",
         "uuidv",
+        "Vuex",
         "webgl"
     ]
 }
