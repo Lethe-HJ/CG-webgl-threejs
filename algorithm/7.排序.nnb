@@ -1,0 +1,39 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "### 冒泡排序\r\n\r\n```js\r\nArray.prototype.bubbleSort = function () {\r\n    for (let i = 0; i < this.length - 1; i += 1) {\r\n        for (let j = 0; j < this.length - 1 - i; j += 1) {\r\n            if (this[j] > this[j + 1]) {\r\n                const temp = this[j];\r\n                this[j] = this[j + 1];\r\n                this[j + 1] = temp;\r\n            }\r\n        }\r\n    }\r\n};\r\n\r\nconst arr = [5, 4, 3, 2, 1];\r\narr.bubbleSort();\r\n\r\n```"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 插入排序\r\n\r\n```js\r\nArray.prototype.insertionSort = function () {\r\n    for (let i = 1; i < this.length; i += 1) {\r\n        const temp = this[i];\r\n        let j = i;\r\n        while (j > 0) {\r\n            if (this[j - 1] > temp) {\r\n                this[j] = this[j - 1];\r\n            } else {\r\n                break;\r\n            }\r\n            j -= 1;\r\n        }\r\n        this[j] = temp;\r\n    }\r\n};\r\n\r\nconst arr = [2, 4, 5, 3, 1];\r\narr.insertionSort();\r\n\r\n\r\n```"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 选择排序\r\n\r\n```js\r\nArray.prototype.selectionSort = function () {\r\n    for (let i = 0; i < this.length - 1; i += 1) {\r\n        let indexMin = i;\r\n        for (let j = i; j < this.length; j += 1) {\r\n            if (this[j] < this[indexMin]) {\r\n                indexMin = j;\r\n            }\r\n        }\r\n        if (indexMin !== i) {\r\n            const temp = this[i];\r\n            this[i] = this[indexMin];\r\n            this[indexMin] = temp;\r\n        }\r\n    }\r\n};\r\n\r\nconst arr = [5, 4, 3, 2, 1];\r\narr.selectionSort();\r\n\r\n```"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 归并排序\r\n\r\n```js\r\nArray.prototype.mergeSort = function () {\r\n    const rec = (arr) => {\r\n        if (arr.length === 1) { return arr; }\r\n        const mid = Math.floor(arr.length / 2);\r\n        const left = arr.slice(0, mid);\r\n        const right = arr.slice(mid, arr.length);\r\n        const orderLeft = rec(left);\r\n        const orderRight = rec(right);\r\n        const res = [];\r\n        while (orderLeft.length || orderRight.length) {\r\n            if (orderLeft.length && orderRight.length) {\r\n                res.push(orderLeft[0] < orderRight[0] ? orderLeft.shift() : orderRight.shift());\r\n            } else if (orderLeft.length) {\r\n                res.push(orderLeft.shift());\r\n            } else if (orderRight.length) {\r\n                res.push(orderRight.shift());\r\n            }\r\n        }\r\n        return res;\r\n    };\r\n    const res = rec(this);\r\n    res.forEach((n, i) => { this[i] = n; });\r\n};\r\n\r\nconst arr = [5, 4, 3, 2, 1];\r\narr.mergeSort();\r\n\r\n```"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 快速排序\r\n\r\n```js\r\nArray.prototype.quickSort = function () {\r\n    const rec = (arr) => {\r\n        if (arr.length === 1) { return arr; }\r\n        const left = [];\r\n        const right = [];\r\n        const mid = arr[0];\r\n        for (let i = 1; i < arr.length; i += 1) {\r\n            if (arr[i] < mid) {\r\n                left.push(arr[i]);\r\n            } else {\r\n                right.push(arr[i]);\r\n            }\r\n        }\r\n        return [...rec(left), mid, ...rec(right)];\r\n    };\r\n    const res = rec(this);\r\n    res.forEach((n, i) => { this[i] = n });\r\n};\r\n\r\nconst arr = [2, 4, 5, 3, 1];\r\narr.quickSort();\r\n\r\n```"
+            ],
+            "outputs": []
+        }
+    ]
+}

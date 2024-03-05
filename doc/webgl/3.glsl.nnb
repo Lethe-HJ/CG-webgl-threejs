@@ -31,7 +31,7 @@
         {
             "language": "markdown",
             "source": [
-                "### 2.8 存储限定词\r\n\r\n变量类型词\r\n`const` 常量\r\n\r\n存储类型词\r\nattribute 顶点着色器中的全局变量 表示逐顶点信息\r\nuniform 只读 两个着色器中都可 强调一致性 用于存储影响所有顶点的数据 例如变换矩阵等\r\nvarying 用于存储从顶点着色器传递给片元着色器的数据\r\n\r\n精度限定词\r\n`mediump float f` 限定变量f的精度 不推荐\r\n`precision mediump float` 限定着色器的默认精度\r\n其中 可选的精度枚举有 `highp mediump lowp`\r\n注意: 片元着色器中的float类型需要设置默认精度"
+                "### 2.8 存储限定词\r\n\r\n变量类型词\r\n\r\n`const` 常量\r\n\r\n存储类型词\r\n\r\n`attribute` 顶点着色器中的全局变量 表示逐顶点信息\r\n\r\n`uniform` 只读 两个着色器中都可 强调一致性 用于存储影响所有顶点的数据 例如变换矩阵等\r\n\r\n`varying` 用于存储从顶点着色器传递给片元着色器的数据\r\n\r\n精度限定词\r\n\r\n`mediump float f` 限定变量f的精度 不推荐\r\n\r\n`precision mediump float` 限定着色器的默认精度\r\n\r\n其中 可选的精度枚举有 `highp mediump lowp`\r\n\r\n注意: 片元着色器中的float类型需要设置默认精度"
             ],
             "outputs": []
         }
