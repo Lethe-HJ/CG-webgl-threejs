@@ -7,7 +7,21 @@ function initShader(gl, VERTEX_SHADER_SOURCE, FRAGMENT_SHADER_SOURCE) {
 
   // 编译着色器
   gl.compileShader(vertexShader);
+  if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
+    console.error(
+      "ERROR compiling vertex shader!",
+      gl.getShaderInfoLog(vertexShader)
+    );
+    return null;
+  }
   gl.compileShader(fragmentShader);
+  if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
+    console.error(
+      "ERROR compiling fragment shader!",
+      gl.getShaderInfoLog(fragmentShader)
+    );
+    return null;
+  }
 
   // 创建一个程序对象
   const program = gl.createProgram();
@@ -16,6 +30,13 @@ function initShader(gl, VERTEX_SHADER_SOURCE, FRAGMENT_SHADER_SOURCE) {
   gl.attachShader(program, fragmentShader);
 
   gl.linkProgram(program);
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    console.error(
+      "ERROR linking program!",
+      gl.getProgramInfoLog(program)
+    );
+    return null;
+  }
 
   gl.useProgram(program);
 
@@ -155,7 +176,6 @@ function getOrtho(l, r, t, b, n, f) {
     -(r+l)/(r-l),-(t+b)/(t-b),-(f+n)/(f-n),1
   ])
 }
-
 
 // 获取透视投影矩阵
 function getPerspective(fov, aspect, far, near) {
