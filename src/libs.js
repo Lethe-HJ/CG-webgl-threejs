@@ -25,6 +25,13 @@ function initShader(gl, VERTEX_SHADER_SOURCE, FRAGMENT_SHADER_SOURCE) {
   gl.attachShader(program, fragmentShader);
 
   gl.linkProgram(program);
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    console.error(
+      "ERROR linking program!",
+      gl.getProgramInfoLog(program)
+    );
+    return null;
+  }
 
   gl.useProgram(program);
 
