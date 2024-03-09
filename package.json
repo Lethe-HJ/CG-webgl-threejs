@@ -4,6 +4,7 @@
   },
   "dependencies": {
     "crypto": "^1.0.1",
+    "gl-matrix": "^3.4.3",
     "glslCanvas": "^0.2.6",
     "jquery": "^3.7.1",
     "lodash": "^4.17.21",
