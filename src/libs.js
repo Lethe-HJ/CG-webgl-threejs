@@ -8,15 +8,21 @@ function initShader(gl, VERTEX_SHADER_SOURCE, FRAGMENT_SHADER_SOURCE) {
   // 编译着色器
   gl.compileShader(vertexShader);
   if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
-    console.error('ERROR compiling vertex shader!', gl.getShaderInfoLog(vertexShader));
+    console.error(
+      "ERROR compiling vertex shader!",
+      gl.getShaderInfoLog(vertexShader)
+    );
     return;
-}
+  }
 
   gl.compileShader(fragmentShader);
   if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
-    console.error('ERROR compiling fragment shader!', gl.getShaderInfoLog(fragmentShader));
+    console.error(
+      "ERROR compiling fragment shader!",
+      gl.getShaderInfoLog(fragmentShader)
+    );
     return;
-}
+  }
 
   // 创建一个程序对象
   const program = gl.createProgram();
@@ -26,10 +32,7 @@ function initShader(gl, VERTEX_SHADER_SOURCE, FRAGMENT_SHADER_SOURCE) {
 
   gl.linkProgram(program);
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    console.error(
-      "ERROR linking program!",
-      gl.getProgramInfoLog(program)
-    );
+    console.error("ERROR linking program!", gl.getProgramInfoLog(program));
     return null;
   }
 
@@ -58,12 +61,35 @@ function getScaleMatrix(x = 1, y = 1, z = 1) {
     0.0, 0.0, 0.0, 1,
   ])
 }
-// 绕z轴旋转的旋转矩阵
-function getRotateMatrix(deg) {
+
+// 绕x轴旋转的旋转矩阵
+function getRotateMatrixX(deg) {
   // prettier-ignore
   return new Float32Array([
-    Math.cos(deg),  Math.sin(deg), 0.0,0.0,
-    -Math.sin(deg), Math.cos(deg), 0.0,0.0,
+    1.0,  0.0,            0.0,            0.0,
+    0.0,  Math.cos(deg),  -Math.sin(deg), 0.0,
+    0.0,  Math.sin(deg),  Math.cos(deg),  0.0,
+    0.0,  0.0,            0.0,            1,
+  ]);
+}
+
+// 绕y轴旋转的旋转矩阵
+function getRotateMatrixY(deg) {
+  // prettier-ignore
+  return new Float32Array([
+    Math.cos(deg),  0.0,  Math.sin(deg),  0.0,
+    0.0,            1.0,  0.0,            0.0,
+    -Math.sin(deg), 0.0,  Math.cos(deg),  0.0,
+    0.0,            0.0,  0.0,            1,
+  ])
+}
+
+// 绕z轴旋转的旋转矩阵
+function getRotateMatrixZ(deg) {
+  // prettier-ignore
+  return new Float32Array([
+    Math.cos(deg), -Math.sin(deg), 0.0,0.0,
+    Math.sin(deg), Math.cos(deg),  0.0,0.0,
     0.0,            0.0,           1.0,0.0,
     0.0,            0.0,           0.0, 1,
   ])
