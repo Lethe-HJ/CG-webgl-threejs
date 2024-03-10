@@ -198,16 +198,30 @@ function getOrtho(l, r, t, b, n, f) {
   ])
 }
 
+function degToRad(d) {
+  return (d * Math.PI) / 180;
+}
+
 // 获取透视投影矩阵
 function getPerspective(fov, aspect, far, near) {
-  fov = (fov * Math.PI) / 180;
+  // fov = (fov * Math.PI) / 180;
+  // // prettier-ignore
+  // return new Float32Array([
+  //   1/(aspect*Math.tan(fov / 2)), 0,                   0,                      0,
+  //   0,                            1/(Math.tan(fov/2)), 0,                      0,
+  //   0,                            0,                   -(far+near)/(far-near), -(2*far*near)/(far-near),
+  //   0,                            0,                   -1,                     0,
+  // ])
+  fov = degToRad(fov);
+  var f = Math.tan(Math.PI * 0.5 - 0.5 * fov);
+  var rangeInv = 1.0 / (near - far);
   // prettier-ignore
   return new Float32Array([
-    1/(aspect*Math.tan(fov / 2)), 0,                   0,                      0,
-    0,                            1/(Math.tan(fov/2)), 0,                      0,
-    0,                            0,                   -(far+near)/(far-near), -(2*far*near)/(far-near),
-    0,                            0,                   -1,                     0,
-  ])
+    f / aspect, 0,  0,                          0,
+    0,          f,  0,                          0,
+    0,          0,  (near + far) * rangeInv,    -1,
+    0,          0,  near * far * rangeInv * 2,  0,
+  ]);
 }
 
 function distanceSelf(a, b) {

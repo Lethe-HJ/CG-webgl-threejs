@@ -4,50 +4,50 @@ const gl = ctx.getContext("webgl");
 
 // 顶点着色器
 const VERTEX_SHADER_SOURCE = /*glsl */ `
-  attribute vec4 aPosition;
-  attribute vec4 aNormal;
-  varying vec4 vColor;
-  uniform vec3 uPointLightColor;
-  uniform vec3 uPointLightPosition;
-  uniform vec3 uAmbientLightColor;
-  uniform vec3 uMaterialColor;
-  uniform int uMaterialType;
+  attribute vec4 a_position;
+  attribute vec4 a_normal;
+  varying vec4 v_color;
+  uniform vec3 u_pointLightColor;
+  uniform vec3 u_pointLightPosition;
+  uniform vec3 u_ambientLightColor;
+  uniform vec3 u_materialColor;
+  uniform int u_materialType;
   
 
-  uniform mat4 uVpMatrix;
-  uniform mat4 uViewMatrix;
-  uniform mat4 uPerspectiveMatrix;
-  uniform mat4 uTransformMatrix;
-  uniform mat4 uNormalMatrix;
+  uniform mat4 u_vpMatrix;
+  uniform mat4 u_viewMatrix;
+  uniform mat4 u_perspectiveMatrix;
+  uniform mat4 u_transformMatrix;
+  uniform mat4 u_normalMatrix;
   
 
   const int MATERIAL_LAMBERT = 1;
   
   void main() {
-    vec4 aColor = vec4(uMaterialColor, 1.0); // 物体表面的颜色
-    vec4 vertexPosition = uVpMatrix * aPosition; // 顶点的世界坐标
-    if (uMaterialType == MATERIAL_LAMBERT) { // lambert类型的材质
-      vec3 lightDirection = normalize(uPointLightPosition - vec3(vertexPosition)); // 点光源的方向
-      vec3 ambient = uAmbientLightColor * vec3(aColor); // 环境反射
-      vec3 transformedNormal = normalize(vec3(uNormalMatrix * vec4(vec3(aNormal), 0.0)));
-      // vec3 transformedNormal = normalize(vec3(uTransformMatrix * vec4(vec3(aNormal), 0.0)));
+    vec4 aColor = vec4(u_materialColor, 1.0); // 物体表面的颜色
+    vec4 vertexPosition = u_vpMatrix * a_position; // 顶点的世界坐标
+    if (u_materialType == MATERIAL_LAMBERT) { // lambert类型的材质
+      vec3 lightDirection = normalize(u_pointLightPosition - vec3(vertexPosition)); // 点光源的方向
+      vec3 ambient = u_ambientLightColor * vec3(aColor); // 环境反射
+      vec3 transformedNormal = normalize(vec3(u_normalMatrix * vec4(vec3(a_normal), 0.0)));
+      // vec3 transformedNormal = normalize(vec3(u_transformMatrix * vec4(vec3(a_normal), 0.0)));
       float dotDeg = max(dot(transformedNormal, lightDirection), 0.0); // 计算入射角 光线方向和法线方向的点积
-      vec3 diffuseColor = uPointLightColor * vec3(aColor) * dotDeg; // 漫反射光的颜色
-      vColor = vec4(ambient + diffuseColor, aColor.a);
+      vec3 diffuseColor = u_pointLightColor * vec3(aColor) * dotDeg; // 漫反射光的颜色
+      v_color = vec4(ambient + diffuseColor, aColor.a);
     } else {
-      vColor = aColor;
+      v_color = aColor;
     }
-    gl_Position = uTransformMatrix * vertexPosition;
+    gl_Position = u_transformMatrix * vertexPosition;
   }
 `;
 
 // 片元着色器
 const FRAGMENT_SHADER_SOURCE = /*glsl */ `
   precision lowp float;
-  varying vec4 vColor;
+  varying vec4 v_color;
 
   void main() {
-    gl_FragColor = vColor;
+    gl_FragColor = v_color;
   }
 `;
 
@@ -59,28 +59,28 @@ const pointLight = {
   position: [0.0, 10.0, 1.0],
 };
 
-const uPointLightPositionLocation = gl.getUniformLocation(
+const u_pointLightPositionLocation = gl.getUniformLocation(
   program,
-  "uPointLightPosition"
+  "u_pointLightPosition"
 );
-const uPointLightColorLocation = gl.getUniformLocation(
+const u_pointLightColorLocation = gl.getUniformLocation(
   program,
-  "uPointLightColor"
+  "u_pointLightColor"
 );
-gl.uniform3fv(uPointLightPositionLocation, pointLight.position);
-gl.uniform3fv(uPointLightColorLocation, pointLight.color);
+gl.uniform3fv(u_pointLightPositionLocation, pointLight.position);
+gl.uniform3fv(u_pointLightColorLocation, pointLight.color);
 
 // 定义环境光 --------------------------------------------------------------------
 const ambientLightColor = [0.1, 0.1, 0.1];
-const uAmbientLightColorLocation = gl.getUniformLocation(
+const u_ambientLightColorLocation = gl.getUniformLocation(
   program,
-  "uAmbientLightColor"
+  "u_ambientLightColor"
 );
-gl.uniform3fv(uAmbientLightColorLocation, ambientLightColor);
+gl.uniform3fv(u_ambientLightColorLocation, ambientLightColor);
 
 // 定义物体 ----------------------------------------------------------------------
 // 物体位置
-const aPositionLocation = gl.getAttribLocation(program, "aPosition");
+const a_positionLocation = gl.getAttribLocation(program, "a_position");
 const vertices = new Float32Array([
   // 0123
   1, 1, 1, -1, 1, 1, -1, -1, 1, 1, -1, 1,
@@ -99,12 +99,12 @@ const vertices = new Float32Array([
 const buffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
-gl.vertexAttribPointer(aPositionLocation, 3, gl.FLOAT, false, 0, 0);
-gl.enableVertexAttribArray(aPositionLocation);
+gl.vertexAttribPointer(a_positionLocation, 3, gl.FLOAT, false, 0, 0);
+gl.enableVertexAttribArray(a_positionLocation);
 
 // 法向量
 
-const aNormalLocation = gl.getAttribLocation(program, "aNormal");
+const a_normalLocation = gl.getAttribLocation(program, "a_normal");
 // const normals = new Float32Array(vertices.length);
 // let index;
 // for (let i = 0; i < vertices.length; i += 12) {
@@ -136,8 +136,8 @@ const normals = new Float32Array([
 const normalBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
 gl.bufferData(gl.ARRAY_BUFFER, normals, gl.STATIC_DRAW);
-gl.vertexAttribPointer(aNormalLocation, 3, gl.FLOAT, false, 0, 0);
-gl.enableVertexAttribArray(aNormalLocation);
+gl.vertexAttribPointer(a_normalLocation, 3, gl.FLOAT, false, 0, 0);
+gl.enableVertexAttribArray(a_normalLocation);
 
 // 面
 const indices = new Uint8Array([
@@ -155,27 +155,30 @@ const material = {
   type: MaterialType.Lambert,
 };
 
-const uMaterialColorLocation = gl.getUniformLocation(program, "uMaterialColor");
-gl.uniform3fv(uMaterialColorLocation, material.color);
-const uMaterialTypeLocation = gl.getUniformLocation(program, "uMaterialType");
-gl.uniform1i(uMaterialTypeLocation, material.type);
+const u_materialColorLocation = gl.getUniformLocation(
+  program,
+  "u_materialColor"
+);
+gl.uniform3fv(u_materialColorLocation, material.color);
+const u_materialTypeLocation = gl.getUniformLocation(program, "u_materialType");
+gl.uniform1i(u_materialTypeLocation, material.type);
 
 gl.enable(gl.DEPTH_TEST);
 
 // 摄像机与矩阵变换处理
-const uVpMatrixLocation = gl.getUniformLocation(program, "uVpMatrix");
-const uViewMatrixLocation = gl.getUniformLocation(program, "uViewMatrix");
-const uPerspectiveMatrixLocation = gl.getUniformLocation(
+const u_vpMatrixLocation = gl.getUniformLocation(program, "u_vpMatrix");
+const u_viewMatrixLocation = gl.getUniformLocation(program, "u_viewMatrix");
+const u_perspectiveMatrixLocation = gl.getUniformLocation(
   program,
-  "uPerspectiveMatrix"
+  "u_perspectiveMatrix"
 );
-const uTransformMatrixLocation = gl.getUniformLocation(
+const u_transformMatrixLocation = gl.getUniformLocation(
   program,
-  "uTransformMatrix"
+  "u_transformMatrix"
 );
-const uNormalMatrixLocation = gl.getUniformLocation(program, "uNormalMatrix");
+const u_normalMatrixLocation = gl.getUniformLocation(program, "u_normalMatrix");
 const camera = {
-  position: [3, 3, 5],
+  position: [3, 3, 10],
   look_at: [0.0, 0.0, 0.0],
   up: [0.0, 0.6, 0.0],
   fov: 30,
@@ -184,9 +187,7 @@ const camera = {
   near: 1,
 };
 
-let deg = 0;
 
-gl.enable(gl.DEPTH_TEST);
 
 // 视图矩阵和投影矩阵其实就可以抽象成摄像机
 const viewMatrix = getViewMatrix(
@@ -195,7 +196,7 @@ const viewMatrix = getViewMatrix(
   ...camera.up
 );
 
-gl.uniformMatrix4fv(uViewMatrixLocation, false, viewMatrix);
+gl.uniformMatrix4fv(u_viewMatrixLocation, false, viewMatrix);
 
 const perspectiveMatrix = getPerspective(
   camera.fov,
@@ -203,19 +204,23 @@ const perspectiveMatrix = getPerspective(
   camera.far,
   camera.near
 );
-gl.uniformMatrix4fv(uPerspectiveMatrixLocation, false, perspectiveMatrix);
-const uVpMatrix = mixMatrix(perspectiveMatrix, viewMatrix);
-gl.uniformMatrix4fv(uVpMatrixLocation, false, uVpMatrix);
+gl.uniformMatrix4fv(u_perspectiveMatrixLocation, false, perspectiveMatrix);
+const u_vpMatrix = mixMatrix(perspectiveMatrix, viewMatrix);
+gl.uniformMatrix4fv(u_vpMatrixLocation, false, u_vpMatrix);
+
+let deg = 1;
+gl.enable(gl.DEPTH_TEST);
 
 function draw() {
   deg += 0.01;
   const rotateMatrix = getRotateMatrixZ(deg);
-  const uTransformMatrix = rotateMatrix;
-  gl.uniformMatrix4fv(uTransformMatrixLocation, false, uTransformMatrix);
-  const modelMatrix = uTransformMatrix; // 这里没有本地坐标系的变换 而且只有旋转操作 因此模型矩阵即为旋转矩阵
+  const u_transformMatrix = rotateMatrix;
+  gl.uniformMatrix4fv(u_transformMatrixLocation, false, u_transformMatrix);
+  const modelMatrix = u_transformMatrix; // 这里没有本地坐标系的变换 而且只有旋转操作 因此模型矩阵即为旋转矩阵
   const normalMatrix = inverseTranspose(modelMatrix); // 法线矩阵为模型矩阵的逆转置
-  gl.uniformMatrix4fv(uNormalMatrixLocation, false, normalMatrix);
+  gl.uniformMatrix4fv(u_normalMatrixLocation, false, normalMatrix);
 
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_BYTE, 0);
   requestAnimationFrame(draw);
 }
