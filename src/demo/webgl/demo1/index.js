@@ -1,26 +1,27 @@
 const ctx = document.getElementById("canvas");
-
 const gl = ctx.getContext("webgl");
 
-const uniformRegisters = [];
+const ambient_light = createAmbientLight({
+  color: [0.1, 0.1, 0.1],
+}); // 定义环境光 实际上就是一些uniform 待传入到着色器
 
-let program = gl.createProgram();
-
-initPointLight({
+const point_light = createPointLight({
   color: [1.0, 1.0, 1.0],
   position: [0.0, 6.0, 0.0],
   attenuation: [0.5, 0.04, 0.032],
 }); // 定义点光源  实际上就是一些uniform 待传入到着色器中
 
-const ambient_light = createAmbientLight({
-  color: [1, 1, 1],
-}); // 定义环境光 实际上就是一些uniform 待传入到着色器
+const geometry = createGeometry(); // 定义物体 实际上就是待传入到着色器中的点数据面数据
 
-const indices = initGeometry(); // 定义物体 实际上就是待传入到着色器中的点数据面数据
+const material = createMaterial(
+  {
+    type: MaterialType.Phong,
+    color: [0.0, 1.0, 0.0],
+  },
+  gl
+); // 定义材质 实际上就是着色器
 
-program = initMaterial(); // 定义材质 实际上就是着色器
-
-const camera = initCamera({
+const camera = createCamera({
   position: [4, 4, 4],
   target: [0.0, 0.0, 0.0],
   up: [0.0, 1.0, 0.0],
@@ -30,37 +31,62 @@ const camera = initCamera({
   far: 10,
 }); // 定义相机 实际上就是视图矩阵和投影矩阵
 
-let deg = 0;
-gl.enable(gl.DEPTH_TEST);
+(function main(gl) {
+  gl.enable(gl.DEPTH_TEST);
+  const shaderProgram = material.shaderProgram;
+  point_light.attach(shaderProgram, gl);
+  ambient_light.attach(shaderProgram, gl);
+  geometry.attach(shaderProgram, gl);
+  material.attach(shaderProgram, gl);
+  camera.attach(shaderProgram, gl);
+  let deg = 1;
+  const render_matrixes = {
+    mvp: {
+      value: null,
+      location: gl.getUniformLocation(shaderProgram, "u_mvpMatrix"),
+    },
+    model: {
+      value: null,
+      location: gl.getUniformLocation(shaderProgram, "u_modelMatrix"),
+    },
+    normal: {
+      value: null,
+      location: gl.getUniformLocation(shaderProgram, "u_normalMatrix"),
+    },
+  };
+  function render() {
+    deg += 0.005;
+    if (deg > 20) deg = 0;
+    doTransform(deg, render_matrixes, gl);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.drawElements(gl.TRIANGLES, geometry.indices.length, gl.UNSIGNED_BYTE, 0);
+    requestAnimationFrame(render);
+  }
+  render(shaderProgram, gl);
+})(gl);
 
-function doTransform() {
-  const rotateMatrixZ = m4.zRotation(deg);
-  const rotateMatrixY = m4.yRotation(deg);
-  const rotateMatrixX = m4.xRotation(deg);
-  const translateMatrix = m4.translation(deg * 0.1, deg * 0.1, deg * 0.1);
-  const u_transformMatrix = m4.multiply(
-    m4.multiply(m4.multiply(rotateMatrixZ, rotateMatrixY), rotateMatrixX),
-    translateMatrix
+function doTransform(deg, render_matrixes, gl) {
+  let transformMatrix = m4.xRotation(deg);
+  transformMatrix = m4.multiply(transformMatrix, m4.yRotation(deg * 2));
+  transformMatrix = m4.multiply(transformMatrix, m4.xRotation(deg * 3));
+  transformMatrix = m4.multiply(
+    transformMatrix,
+    m4.translation(deg * 0.1, deg * 0.1, deg * 0.1)
   );
-  const modelMatrix = u_transformMatrix; // 这里没有本地坐标系的变换 而且只有旋转操作 因此模型矩阵即为旋转矩阵
-  gl.uniformMatrix4fv(camera.location.modelMatrix, false, modelMatrix);
-  const mvpMatrix = m4.multiply(camera.matrix.vpMatrix, modelMatrix);
+  const modelMatrix = transformMatrix; // 这里没有用场景图 而且只有旋转操作 因此模型矩阵即为旋转矩阵
+  gl.uniformMatrix4fv(render_matrixes.model.location, false, modelMatrix);
+  render_matrixes.model.value = modelMatrix;
+
+  const mvpMatrix = m4.multiply(camera.matrix.vp, modelMatrix);
+  gl.uniformMatrix4fv(render_matrixes.mvp.location, false, mvpMatrix);
+  render_matrixes.mvp.value = mvpMatrix;
+
   const normalMatrix = m4.transpose(m4.inverse(modelMatrix)); // 法线矩阵为模型矩阵的逆转置
-  gl.uniformMatrix4fv(camera.location.mvpMatrix, false, mvpMatrix);
-  gl.uniformMatrix4fv(camera.location.normalMatrix, false, normalMatrix);
+  gl.uniformMatrix4fv(render_matrixes.normal.location, false, normalMatrix);
+  render_matrixes.normal.value = normalMatrix;
 }
 
-function render() {
-  deg += 0.01;
-  if (deg > 10) deg = 0;
-  doTransform(deg);
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-  gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_BYTE, 0);
-  requestAnimationFrame(render);
-}
-render();
-
-function initGeometry() {
+function createGeometry() {
   // 物体位置
   const vertices = new Float32Array([
     // 0123
@@ -99,148 +125,53 @@ function initGeometry() {
     15, 16, 17, 18, 16, 18, 19, 20, 21, 22, 20, 22, 23,
   ]);
 
-  uniformRegisters.push(() => {
-    const a_positionLocation = gl.getAttribLocation(program, "a_position");
-    const buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
-    gl.vertexAttribPointer(a_positionLocation, 3, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(a_positionLocation);
+  return {
+    vertices,
+    normals,
+    indices,
+    attach(program, gl) {
+      const a_positionLocation = gl.getAttribLocation(program, "a_position");
+      const vertices_buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, vertices_buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+      gl.vertexAttribPointer(a_positionLocation, 3, gl.FLOAT, false, 0, 0);
+      gl.enableVertexAttribArray(a_positionLocation);
 
-    const a_normalLocation = gl.getAttribLocation(program, "a_normal");
-    const normalBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, normals, gl.STATIC_DRAW);
-    gl.vertexAttribPointer(a_normalLocation, 3, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(a_normalLocation);
+      const a_normalLocation = gl.getAttribLocation(program, "a_normal");
+      const normal_buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, normal_buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, normals, gl.STATIC_DRAW);
+      gl.vertexAttribPointer(a_normalLocation, 3, gl.FLOAT, false, 0, 0);
+      gl.enableVertexAttribArray(a_normalLocation);
 
-    const indexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
-  });
-  return indices;
+      const indices_buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indices_buffer);
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
+    },
+  };
 }
 
-function initMaterial() {
-  const MaterialType = { None: 0, Lambert: 1, Phong: 2 };
-  const material = {
-    color: [0.0, 1.0, 0.0],
-    type: MaterialType.Lambert,
+function createMaterial(config, gl) {
+  const { vertex, fragment } = shaders[config.type];
+  const shaderProgram = createShaderProgram(gl, vertex, fragment);
+  return {
+    shaderProgram,
+    color: config.color,
+    attach(program, gl) {
+      gl.uniform3fv(
+        gl.getUniformLocation(program, "u_materialColor"),
+        config.color
+      );
+    },
   };
+}
 
+function createShaderProgram(gl, vertexShaderSource, fragmentShaderSource) {
   const vertexShader = gl.createShader(gl.VERTEX_SHADER);
   const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
 
-  // 顶点着色器
-  const VERTEX_SHADER_SOURCE = /*glsl */ `
-    precision highp float;
-    precision mediump int;
-
-    attribute vec4 a_position;
-    attribute vec4 a_normal;
-    uniform vec3 u_ambientLightColor;
-    uniform vec3 u_materialColor;
-    uniform int u_materialType;
-    uniform mat4 u_mvpMatrix;
-    uniform mat4 u_normalMatrix;
-    uniform mat4 u_modelMatrix;
-    
-
-    varying vec4 v_color;
-    varying vec3 v_normal;
-    varying vec3 v_fragPos; // 用于传递片元的世界坐标
-
-    struct PointLight {
-      vec3 color; // 光源颜色
-      vec3 position; // 光源位置
-      float constant; // 光源常数衰减
-      float linear; // 光源线性衰减
-      float quadratic; // 光源二次衰减
-    };
-
-    uniform PointLight u_pointLight;
-
-    const int MATERIAL_NONE = 0;
-    const int MATERIAL_LAMBERT = 1;
-    const int MATERIAL_PHONG = 2;
-
-    void main() {
-      vec4 color = vec4(u_materialColor, 1.0); // 物体表面的颜色
-      vec4 vertexPosition = u_mvpMatrix * a_position; // 顶点的世界坐标
-      if (u_materialType == MATERIAL_LAMBERT) { // lambert类型的材质
-        vec3 lightDirection = normalize(u_pointLight.position - vec3(vertexPosition)); // 点光源的方向
-        vec3 ambientColor = u_ambientLightColor * vec3(color); // 环境反射
-        vec3 transformedNormal = normalize(vec3(u_normalMatrix * vec4(vec3(a_normal), 0.0)));
-
-         // 计算衰减
-        float dist = length(u_pointLight.position - v_fragPos);
-        float attenuation = 1.0 / (u_pointLight.constant + u_pointLight.linear * dist + u_pointLight.quadratic * dist * dist);
-
-        float dotDeg = max(dot(transformedNormal, lightDirection), 0.0); // 计算入射角 光线方向和法线方向的点积
-        vec3 diffuseColor = u_pointLight.color * vec3(color) * dotDeg; // 漫反射光的颜色
-        v_color = vec4(ambientColor + diffuseColor, color.a);
-      } else if(u_materialType == MATERIAL_PHONG){
-        // 计算顶点的世界坐标并传递给片元着色器
-        vec4 worldPosition = u_modelMatrix * a_position;
-        v_fragPos = worldPosition.xyz;
-        v_normal = normalize(vec3(u_normalMatrix * vec4(vec3(a_normal), 0.0)));
-        v_color = color;
-      } else {
-        v_color = color;
-      }
-      gl_Position =  vertexPosition;
-    }
-`;
-
-  // 片元着色器
-  const FRAGMENT_SHADER_SOURCE = /*glsl */ `
-    precision highp float;
-    precision mediump int;
-
-    varying vec4 v_color; // 从顶点着色器传来的颜色值
-    varying vec3 v_normal; // 从顶点着色器传来的法线
-    varying vec3 v_fragPos; // 从顶点着色器传来的片元位置
-
-    uniform int u_materialType;
-    uniform vec3 u_ambientLightColor; // 环境光颜色
-
-    const int MATERIAL_NONE = 0;
-    const int MATERIAL_LAMBERT = 1;
-    const int MATERIAL_PHONG = 2;
-
-    struct PointLight {
-      vec3 color; // 光源颜色
-      vec3 position; // 光源位置
-      float constant; // 光源常数衰减
-      float linear; // 光源线性衰减
-      float quadratic; // 光源二次衰减
-    };
-
-    uniform PointLight u_pointLight;
-    
-    void main() {
-      if(u_materialType == MATERIAL_PHONG){
-        // 环境光
-        vec3 ambient = u_ambientLightColor * vec3(v_color);
-    
-        // 计算衰减
-        float dist = length(u_pointLight.position - v_fragPos);
-        float attenuation = 1.0 / (u_pointLight.constant + u_pointLight.linear * dist + u_pointLight.quadratic * dist * dist);
-        // 漫反射光
-        vec3 norm = normalize(v_normal);
-        vec3 lightDir = normalize(u_pointLight.position - v_fragPos);
-        float diff = max(dot(norm, lightDir), 0.0);
-        vec3 diffuse = diff * u_pointLight.color;
-        vec3 result = (ambient + diffuse * attenuation) * vec3(v_color);
-        gl_FragColor = vec4(result, 1.0);
-      } else {
-        gl_FragColor = v_color;
-      }
-    }
-  `;
-
-  gl.shaderSource(vertexShader, VERTEX_SHADER_SOURCE); // 指定顶点着色器的源码
-  gl.shaderSource(fragmentShader, FRAGMENT_SHADER_SOURCE); // 指定片元着色器的源码
+  gl.shaderSource(vertexShader, vertexShaderSource); // 指定顶点着色器的源码
+  gl.shaderSource(fragmentShader, fragmentShaderSource); // 指定片元着色器的源码
 
   // 编译着色器
   gl.compileShader(vertexShader);
@@ -261,40 +192,23 @@ function initMaterial() {
     return;
   }
 
-  gl.attachShader(program, vertexShader);
-  gl.attachShader(program, fragmentShader);
+  const shaderProgram = gl.createProgram();
+  gl.attachShader(shaderProgram, vertexShader);
+  gl.attachShader(shaderProgram, fragmentShader);
 
-  gl.linkProgram(program);
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    console.error("ERROR linking program!", gl.getProgramInfoLog(program));
+  gl.linkProgram(shaderProgram);
+  if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+    console.error(
+      "ERROR linking program!",
+      gl.getProgramInfoLog(shaderProgram)
+    );
     return null;
   }
-
-  gl.useProgram(program);
-
-  uniformRegisters.push(() => {
-    const u_materialColorLocation = gl.getUniformLocation(
-      program,
-      "u_materialColor"
-    );
-    gl.uniform3fv(u_materialColorLocation, material.color);
-    const u_materialTypeLocation = gl.getUniformLocation(
-      program,
-      "u_materialType"
-    );
-    gl.uniform1i(u_materialTypeLocation, material.type);
-
-    gl.enable(gl.DEPTH_TEST);
-  });
-
-  uniformRegisters.forEach((callback) => {
-    callback();
-  });
-
-  return program;
+  gl.useProgram(shaderProgram);
+  return shaderProgram;
 }
 
-function initCamera(config) {
+function createCamera(config) {
   const { position, target, up, fov, aspect, near, far } = config;
 
   const cameraMatrix = m4.lookAt(position, target, up);
@@ -307,359 +221,56 @@ function initCamera(config) {
   return {
     ...config,
     matrix: {
-      cameraMatrix,
-      projectionMatrix,
-      viewMatrix,
-      vpMatrix,
+      camera: cameraMatrix,
+      projection: projectionMatrix,
+      view: viewMatrix,
+      vp: vpMatrix,
     },
-    location: {
-      modelMatrix: gl.getUniformLocation(program, "u_modelMatrix"),
-      mvpMatrix: gl.getUniformLocation(program, "u_mvpMatrix"),
-      normalMatrix: gl.getUniformLocation(program, "u_normalMatrix"),
+    attach(program, gl) {
+      gl.uniform3fv(
+        gl.getUniformLocation(program, "u_cameraPosition"),
+        position
+      );
     },
   };
 }
 
-function createAmbientLight(ambientLightColor) {
-  return () => {
-    const u_ambientLightColorLocation = gl.getUniformLocation(
-      program,
-      "u_ambientLightColor"
-    );
-    gl.uniform3fv(u_ambientLightColorLocation, ambientLightColor);
+function createAmbientLight(config) {
+  return {
+    color: config.color,
+    attach(program, gl) {
+      gl.uniform3fv(
+        gl.getUniformLocation(program, "u_ambientLightColor"),
+        config.color
+      );
+    },
   };
 }
 
-function initPointLight(pointLight) {
-  uniformRegisters.push(() => {
-    gl.uniform3fv(
-      gl.getUniformLocation(program, "u_pointLight.position"),
-      pointLight.position
-    );
-    gl.uniform3fv(
-      gl.getUniformLocation(program, "u_pointLight.color"),
-      pointLight.color
-    );
-    // 设置点光源衰减系数
-    gl.uniform1f(
-      gl.getUniformLocation(program, "u_pointLight.constant"),
-      pointLight.attenuation[0]
-    );
-    gl.uniform1f(
-      gl.getUniformLocation(program, "u_pointLight.linear"),
-      pointLight.attenuation[2]
-    );
-    gl.uniform1f(
-      gl.getUniformLocation(program, "u_pointLight.quadratic"),
-      pointLight.attenuation[1]
-    );
-  });
+function createPointLight(pointLight) {
+  return {
+    ...pointLight,
+    attach(program, gl) {
+      gl.uniform3fv(
+        gl.getUniformLocation(program, "u_pointLight.position"),
+        pointLight.position
+      );
+      gl.uniform3fv(
+        gl.getUniformLocation(program, "u_pointLight.color"),
+        pointLight.color
+      );
+      gl.uniform1f(
+        gl.getUniformLocation(program, "u_pointLight.constant"),
+        pointLight.attenuation[0]
+      );
+      gl.uniform1f(
+        gl.getUniformLocation(program, "u_pointLight.linear"),
+        pointLight.attenuation[1]
+      );
+      gl.uniform1f(
+        gl.getUniformLocation(program, "u_pointLight.quadratic"),
+        pointLight.attenuation[2]
+      );
+    },
+  };
 }
-
-var m4 = {
-  perspective(fieldOfViewInRadians, aspect, near, far) {
-    var f = Math.tan(Math.PI * 0.5 - 0.5 * fieldOfViewInRadians);
-    var rangeInv = 1.0 / (near - far);
-    // prettier-ignore
-    return [
-    f / aspect, 0, 0,                 0,
-    0,       f, 0,                 0,
-    0,       0, (near + far) * rangeInv,  -1,
-    0,       0, near * far * rangeInv * 2, 0
-    ];
-  },
-
-  projection(width, height, depth) {
-    // Note: This matrix flips the Y axis so 0 is at the top.
-    // prettier-ignore
-    return [
-      2 / width, 0, 0, 0,
-      0, -2 / height, 0, 0,
-      0, 0, 2 / depth, 0,
-      -1, 1, 0, 1, 
-    ];
-  },
-
-  translation(tx, ty, tz) {
-    // prettier-ignore
-    return [
-      1,  0,  0,  0,
-      0,  1,  0,  0,
-      0,  0,  1,  0,
-      tx, ty, tz, 1,
-    ];
-  },
-
-  xRotation(angleInRadians) {
-    var c = Math.cos(angleInRadians);
-    var s = Math.sin(angleInRadians);
-    // prettier-ignore
-    return [
-    1, 0, 0, 0,
-    0, c, s, 0,
-    0, -s, c, 0,
-    0, 0, 0, 1,
-    ];
-  },
-
-  yRotation(angleInRadians) {
-    var c = Math.cos(angleInRadians);
-    var s = Math.sin(angleInRadians);
-    // prettier-ignore
-    return [
-    c, 0, -s, 0,
-    0, 1, 0, 0,
-    s, 0, c, 0,
-    0, 0, 0, 1,
-    ];
-  },
-
-  zRotation(angleInRadians) {
-    var c = Math.cos(angleInRadians);
-    var s = Math.sin(angleInRadians);
-    // prettier-ignore
-    return [
-      c, s, 0, 0,
-      -s, c, 0, 0,
-      0, 0, 1, 0,
-      0, 0, 0, 1,
-    ];
-  },
-
-  scaling(sx, sy, sz) {
-    // prettier-ignore
-    return [
-      sx, 0,  0,  0,
-      0, sy,  0,  0,
-      0,  0, sz,  0,
-      0,  0,  0,  1,
-    ];
-  },
-
-  translate(m, tx, ty, tz) {
-    return m4.multiply(m, m4.translation(tx, ty, tz));
-  },
-
-  xRotate(m, angleInRadians) {
-    return m4.multiply(m, m4.xRotation(angleInRadians));
-  },
-
-  yRotate(m, angleInRadians) {
-    return m4.multiply(m, m4.yRotation(angleInRadians));
-  },
-
-  zRotate(m, angleInRadians) {
-    return m4.multiply(m, m4.zRotation(angleInRadians));
-  },
-
-  scale(m, sx, sy, sz) {
-    return m4.multiply(m, m4.scaling(sx, sy, sz));
-  },
-
-  inverse(m) {
-    var m00 = m[0 * 4 + 0];
-    var m01 = m[0 * 4 + 1];
-    var m02 = m[0 * 4 + 2];
-    var m03 = m[0 * 4 + 3];
-    var m10 = m[1 * 4 + 0];
-    var m11 = m[1 * 4 + 1];
-    var m12 = m[1 * 4 + 2];
-    var m13 = m[1 * 4 + 3];
-    var m20 = m[2 * 4 + 0];
-    var m21 = m[2 * 4 + 1];
-    var m22 = m[2 * 4 + 2];
-    var m23 = m[2 * 4 + 3];
-    var m30 = m[3 * 4 + 0];
-    var m31 = m[3 * 4 + 1];
-    var m32 = m[3 * 4 + 2];
-    var m33 = m[3 * 4 + 3];
-    var tmp_0 = m22 * m33;
-    var tmp_1 = m32 * m23;
-    var tmp_2 = m12 * m33;
-    var tmp_3 = m32 * m13;
-    var tmp_4 = m12 * m23;
-    var tmp_5 = m22 * m13;
-    var tmp_6 = m02 * m33;
-    var tmp_7 = m32 * m03;
-    var tmp_8 = m02 * m23;
-    var tmp_9 = m22 * m03;
-    var tmp_10 = m02 * m13;
-    var tmp_11 = m12 * m03;
-    var tmp_12 = m20 * m31;
-    var tmp_13 = m30 * m21;
-    var tmp_14 = m10 * m31;
-    var tmp_15 = m30 * m11;
-    var tmp_16 = m10 * m21;
-    var tmp_17 = m20 * m11;
-    var tmp_18 = m00 * m31;
-    var tmp_19 = m30 * m01;
-    var tmp_20 = m00 * m21;
-    var tmp_21 = m20 * m01;
-    var tmp_22 = m00 * m11;
-    var tmp_23 = m10 * m01;
-
-    var t0 =
-      tmp_0 * m11 +
-      tmp_3 * m21 +
-      tmp_4 * m31 -
-      (tmp_1 * m11 + tmp_2 * m21 + tmp_5 * m31);
-    var t1 =
-      tmp_1 * m01 +
-      tmp_6 * m21 +
-      tmp_9 * m31 -
-      (tmp_0 * m01 + tmp_7 * m21 + tmp_8 * m31);
-    var t2 =
-      tmp_2 * m01 +
-      tmp_7 * m11 +
-      tmp_10 * m31 -
-      (tmp_3 * m01 + tmp_6 * m11 + tmp_11 * m31);
-    var t3 =
-      tmp_5 * m01 +
-      tmp_8 * m11 +
-      tmp_11 * m21 -
-      (tmp_4 * m01 + tmp_9 * m11 + tmp_10 * m21);
-
-    var d = 1.0 / (m00 * t0 + m10 * t1 + m20 * t2 + m30 * t3);
-    // prettier-ignore
-    return [
-      d * t0,
-      d * t1,
-      d * t2,
-      d * t3,
-      d * ((tmp_1 * m10 + tmp_2 * m20 + tmp_5 * m30) -
-          (tmp_0 * m10 + tmp_3 * m20 + tmp_4 * m30)),
-      d * ((tmp_0 * m00 + tmp_7 * m20 + tmp_8 * m30) -
-          (tmp_1 * m00 + tmp_6 * m20 + tmp_9 * m30)),
-      d * ((tmp_3 * m00 + tmp_6 * m10 + tmp_11 * m30) -
-          (tmp_2 * m00 + tmp_7 * m10 + tmp_10 * m30)),
-      d * ((tmp_4 * m00 + tmp_9 * m10 + tmp_10 * m20) -
-          (tmp_5 * m00 + tmp_8 * m10 + tmp_11 * m20)),
-      d * ((tmp_12 * m13 + tmp_15 * m23 + tmp_16 * m33) -
-          (tmp_13 * m13 + tmp_14 * m23 + tmp_17 * m33)),
-      d * ((tmp_13 * m03 + tmp_18 * m23 + tmp_21 * m33) -
-          (tmp_12 * m03 + tmp_19 * m23 + tmp_20 * m33)),
-      d * ((tmp_14 * m03 + tmp_19 * m13 + tmp_22 * m33) -
-          (tmp_15 * m03 + tmp_18 * m13 + tmp_23 * m33)),
-      d * ((tmp_17 * m03 + tmp_20 * m13 + tmp_23 * m23) -
-          (tmp_16 * m03 + tmp_21 * m13 + tmp_22 * m23)),
-      d * ((tmp_14 * m22 + tmp_17 * m32 + tmp_13 * m12) -
-          (tmp_16 * m32 + tmp_12 * m12 + tmp_15 * m22)),
-      d * ((tmp_20 * m32 + tmp_12 * m02 + tmp_19 * m22) -
-          (tmp_18 * m22 + tmp_21 * m32 + tmp_13 * m02)),
-      d * ((tmp_18 * m12 + tmp_23 * m32 + tmp_15 * m02) -
-          (tmp_22 * m32 + tmp_14 * m02 + tmp_19 * m12)),
-      d * ((tmp_22 * m22 + tmp_16 * m02 + tmp_21 * m12) -
-          (tmp_20 * m12 + tmp_23 * m22 + tmp_17 * m02))
-    ];
-  },
-
-  // prettier-ignore
-  transpose: function(m) {
-    return [
-      m[0], m[4], m[8], m[12],
-      m[1], m[5], m[9], m[13],
-      m[2], m[6], m[10], m[14],
-      m[3], m[7], m[11], m[15],
-    ];
-  },
-
-  lookAt(cameraPosition, target, up) {
-    var zAxis = v3.normalize(v3.subtractVectors(cameraPosition, target));
-    var xAxis = v3.normalize(v3.cross(up, zAxis));
-    var yAxis = v3.normalize(v3.cross(zAxis, xAxis));
-    // prettier-ignore
-    return [
-      xAxis[0],       xAxis[1],      xAxis[2],        0,
-      yAxis[0],       yAxis[1],      yAxis[2],        0,
-      zAxis[0],       zAxis[1],      zAxis[2],        0,
-      cameraPosition[0], cameraPosition[1], cameraPosition[2], 1,
-    ];
-  },
-
-  multiply(a, b) {
-    var a00 = a[0 * 4 + 0];
-    var a01 = a[0 * 4 + 1];
-    var a02 = a[0 * 4 + 2];
-    var a03 = a[0 * 4 + 3];
-    var a10 = a[1 * 4 + 0];
-    var a11 = a[1 * 4 + 1];
-    var a12 = a[1 * 4 + 2];
-    var a13 = a[1 * 4 + 3];
-    var a20 = a[2 * 4 + 0];
-    var a21 = a[2 * 4 + 1];
-    var a22 = a[2 * 4 + 2];
-    var a23 = a[2 * 4 + 3];
-    var a30 = a[3 * 4 + 0];
-    var a31 = a[3 * 4 + 1];
-    var a32 = a[3 * 4 + 2];
-    var a33 = a[3 * 4 + 3];
-    var b00 = b[0 * 4 + 0];
-    var b01 = b[0 * 4 + 1];
-    var b02 = b[0 * 4 + 2];
-    var b03 = b[0 * 4 + 3];
-    var b10 = b[1 * 4 + 0];
-    var b11 = b[1 * 4 + 1];
-    var b12 = b[1 * 4 + 2];
-    var b13 = b[1 * 4 + 3];
-    var b20 = b[2 * 4 + 0];
-    var b21 = b[2 * 4 + 1];
-    var b22 = b[2 * 4 + 2];
-    var b23 = b[2 * 4 + 3];
-    var b30 = b[3 * 4 + 0];
-    var b31 = b[3 * 4 + 1];
-    var b32 = b[3 * 4 + 2];
-    var b33 = b[3 * 4 + 3];
-    // prettier-ignore
-    return [
-      b00 * a00 + b01 * a10 + b02 * a20 + b03 * a30,
-      b00 * a01 + b01 * a11 + b02 * a21 + b03 * a31,
-      b00 * a02 + b01 * a12 + b02 * a22 + b03 * a32,
-      b00 * a03 + b01 * a13 + b02 * a23 + b03 * a33,
-      b10 * a00 + b11 * a10 + b12 * a20 + b13 * a30,
-      b10 * a01 + b11 * a11 + b12 * a21 + b13 * a31,
-      b10 * a02 + b11 * a12 + b12 * a22 + b13 * a32,
-      b10 * a03 + b11 * a13 + b12 * a23 + b13 * a33,
-      b20 * a00 + b21 * a10 + b22 * a20 + b23 * a30,
-      b20 * a01 + b21 * a11 + b22 * a21 + b23 * a31,
-      b20 * a02 + b21 * a12 + b22 * a22 + b23 * a32,
-      b20 * a03 + b21 * a13 + b22 * a23 + b23 * a33,
-      b30 * a00 + b31 * a10 + b32 * a20 + b33 * a30,
-      b30 * a01 + b31 * a11 + b32 * a21 + b33 * a31,
-      b30 * a02 + b31 * a12 + b32 * a22 + b33 * a32,
-      b30 * a03 + b31 * a13 + b32 * a23 + b33 * a33,
-    ];
-  },
-};
-
-var v3 = {
-  vectorMultiply(v, m) {
-    var dst = [];
-    for (var i = 0; i < 4; ++i) {
-      dst[i] = 0.0;
-      for (var j = 0; j < 4; ++j) {
-        dst[i] += v[j] * m[j * 4 + i];
-      }
-    }
-    return dst;
-  },
-
-  cross(a, b) {
-    return [
-      a[1] * b[2] - a[2] * b[1],
-      a[2] * b[0] - a[0] * b[2],
-      a[0] * b[1] - a[1] * b[0],
-    ];
-  },
-  subtractVectors(a, b) {
-    return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
-  },
-  normalize(v) {
-    var length = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
-    // 确定不会除以 0
-    if (length > 0.00001) {
-      return [v[0] / length, v[1] / length, v[2] / length];
-    } else {
-      return [0, 0, 0];
-    }
-  },
-};
