@@ -26,20 +26,21 @@ const material1 = createMaterial(
 ); // 定义材质 实际上就是着色器
 
 const mesh1 = createMesh(geometry, material1); // Mesh的实质就是将几何体和材质绑定成一组 用材质指定的着色器 绘制一次这个几何体
+mesh1.setPosition(-2, 0, 0);
 scene.add(mesh1);
 
-// const material2 = createMaterial(
-//   {
-//     type: MaterialType.Lambert,
-//     color: color.hexToRgbNormalized("#ffffff"),
-//   },
-//   gl
-// );
-// const mesh2 = createMesh(geometry, material2);
-// const group = createGroup();
-// group.add(mesh2);
-// group.translate(1, 0, 0);
-// scene.add(group);
+const material2 = createMaterial(
+  {
+    type: MaterialType.Lambert,
+    color: color.hexToRgbNormalized("#ffffff"),
+  },
+  gl
+);
+const mesh2 = createMesh(geometry, material2);
+const group = createGroup();
+group.add(mesh2);
+group.setPosition(2, 1, 1);
+scene.add(group);
 
 const camera = createCamera({
   position: [4, 4, 4],
@@ -57,7 +58,7 @@ let deg = 1;
 function animate() {
   deg += 0.005;
   if (deg > 20) deg = 0;
-  mesh1.rotation(deg, 2 * deg, 3 * deg);
+  mesh1.setRotation(deg, 2 * deg, 3 * deg);
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
 }
@@ -66,11 +67,16 @@ animate();
 // ----------------------------- 下面是抽象概念的封装
 function createScene() {
   return {
-    objects: [],
     meshes: [],
+    objects: [],
+    groups: [],
+    children: [],
     add(object) {
       if (object.name === AbstractName.Mesh) this.meshes.push(object);
-      else this.objects.push(object);
+      else if (object.name === AbstractName.Group) {
+        this.groups.push(object);
+      } else this.objects.push(object);
+      this.children.push(object);
     },
   };
 }
@@ -118,7 +124,7 @@ function createGeometry() {
     vertices,
     normals,
     indices,
-    attach(program, gl) {
+    attach(gl, program) {
       const a_positionLocation = gl.getAttribLocation(program, "a_position");
       const vertices_buffer = gl.createBuffer();
       gl.bindBuffer(gl.ARRAY_BUFFER, vertices_buffer);
@@ -146,9 +152,10 @@ function createMaterial(config, gl) {
   return {
     shaderProgram,
     color: config.color,
-    attach(program, gl) {
+    attach(gl) {
+      gl.useProgram(shaderProgram);
       gl.uniform3fv(
-        gl.getUniformLocation(program, "u_materialColor"),
+        gl.getUniformLocation(shaderProgram, "u_materialColor"),
         config.color
       );
     },
@@ -193,7 +200,6 @@ function createShaderProgram(gl, vertexShaderSource, fragmentShaderSource) {
     );
     return null;
   }
-  gl.useProgram(shaderProgram);
   return shaderProgram;
 }
 
@@ -215,7 +221,8 @@ function createCamera(config) {
       view: viewMatrix,
       vp: vpMatrix,
     },
-    attach(program, gl) {
+    attach(gl, program) {
+      gl.useProgram(program);
       gl.uniform3fv(
         gl.getUniformLocation(program, "u_cameraPosition"),
         position
@@ -227,7 +234,7 @@ function createCamera(config) {
 function createAmbientLight(config) {
   return {
     color: config.color,
-    attach(program, gl) {
+    attach(gl, program) {
       gl.uniform3fv(
         gl.getUniformLocation(program, "u_ambientLightColor"),
         config.color
@@ -239,7 +246,7 @@ function createAmbientLight(config) {
 function createPointLight(pointLight) {
   return {
     ...pointLight,
-    attach(program, gl) {
+    attach(gl, program) {
       gl.uniform3fv(
         gl.getUniformLocation(program, "u_pointLight.position"),
         pointLight.position
@@ -269,6 +276,7 @@ function createMesh(geometry, material) {
     name: AbstractName.Mesh,
     geometry,
     material,
+    parent: null,
     matrixes: {
       mvp: { value: null, location: null },
       model: { value: null, location: null },
@@ -276,8 +284,11 @@ function createMesh(geometry, material) {
       rotation: m4.identity(),
       translate: m4.identity(),
       scale: m4.identity(),
+      localModel: m4.identity(),
     },
-    attach(program, gl) {
+    attach(gl) {
+      material.attach(gl);
+      const program = this.material.shaderProgram;
       this.matrixes.mvp.location = gl.getUniformLocation(
         program,
         "u_mvpMatrix"
@@ -290,16 +301,30 @@ function createMesh(geometry, material) {
         program,
         "u_normalMatrix"
       );
-      return {
-        ...material.attach(program, gl),
-        ...geometry.attach(program, gl),
-      };
+
+      geometry.attach(gl, program);
+      return {};
+    },
+
+    updateModelMatrix() {
+      this.matrixes.localModel = m4.multiplySeries(
+        this.matrixes.translate,
+        this.matrixes.rotation,
+        this.matrixes.scale
+      );
+      this.matrixes.model.value = this.parent
+        ? m4.multiply(this.parent.matrixes.model, this.matrixes.localModel)
+        : this.matrixes.localModel;
     },
 
     updateMatrix(gl, camera) {
-      const { rotation, translate, scale } = this.matrixes;
-      const modelMatrix = m4.multiplySeries(rotation, scale, translate);
-      this.matrixes.model.value = modelMatrix;
+      // const { rotation, translate, scale } = this.matrixes;
+      // const localModelMatrix = m4.multiplySeries(translate, scale, rotation);
+      // const modelMatrix = this.parent
+      //   ? m4.multiply(localModelMatrix, this.parent.matrixes.model)
+      //   : localModelMatrix;
+      // this.matrixes.model.value = modelMatrix;
+      const modelMatrix = this.matrixes.model.value;
       const mvpMatrix = m4.multiply(camera.matrix.vp, modelMatrix);
       this.matrixes.mvp.value = mvpMatrix;
       const normalMatrix = m4.transpose(m4.inverse(modelMatrix)); // 法线矩阵为模型矩阵的逆转置
@@ -320,7 +345,7 @@ function createMesh(geometry, material) {
         this.matrixes.normal.value
       );
     },
-    rotation(xDeg, yDeg, zDeg) {
+    setRotation(xDeg, yDeg, zDeg) {
       this.matrixes.rotation = m4.multiplySeries(
         m4.identity(),
         m4.xRotation(xDeg),
@@ -328,20 +353,16 @@ function createMesh(geometry, material) {
         m4.zRotation(zDeg)
       );
     },
-    translate(x, y, z) {
+    setPosition(x, y, z) {
       this.matrixes.translate = m4.multiplySeries(
         m4.identity(),
-        m4.translate(x),
-        m4.translate(y),
-        m4.translate(z)
+        m4.translation(x, y, z)
       );
     },
-    scale(x, y, z) {
+    setScale(x, y, z) {
       this.matrixes.translate = m4.multiplySeries(
         m4.identity(),
-        m4.scaling(x),
-        m4.scaling(y),
-        m4.scaling(z)
+        m4.scaling(x, y, z)
       );
     },
   };
@@ -351,20 +372,30 @@ function createGroup() {
   return {
     name: AbstractName.Group,
     matrixes: {
+      model: m4.identity(),
+      localModel: m4.identity(),
       rotation: m4.identity(),
       translate: m4.identity(),
       scale: m4.identity(),
     },
     children: [],
+    parent: null,
     add(object) {
       this.children.push(object);
+      object.parent = this;
     },
-    attach(program, gl) {
-      this.children.forEach((child) => {
-        child.attach(program, gl);
-      });
+    updateModelMatrix() {
+      this.matrixes.localModel = m4.multiplySeries(
+        this.matrixes.translate,
+        this.matrixes.rotation,
+        this.matrixes.scale
+      );
+      this.matrixes.model = this.parent
+        ? m4.multiply(this.parent.matrixes.model, this.matrixes.localModel)
+        : this.matrixes.localModel;
+      this.children.forEach((child) => child.updateModelMatrix());
     },
-    rotation(xDeg, yDeg, zDeg) {
+    setRotation(xDeg, yDeg, zDeg) {
       this.matrixes.rotation = m4.multiplySeries(
         m4.identity(),
         m4.xRotation(xDeg),
@@ -372,20 +403,16 @@ function createGroup() {
         m4.zRotation(zDeg)
       );
     },
-    translate(x, y, z) {
+    setPosition(x, y, z) {
       this.matrixes.translate = m4.multiplySeries(
         m4.identity(),
-        m4.translate(x),
-        m4.translate(y),
-        m4.translate(z)
+        m4.translation(x, y, z)
       );
     },
-    scale(x, y, z) {
+    setScale(x, y, z) {
       this.matrixes.translate = m4.multiplySeries(
         m4.identity(),
-        m4.scaling(x),
-        m4.scaling(y),
-        m4.scaling(z)
+        m4.scaling(x, y, z)
       );
     },
   };
@@ -396,12 +423,17 @@ function createRenderer(gl) {
   return {
     render(scene, camera) {
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-      scene.meshes.find((mesh) => {
+      scene.children.forEach((object) => {
+        if ([AbstractName.Group, AbstractName.Mesh].includes(object.name))
+          object.updateModelMatrix();
+      });
+      scene.meshes.forEach((mesh) => {
+        mesh.attach(gl);
         const shaderProgram = mesh.material.shaderProgram;
-        mesh.attach(shaderProgram, gl);
+        gl.useProgram(shaderProgram);
         mesh.updateMatrix(gl, camera);
-        scene.objects.forEach((object) => object.attach(shaderProgram, gl));
-        camera.attach(shaderProgram, gl);
+        scene.objects.forEach((object) => object.attach(gl, shaderProgram));
+        camera.attach(gl, shaderProgram);
         gl.drawElements(
           gl.TRIANGLES,
           mesh.geometry.indices.length,
