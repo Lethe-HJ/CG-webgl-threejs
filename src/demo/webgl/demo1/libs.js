@@ -1,5 +1,10 @@
 var MaterialType = { None: 0, Lambert: 1, Phong: 2 };
 
+var AbstractName = {
+  Mesh: "Mesh",
+  Group: "Group",
+};
+
 var noneShader = {
   vertex: /*glsl */ `
     attribute vec4 a_position;
@@ -165,6 +170,15 @@ var shaders = {
 };
 
 var m4 = {
+  identity() {
+    // prettier-ignore
+    return new Float32Array([
+      1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1
+    ])
+  },
   perspective(fieldOfViewInRadians, aspect, near, far) {
     var f = Math.tan(Math.PI * 0.5 - 0.5 * fieldOfViewInRadians);
     var rangeInv = 1.0 / (near - far);
@@ -437,6 +451,20 @@ var m4 = {
         b30 * a03 + b31 * a13 + b32 * a23 + b33 * a33,
       ];
   },
+
+  multiplySeries(...matrices) {
+    if (matrices.length < 2) {
+      throw new Error("Need at least two matrices to multiply");
+    }
+
+    let result = matrices[0];
+
+    for (let i = 1; i < matrices.length; i++) {
+      result = this.multiply(result, matrices[i]);
+    }
+
+    return result;
+  },
 };
 
 var v3 = {
@@ -469,5 +497,14 @@ var v3 = {
     } else {
       return [0, 0, 0];
     }
+  },
+};
+
+var color = {
+  hexToRgbNormalized(hex) {
+    const r = parseInt(hex.slice(1, 3), 16) / 255;
+    const g = parseInt(hex.slice(3, 5), 16) / 255;
+    const b = parseInt(hex.slice(5, 7), 16) / 255;
+    return [r, g, b];
   },
 };
