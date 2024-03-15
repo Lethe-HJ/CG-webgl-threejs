@@ -1,446 +1,109 @@
+import * as easy3d from "./easy3d.js";
+import { MaterialType } from "./libs.js";
 const ctx = document.getElementById("canvas");
 const gl = ctx.getContext("webgl");
 
-const scene = createScene();
+const scene = easy3d.createScene();
 
-const ambient_light = createAmbientLight({
-  color: color.hexToRgbNormalized("#191919"),
+const ambient_light = easy3d.createAmbientLight({
+  color: "#494949",
 }); // 定义环境光 实际上就是一些uniform 待传入到着色器
 scene.add(ambient_light);
 
-const point_light = createPointLight({
-  color: color.hexToRgbNormalized("#ffffff"),
-  position: [0.0, 6.0, 0.0],
-  attenuation: [0.5, 0.04, 0.032],
+const point_light = easy3d.createPointLight({
+  color: "#ffffff",
+  position: [2.0, 6.0, 2.0],
+  attenuation: [0.5, 0.01, 0.032],
 }); // 定义点光源  实际上就是一些uniform 待传入到着色器中
 scene.add(point_light);
 
-const geometry = createGeometry(); // 定义物体 实际上就是待传入到着色器中的点数据面数据
+const camera = easy3d.createCamera({
+  position: [1, 1, 10],
+  target: [1.0, 0.0, 0.0],
+  up: [0.0, 1.0, 0.0],
+  fov: 90 * (Math.PI / 360),
+  aspect: ctx.width / ctx.height,
+  near: 0.1,
+  far: 20,
+}); // 定义相机 实际上就是视图矩阵和投影矩阵
 
-const material1 = createMaterial(
+// 物体位置
+const vertices = new Float32Array([
+  // 0123
+  1, 1, 1, -1, 1, 1, -1, -1, 1, 1, -1, 1,
+  // 0345
+  1, 1, 1, 1, -1, 1, 1, -1, -1, 1, 1, -1,
+  // 0156
+  1, 1, 1, 1, 1, -1, -1, 1, -1, -1, 1, 1,
+  // 1267
+  -1, 1, 1, -1, 1, -1, -1, -1, -1, -1, -1, 1,
+  // 2347
+  -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1,
+  // 4567
+  1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1, -1,
+]);
+
+// 法向量
+const normals = new Float32Array([
+  // 0123
+  0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
+  // 0345
+  1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,
+  // 0156
+  0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0,
+  // 1267
+  -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0,
+  // 2347
+  0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0,
+  // 4567
+  0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1,
+]);
+
+// 面
+const indices = new Uint8Array([
+  0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7, 8, 9, 10, 8, 10, 11, 12, 13, 14, 12, 14,
+  15, 16, 17, 18, 16, 18, 19, 20, 21, 22, 20, 22, 23,
+]);
+
+const geometry = easy3d.createGeometry(vertices, normals, indices); // 定义物体 实际上就是待传入到着色器中的点数据面数据
+
+const material1 = easy3d.createMaterial(
   {
     type: MaterialType.Phong,
-    color: color.hexToRgbNormalized("#00FF00"),
+    color: "#00FF00",
+    shininess: 100.0,
   },
   gl
 ); // 定义材质 实际上就是着色器
 
-const mesh1 = createMesh(geometry, material1); // Mesh的实质就是将几何体和材质绑定成一组 用材质指定的着色器 绘制一次这个几何体
+const mesh1 = easy3d.createMesh(geometry, material1); // Mesh的实质就是将几何体和材质绑定成一组 用材质指定的着色器 绘制一次这个几何体
 mesh1.setPosition(-2, 0, 0);
+mesh1.setScale(1.5, 1.5, 1.5);
 scene.add(mesh1);
 
-const material2 = createMaterial(
+const material2 = easy3d.createMaterial(
   {
     type: MaterialType.Lambert,
-    color: color.hexToRgbNormalized("#ffffff"),
+    color: "#00FF00",
   },
   gl
 );
-const mesh2 = createMesh(geometry, material2);
-const group = createGroup();
+const mesh2 = easy3d.createMesh(geometry, material2);
+const group = easy3d.createGroup();
 group.add(mesh2);
-group.setPosition(2, 1, 1);
+group.setPosition(4, 0, 0);
+group.setScale(1.5, 1.5, 1.5);
 scene.add(group);
 
-const camera = createCamera({
-  position: [4, 4, 4],
-  target: [0.0, 0.0, 0.0],
-  up: [0.0, 1.0, 0.0],
-  fov: 75 * (Math.PI / 360),
-  aspect: ctx.width / ctx.height,
-  near: 0.1,
-  far: 10,
-}); // 定义相机 实际上就是视图矩阵和投影矩阵
-
-const renderer = createRenderer(gl);
+const renderer = easy3d.createRenderer(gl);
 
 let deg = 1;
 function animate() {
   deg += 0.005;
   if (deg > 20) deg = 0;
   mesh1.setRotation(deg, 2 * deg, 3 * deg);
+  mesh2.setRotation(deg, 2 * deg, 3 * deg);
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
 }
 animate();
-
-// ----------------------------- 下面是抽象概念的封装
-function createScene() {
-  return {
-    meshes: [],
-    objects: [],
-    groups: [],
-    children: [],
-    add(object) {
-      if (object.name === AbstractName.Mesh) this.meshes.push(object);
-      else if (object.name === AbstractName.Group) {
-        this.groups.push(object);
-      } else this.objects.push(object);
-      this.children.push(object);
-    },
-  };
-}
-
-function createGeometry() {
-  // 物体位置
-  const vertices = new Float32Array([
-    // 0123
-    1, 1, 1, -1, 1, 1, -1, -1, 1, 1, -1, 1,
-    // 0345
-    1, 1, 1, 1, -1, 1, 1, -1, -1, 1, 1, -1,
-    // 0156
-    1, 1, 1, 1, 1, -1, -1, 1, -1, -1, 1, 1,
-    // 1267
-    -1, 1, 1, -1, 1, -1, -1, -1, -1, -1, -1, 1,
-    // 2347
-    -1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1,
-    // 4567
-    1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1, -1,
-  ]);
-
-  // 法向量
-  const normals = new Float32Array([
-    // 0123
-    0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
-    // 0345
-    1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,
-    // 0156
-    0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0,
-    // 1267
-    -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0,
-    // 2347
-    0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0,
-    // 4567
-    0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1,
-  ]);
-
-  // 面
-  const indices = new Uint8Array([
-    0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7, 8, 9, 10, 8, 10, 11, 12, 13, 14, 12, 14,
-    15, 16, 17, 18, 16, 18, 19, 20, 21, 22, 20, 22, 23,
-  ]);
-
-  return {
-    vertices,
-    normals,
-    indices,
-    attach(gl, program) {
-      const a_positionLocation = gl.getAttribLocation(program, "a_position");
-      const vertices_buffer = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, vertices_buffer);
-      gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
-      gl.vertexAttribPointer(a_positionLocation, 3, gl.FLOAT, false, 0, 0);
-      gl.enableVertexAttribArray(a_positionLocation);
-
-      const a_normalLocation = gl.getAttribLocation(program, "a_normal");
-      const normal_buffer = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, normal_buffer);
-      gl.bufferData(gl.ARRAY_BUFFER, normals, gl.STATIC_DRAW);
-      gl.vertexAttribPointer(a_normalLocation, 3, gl.FLOAT, false, 0, 0);
-      gl.enableVertexAttribArray(a_normalLocation);
-
-      const indices_buffer = gl.createBuffer();
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indices_buffer);
-      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
-    },
-  };
-}
-
-function createMaterial(config, gl) {
-  const { vertex, fragment } = shaders[config.type];
-  const shaderProgram = createShaderProgram(gl, vertex, fragment);
-  return {
-    shaderProgram,
-    color: config.color,
-    attach(gl) {
-      gl.useProgram(shaderProgram);
-      gl.uniform3fv(
-        gl.getUniformLocation(shaderProgram, "u_materialColor"),
-        config.color
-      );
-    },
-  };
-}
-
-function createShaderProgram(gl, vertexShaderSource, fragmentShaderSource) {
-  const vertexShader = gl.createShader(gl.VERTEX_SHADER);
-  const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-
-  gl.shaderSource(vertexShader, vertexShaderSource); // 指定顶点着色器的源码
-  gl.shaderSource(fragmentShader, fragmentShaderSource); // 指定片元着色器的源码
-
-  // 编译着色器
-  gl.compileShader(vertexShader);
-  if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
-    console.error(
-      "ERROR compiling vertex shader!",
-      gl.getShaderInfoLog(vertexShader)
-    );
-    return;
-  }
-
-  gl.compileShader(fragmentShader);
-  if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
-    console.error(
-      "ERROR compiling fragment shader!",
-      gl.getShaderInfoLog(fragmentShader)
-    );
-    return;
-  }
-
-  const shaderProgram = gl.createProgram();
-  gl.attachShader(shaderProgram, vertexShader);
-  gl.attachShader(shaderProgram, fragmentShader);
-
-  gl.linkProgram(shaderProgram);
-  if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-    console.error(
-      "ERROR linking program!",
-      gl.getProgramInfoLog(shaderProgram)
-    );
-    return null;
-  }
-  return shaderProgram;
-}
-
-function createCamera(config) {
-  const { position, target, up, fov, aspect, near, far } = config;
-
-  const cameraMatrix = m4.lookAt(position, target, up);
-  const viewMatrix = m4.inverse(cameraMatrix);
-
-  const projectionMatrix = m4.perspective(fov, aspect, near, far);
-
-  const vpMatrix = m4.multiply(projectionMatrix, viewMatrix);
-
-  return {
-    ...config,
-    matrix: {
-      camera: cameraMatrix,
-      projection: projectionMatrix,
-      view: viewMatrix,
-      vp: vpMatrix,
-    },
-    attach(gl, program) {
-      gl.useProgram(program);
-      gl.uniform3fv(
-        gl.getUniformLocation(program, "u_cameraPosition"),
-        position
-      );
-    },
-  };
-}
-
-function createAmbientLight(config) {
-  return {
-    color: config.color,
-    attach(gl, program) {
-      gl.uniform3fv(
-        gl.getUniformLocation(program, "u_ambientLightColor"),
-        config.color
-      );
-    },
-  };
-}
-
-function createPointLight(pointLight) {
-  return {
-    ...pointLight,
-    attach(gl, program) {
-      gl.uniform3fv(
-        gl.getUniformLocation(program, "u_pointLight.position"),
-        pointLight.position
-      );
-      gl.uniform3fv(
-        gl.getUniformLocation(program, "u_pointLight.color"),
-        pointLight.color
-      );
-      gl.uniform1f(
-        gl.getUniformLocation(program, "u_pointLight.constant"),
-        pointLight.attenuation[0]
-      );
-      gl.uniform1f(
-        gl.getUniformLocation(program, "u_pointLight.linear"),
-        pointLight.attenuation[1]
-      );
-      gl.uniform1f(
-        gl.getUniformLocation(program, "u_pointLight.quadratic"),
-        pointLight.attenuation[2]
-      );
-    },
-  };
-}
-
-function createMesh(geometry, material) {
-  return {
-    name: AbstractName.Mesh,
-    geometry,
-    material,
-    parent: null,
-    matrixes: {
-      mvp: { value: null, location: null },
-      model: { value: null, location: null },
-      normal: { value: null, location: null },
-      rotation: m4.identity(),
-      translate: m4.identity(),
-      scale: m4.identity(),
-      localModel: m4.identity(),
-    },
-    attach(gl) {
-      material.attach(gl);
-      const program = this.material.shaderProgram;
-      this.matrixes.mvp.location = gl.getUniformLocation(
-        program,
-        "u_mvpMatrix"
-      );
-      this.matrixes.model.location = gl.getUniformLocation(
-        program,
-        "u_modelMatrix"
-      );
-      this.matrixes.normal.location = gl.getUniformLocation(
-        program,
-        "u_normalMatrix"
-      );
-
-      geometry.attach(gl, program);
-      return {};
-    },
-
-    updateModelMatrix() {
-      this.matrixes.localModel = m4.multiplySeries(
-        this.matrixes.translate,
-        this.matrixes.rotation,
-        this.matrixes.scale
-      );
-      this.matrixes.model.value = this.parent
-        ? m4.multiply(this.parent.matrixes.model, this.matrixes.localModel)
-        : this.matrixes.localModel;
-    },
-
-    updateMatrix(gl, camera) {
-      // const { rotation, translate, scale } = this.matrixes;
-      // const localModelMatrix = m4.multiplySeries(translate, scale, rotation);
-      // const modelMatrix = this.parent
-      //   ? m4.multiply(localModelMatrix, this.parent.matrixes.model)
-      //   : localModelMatrix;
-      // this.matrixes.model.value = modelMatrix;
-      const modelMatrix = this.matrixes.model.value;
-      const mvpMatrix = m4.multiply(camera.matrix.vp, modelMatrix);
-      this.matrixes.mvp.value = mvpMatrix;
-      const normalMatrix = m4.transpose(m4.inverse(modelMatrix)); // 法线矩阵为模型矩阵的逆转置
-      this.matrixes.normal.value = normalMatrix;
-      gl.uniformMatrix4fv(
-        this.matrixes.model.location,
-        false,
-        this.matrixes.model.value
-      );
-      gl.uniformMatrix4fv(
-        this.matrixes.mvp.location,
-        false,
-        this.matrixes.mvp.value
-      );
-      gl.uniformMatrix4fv(
-        this.matrixes.normal.location,
-        false,
-        this.matrixes.normal.value
-      );
-    },
-    setRotation(xDeg, yDeg, zDeg) {
-      this.matrixes.rotation = m4.multiplySeries(
-        m4.identity(),
-        m4.xRotation(xDeg),
-        m4.yRotation(yDeg),
-        m4.zRotation(zDeg)
-      );
-    },
-    setPosition(x, y, z) {
-      this.matrixes.translate = m4.multiplySeries(
-        m4.identity(),
-        m4.translation(x, y, z)
-      );
-    },
-    setScale(x, y, z) {
-      this.matrixes.translate = m4.multiplySeries(
-        m4.identity(),
-        m4.scaling(x, y, z)
-      );
-    },
-  };
-}
-
-function createGroup() {
-  return {
-    name: AbstractName.Group,
-    matrixes: {
-      model: m4.identity(),
-      localModel: m4.identity(),
-      rotation: m4.identity(),
-      translate: m4.identity(),
-      scale: m4.identity(),
-    },
-    children: [],
-    parent: null,
-    add(object) {
-      this.children.push(object);
-      object.parent = this;
-    },
-    updateModelMatrix() {
-      this.matrixes.localModel = m4.multiplySeries(
-        this.matrixes.translate,
-        this.matrixes.rotation,
-        this.matrixes.scale
-      );
-      this.matrixes.model = this.parent
-        ? m4.multiply(this.parent.matrixes.model, this.matrixes.localModel)
-        : this.matrixes.localModel;
-      this.children.forEach((child) => child.updateModelMatrix());
-    },
-    setRotation(xDeg, yDeg, zDeg) {
-      this.matrixes.rotation = m4.multiplySeries(
-        m4.identity(),
-        m4.xRotation(xDeg),
-        m4.yRotation(yDeg),
-        m4.zRotation(zDeg)
-      );
-    },
-    setPosition(x, y, z) {
-      this.matrixes.translate = m4.multiplySeries(
-        m4.identity(),
-        m4.translation(x, y, z)
-      );
-    },
-    setScale(x, y, z) {
-      this.matrixes.translate = m4.multiplySeries(
-        m4.identity(),
-        m4.scaling(x, y, z)
-      );
-    },
-  };
-}
-
-function createRenderer(gl) {
-  gl.enable(gl.DEPTH_TEST);
-  return {
-    render(scene, camera) {
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-      scene.children.forEach((object) => {
-        if ([AbstractName.Group, AbstractName.Mesh].includes(object.name))
-          object.updateModelMatrix();
-      });
-      scene.meshes.forEach((mesh) => {
-        mesh.attach(gl);
-        const shaderProgram = mesh.material.shaderProgram;
-        gl.useProgram(shaderProgram);
-        mesh.updateMatrix(gl, camera);
-        scene.objects.forEach((object) => object.attach(gl, shaderProgram));
-        camera.attach(gl, shaderProgram);
-        gl.drawElements(
-          gl.TRIANGLES,
-          mesh.geometry.indices.length,
-          gl.UNSIGNED_BYTE,
-          0
-        );
-      });
-    },
-  };
-}
