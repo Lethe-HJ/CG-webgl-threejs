@@ -1,0 +1,77 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "### 1. 原型链\r\n\r\nsuo'you"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 2. 小数运算的不精确的根源\r\n\r\n十进制\r\n\r\n$ 314 = 3 * 10^2 + 1*10^1 + 4*10^0 $\r\n$ 3.14 = 3 * 10^0 + 1*10^{-1} + 4*10^{-2} $\r\n\r\n二进制\r\n\r\n$ 101 = 1 * 2^2 + 0*2^1 + 1*2^0 = 5$\r\n\r\n$ 1.101 = 1 *2^0 + 1*2^{-1} + 0*2^{-2} + 1*2^{-3} = 1.625 $ \r\n\r\n二进制小数转换成十进制后的最后一位肯定是5\r\n因为\r\n\r\n$ 1*2^{-1} = 0.5 $\r\n\r\n$ 1*2^{-2} = 0.25 $\r\n\r\n$ 1*2^{-3} = 0.125 $\r\n\r\n反之 如果一个十进制小数的最后一位不是5那么肯定找不到有限位数二进制小数与之对应\r\n> 如果一个十进制小数的最后一位是5 他也不一定找得到有限位数二进制小数与之对应"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "[0.125.toString(2), 0.1.toString(2), 0.3.toString(2)]"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "text/plain",
+                            "value": [
+                                "[",
+                                "  \u001b[32m'0.001'\u001b[39m,",
+                                "  \u001b[32m'0.0001100110011001100110011001100110011001100110011001101'\u001b[39m,",
+                                "  \u001b[32m'0.010011001100110011001100110011001100110011001100110011'\u001b[39m",
+                                "]"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 3. 手写 Promise\r\n\r\n```js\r\n\r\n\r\n```\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const PENDING = \"pending\";\r\nconst FULFILLED = \"fulfilled\";\r\nconst REJECTED = \"rejected\";\r\nclass MyPromise {\r\n  #state = PENDING;\r\n  #result = undefined;\r\n  #handlers = [];\r\n  constructor(executor) {\r\n    this.init(executor);\r\n  }\r\n\r\n  async init(executor) {\r\n    const resolve = (data) => {\r\n      this.#changeState(FULFILLED, data);\r\n    };\r\n    const reject = (reason) => {\r\n      this.#changeState(REJECTED, reason);\r\n    };\r\n    try {\r\n      await executor(resolve, reject);\r\n    } catch (error) {\r\n      reject(error);\r\n    }\r\n  }\r\n\r\n  #changeState(state, result) {\r\n    if (this.#state !== PENDING) return;\r\n    this.#state = state;\r\n    this.#result = result;\r\n    this.#run();\r\n  }\r\n\r\n  #isPromiseLike() {\r\n    return true;\r\n  }\r\n\r\n  #runMicroTask(func) {\r\n    setTimeout(func, 0);\r\n  }\r\n\r\n  #runOne(callback, resolve, reject) {\r\n    this.#runMicroTask(() => {\r\n      if (typeof callback !== \"function\") {\r\n        const settled = (this.#state = FULFILLED ? resolve : reject);\r\n        settled(this.#result);\r\n        return;\r\n      }\r\n      try {\r\n        const data = callback(this.#result);\r\n        if (this.#isPromiseLike(data)) {\r\n          data.then(resolve, reject);\r\n        } else {\r\n          resolve(data);\r\n        }\r\n      } catch (error) {\r\n        reject(error);\r\n      }\r\n    });\r\n  }\r\n\r\n  #run() {\r\n    if (this.#state === PENDING) return;\r\n    while (this.#handlers.length) {\r\n      const { onFulfilled, onRejected, resolve, reject } =\r\n        this.#handlers.shift();\r\n\r\n      if (this.#state === FULFILLED) {\r\n        try {\r\n          this.#runOne(onFulfilled, resolve, reject);\r\n        } catch (error) {\r\n          this.#runOne(onRejected, resolve, reject);\r\n        }\r\n      } else {\r\n        onRejected(this.#result);\r\n      }\r\n    }\r\n  }\r\n\r\n  then(onFulfilled, onRejected) {\r\n    return new MyPromise((resolve, reject) => {\r\n      this.#handlers.push({\r\n        onFulfilled,\r\n        onRejected,\r\n        resolve,\r\n        reject,\r\n      });\r\n      this.#run();\r\n    });\r\n  }\r\n}\r\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

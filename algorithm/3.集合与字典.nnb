@@ -1,0 +1,60 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "# 集合\r\n\r\n特性: 无序且唯一\r\n\r\n```js\r\n// 去重\r\nconst arr = [1, 1, 2, 2];\r\nconst arr2 = [...new Set(arr)];\r\n\r\n// 判断元素是否在集合中\r\nconst set = new Set(arr);\r\nconst has = set.has(3);\r\n\r\n// 求交集\r\nconst set2 = new Set([2, 3]);\r\nconst set3 = new Set([...set].filter(item => set2.has(item)));\r\n\r\n```\r\n\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 题目 两个数组的交集(349)\r\n\r\n给定两个数组 nums1 和 nums2 ，返回 它们的交集 。输出结果中的每个元素一定是 唯一 的。我们可以 不考虑输出结果的顺序 。\r\n\r\n示例 1：\r\n\r\n输入：nums1 = [1,2,2,1], nums2 = [2,2]\r\n输出：[2]\r\n示例 2：\r\n\r\n输入：nums1 = [4,9,5], nums2 = [9,4,9,8,4]\r\n输出：[9,4]\r\n解释：[4,9] 也是可通过的\r\n\r\n提示：\r\n\r\n1 <= nums1.length, nums2.length <= 1000\r\n0 <= nums1[i], nums2[i] <= 1000\r\n\r\n```js\r\n/**\r\n * @param {number[]} nums1\r\n * @param {number[]} nums2\r\n * @return {number[]}\r\n */\r\nvar intersection = function (nums1, nums2) {\r\n  return [...new Set(nums1)].filter((n) => nums2.includes(n));\r\n};\r\n```\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 使用es6 Set\r\n\r\n```js\r\nlet mySet = new Set();\r\n\r\nmySet.add(1);\r\nmySet.add(5);\r\nmySet.add(5);\r\nmySet.add('some text');\r\nlet o = { a: 1, b: 2 };\r\nmySet.add(o);\r\nmySet.add({ a: 1, b: 2 });\r\n\r\nconst has = mySet.has(o);\r\n\r\nmySet.delete(5);\r\n\r\nfor(let [key, value] of mySet.entries()) console.log(key, value);\r\n\r\nconst myArr = Array.from(mySet);\r\n\r\nconst mySet2 = new Set([1,2,3,4]);\r\n\r\nconst intersection = new Set([...mySet].filter(x => mySet2.has(x)));\r\nconst difference = new Set([...mySet].filter(x => !mySet2.has(x)));\r\n\r\n```"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "# 字典\r\n\r\n特点: 以键值对的形式来存储数据\r\n\r\n```js\r\nconst m = new Map();\r\n\r\n// 增\r\nm.set('a', 'aa');\r\nm.set('b', 'bb');\r\n\r\n// 删\r\nm.delete('b');\r\n// m.clear();\r\n\r\n// 改\r\nm.set('a', 'aaa');\r\n\r\n```"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 题目 349. 两个数组的交集\r\n\r\n给定两个数组 nums1 和 nums2 ，返回 它们的交集 。输出结果中的每个元素一定是 唯一 的。我们可以 不考虑输出结果的顺序 。\r\n\r\n示例 1：\r\n\r\n输入：nums1 = [1,2,2,1], nums2 = [2,2]\r\n输出：[2]\r\n示例 2：\r\n\r\n输入：nums1 = [4,9,5], nums2 = [9,4,9,8,4]\r\n输出：[9,4]\r\n解释：[4,9] 也是可通过的\r\n\r\n提示：\r\n\r\n1 <= nums1.length, nums2.length <= 1000\r\n0 <= nums1[i], nums2[i] <= 1000\r\n\r\n```js\r\n/**\r\n * @param {number[]} nums1\r\n * @param {number[]} nums2\r\n * @return {number[]}\r\n */\r\nvar intersection = function (nums1, nums2) {\r\n  const map = new Map();\r\n  nums1.forEach((n) => {\r\n    map.set(n, true);\r\n  });\r\n  const res = [];\r\n  nums2.forEach((n) => {\r\n    if (map.get(n)) {\r\n      res.push(n);\r\n      map.delete(n);\r\n    }\r\n  });\r\n  return res;\r\n};\r\n```\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 题目 1. 两数之和\r\n\r\n给定一个整数数组 nums 和一个整数目标值 target，请你在该数组中找出 和为目标值 target 的那 两个 整数，并返回它们的数组下标。\r\n\r\n你可以假设每种输入只会对应一个答案。但是，数组中同一个元素在答案里不能重复出现。\r\n\r\n你可以按任意顺序返回答案。\r\n\r\n示例 1：\r\n\r\n输入：nums = [2,7,11,15], target = 9\r\n输出：[0,1]\r\n解释：因为 nums[0] + nums[1] == 9 ，返回 [0, 1] 。\r\n示例 2：\r\n\r\n输入：nums = [3,2,4], target = 6\r\n输出：[1,2]\r\n示例 3：\r\n\r\n输入：nums = [3,3], target = 6\r\n输出：[0,1]\r\n\r\n提示：\r\n\r\n2 <= nums.length <= 104\r\n-109 <= nums[i] <= 109\r\n-109 <= target <= 109\r\n只会存在一个有效答案\r\n\r\n进阶：你可以想出一个时间复杂度小于 O(n2) 的算法吗？\r\n\r\n```js\r\n/**\r\n * @param {number[]} nums\r\n * @param {number} target\r\n * @return {number[]}\r\n */\r\nvar twoSum = function (nums, target) {\r\n  const map = new Map();\r\n  for (let i = 0; i < nums.length; i += 1) {\r\n    const n = nums[i];\r\n    const n2 = target - n;\r\n    if (map.has(n2)) {\r\n      return [map.get(n2), i];\r\n    } else {\r\n      map.set(n, i);\r\n    }\r\n  }\r\n};\r\n```\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 题目 3. 无重复字符的最长子串\r\n\r\n给定一个字符串 s ，请你找出其中不含有重复字符的 最长子串 的长度。\r\n\r\n示例 1:\r\n\r\n输入: s = \"abcabcbb\"\r\n输出: 3\r\n解释: 因为无重复字符的最长子串是 \"abc\"，所以其长度为 3。\r\n示例 2:\r\n\r\n输入: s = \"bbbbb\"\r\n输出: 1\r\n解释: 因为无重复字符的最长子串是 \"b\"，所以其长度为 1。\r\n示例 3:\r\n\r\n输入: s = \"pwwkew\"\r\n输出: 3\r\n解释: 因为无重复字符的最长子串是 \"wke\"，所以其长度为 3。\r\n请注意，你的答案必须是 子串 的长度，\"pwke\" 是一个子序列，不是子串。\r\n\r\n提示：\r\n\r\n0 <= s.length <= 5 \\* 104\r\ns 由英文字母、数字、符号和空格组成\r\n\r\n```js\r\n/**\r\n * @param {string} s\r\n * @return {number}\r\n */\r\nvar lengthOfLongestSubstring = function (s) {\r\n  let l = 0;\r\n  let res = 0;\r\n  const map = new Map();\r\n  for (let r = 0; r < s.length; r += 1) {\r\n    if (map.has(s[r]) && map.get(s[r]) >= l) {\r\n      l = map.get(s[r]) + 1;\r\n    }\r\n    res = Math.max(res, r - l + 1);\r\n    map.set(s[r], r);\r\n  }\r\n  return res; \r\n};\r\n```\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### 题目 76. 最小覆盖子串\r\n\r\n给你一个字符串 s 、一个字符串 t 。返回 s 中涵盖 t 所有字符的最小子串。如果 s 中不存在涵盖 t 所有字符的子串，则返回空字符串 \"\" 。\r\n\r\n注意：\r\n\r\n对于 t 中重复字符，我们寻找的子字符串中该字符数量必须不少于 t 中该字符数量。\r\n如果 s 中存在这样的子串，我们保证它是唯一的答案。\r\n\r\n示例 1：\r\n\r\n输入：s = \"ADOBECODEBANC\", t = \"ABC\"\r\n输出：\"BANC\"\r\n解释：最小覆盖子串 \"BANC\" 包含来自字符串 t 的 'A'、'B' 和 'C'。\r\n示例 2：\r\n\r\n输入：s = \"a\", t = \"a\"\r\n输出：\"a\"\r\n解释：整个字符串 s 是最小覆盖子串。\r\n示例 3:\r\n\r\n输入: s = \"a\", t = \"aa\"\r\n输出: \"\"\r\n解释: t 中两个字符 'a' 均应包含在 s 的子串中，\r\n因此没有符合条件的子字符串，返回空字符串。\r\n\r\n提示：\r\n\r\nm == s.length\r\nn == t.length\r\n1 <= m, n <= 105\r\ns 和 t 由英文字母组成\r\n\r\n进阶：你能设计一个在 o(m+n) 时间内解决此问题的算法吗？\r\n\r\n```js\r\n/**\r\n * @param {string} s\r\n * @param {string} t\r\n * @return {string}\r\n */\r\nvar minWindow = function (s, t) {\r\n  let l = 0;\r\n  let r = 0;\r\n  const need = new Map();\r\n  for (let c of t) {\r\n    need.set(c, need.has(c) ? need.get(c) + 1 : 1);\r\n  }\r\n  let needType = need.size;\r\n  let res = \"\";\r\n  while (r < s.length) {\r\n    const c = s[r];\r\n    if (need.has(c)) {\r\n      need.set(c, need.get(c) - 1);\r\n      if (need.get(c) === 0) needType -= 1;\r\n    }\r\n    while (needType === 0) {\r\n      const newRes = s.substring(l, r + 1);\r\n      if (!res || newRes.length < res.length) res = newRes;\r\n      const c2 = s[i];\r\n      if (need.has(c2)) {\r\n        need.set(c2, need.get(c2) + 1);\r\n        if (need.get(c2) === 1) needType += 1;\r\n      }\r\n      l += 1;\r\n    }\r\n    r += 1;\r\n  }\r\n  return res;\r\n};\r\n```\r\n"
+            ],
+            "outputs": []
+        }
+    ]
+}

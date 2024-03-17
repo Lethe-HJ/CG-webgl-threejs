@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event Loop Order Verification</title>
+</head>
+
+<body>
+    <h1>hahahah</h1>
+    <script>
+        console.log('1. 同步任务开始');
+
+        Promise.resolve().then(() => {
+            console.log('3. 微任务');
+        });
+
+        setTimeout(() => {
+            console.log('5. 宏任务（setTimeout）');
+            
+            Promise.resolve().then(() => {
+                console.log('6. 宏任务中的微任务');
+            });
+
+            requestAnimationFrame(() => {
+                console.log('7. 宏任务中的requestAnimationFrame');
+            });
+        }, 0);
+
+        requestAnimationFrame(() => {
+            console.log('4. requestAnimationFrame');
+        });
+
+        console.log('2. 同步任务结束');
+    </script>
+</body>
+</html>
