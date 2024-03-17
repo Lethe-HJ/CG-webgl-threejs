@@ -4,15 +4,15 @@
 
 ## 1. 链接
 
-### 1.1 文档
+### 1.1 学习心得文档
 
 [从 webgl 到 threejs——由深入浅](https://kx29z3az6f.feishu.cn/docx/RXbud6F5Ooqp6Exn6zAckT78nmf)
 
-### 1.2 笔记目录
+### 1.2 本笔记项目的目录
 
-doc\threejs
-doc\webassembly
-doc\webgl
+1. doc\threejs
+2. doc\webassembly
+3. doc\webgl
 
 ### 1.3 学习项目
 
