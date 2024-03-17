@@ -8,16 +8,16 @@
 
 [从 webgl 到 threejs——由深入浅](https://kx29z3az6f.feishu.cn/docx/RXbud6F5Ooqp6Exn6zAckT78nmf)
 
-### 1.2 本笔记项目的目录
+### 1.2 本笔记项目中的文档目录
 
 1. doc\threejs
 2. doc\webassembly
 3. doc\webgl
 
-### 1.3 学习项目
+### 1.3 本笔记项目中的实践小项目
 
-src\demo\webgl\demo1 基于webgl的简单的图形引擎的实现
-src\webassembly\demo\isosurface 等值面的渲染与加速
+1. src\demo\webgl\demo1 基于webgl的简单的图形引擎的实现
+2. src\webassembly\demo\isosurface 等值面的渲染与加速
 
 ## 2. 使用前的准备
 
