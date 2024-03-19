@@ -1,3 +1,20 @@
+#ifndef EM_PORT_API
+#if defined(__EMSCRIPTEN__)
+#include <emscripten.h>
+#if defined(__cplusplus)
+#define EM_PORT_API(rettype) extern "C" rettype EMSCRIPTEN_KEEPALIVE
+#else
+#define EM_PORT_API(rettype) rettype EMSCRIPTEN_KEEPALIVE
+#endif
+#else
+#if defined(__cplusplus)
+#define EM_PORT_API(rettype) extern "C" rettype
+#else
+#define EM_PORT_API(rettype) rettype
+#endif
+#endif
+#endif
+
 // SurfaceNets, 10 August 2015, Roberto Toro
 // translated from Mikola Lysenko
 // http://0fps.net/2012/07/12/smooth-voxel-terrain-part-2/
@@ -27,8 +44,7 @@ int cube_edges[24];
 int edge_table[256];
 int buffer[4096];
 
-void SurfaceNets(float *data, int *dims, float level, Mesh *mesh, int storeFlag)
-{
+EM_PORT_API(void) surfaceNets(float *data, int *dims, float level, Mesh *mesh, int storeFlag){
     float3D *vertices = mesh->p;
     int3D *faces = mesh->t;
     int n = 0;
@@ -137,4 +153,46 @@ void SurfaceNets(float *data, int *dims, float level, Mesh *mesh, int storeFlag)
     }
     mesh->np = vertices_length;
     mesh->nt = faces_length;
+}
+
+EM_PORT_API(Mesh) computeSurfaceNets(float *data, int *dims, float level)
+{
+    Mesh m;
+    surfaceNets(data, dims, level, &m, 0); // 1st pass: evaluate memory requirements
+    m.p = (float3D *)calloc(m.np, sizeof(float3D));
+    m.t = (int3D *)calloc(m.nt, sizeof(int3D));
+    surfaceNets(data, dims, level, &m, 1); // 2nd pass: store vertices and triangles
+    return m;
+}
+
+// 获取 Mesh 中的顶点数
+EM_PORT_API(int) getMeshVertexCount(Mesh* mesh) {
+    return mesh->np;
+}
+
+// 获取 Mesh 中的三角形数
+EM_PORT_API(int) getMeshTriangleCount(Mesh* mesh) {
+    return mesh->nt;
+}
+
+// 获取 Mesh 的顶点数组指针
+EM_PORT_API(float3D*) getMeshVertices(Mesh* mesh) {
+    return mesh->p;
+}
+
+// 获取 Mesh 的三角形数组指针
+EM_PORT_API(int3D*) getMeshTriangles(Mesh* mesh) {
+    return mesh->t;
+}
+
+EM_PORT_API(void) freeMesh(Mesh* mesh) {
+    // 先检查指针是否为 NULL，避免尝试释放未分配的内存
+    if (mesh->p != NULL) {
+        free(mesh->p); // 释放顶点数组
+        mesh->p = NULL; // 避免悬挂指针
+    }
+    if (mesh->t != NULL) {
+        free(mesh->t); // 释放三角形数组
+        mesh->t = NULL; // 避免悬挂指针
+    }
 }

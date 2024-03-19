@@ -69,8 +69,9 @@ function handleData(data) {
         value: -level,
         color: 0x74add1,
       },
-    ].forEach(({ value, color }) => {
-      const surface = surfaceNets(shape, (x, y, z) => data[x][y][z] - value);
+    ].forEach(async ({ value, color }) => {
+      // const surface = surfaceNets(shape, (x, y, z) => data[x][y][z] - value);
+      const surface = await callSurfaceNets(data, shape, value);
       const geometry = new ConcaveGeometry(surface.positions, surface.cells);
       const material = new THREE.MeshLambertMaterial({
         color,
@@ -169,4 +170,55 @@ function linearInterpolation(data, factor) {
   }
   console.timeEnd("linearInterpolation");
   return out_data;
+}
+
+// 假设 Module 已经加载
+async function callSurfaceNets(data, dims, level) {
+  const Module = window.Module;
+  // 首先，我们需要将数据从 JavaScript 数组转移到 WebAssembly 的内存中。
+  const dataPtr = Module._malloc(data.length * Float32Array.BYTES_PER_ELEMENT);
+  Module.HEAPF32.set(data, dataPtr / Float32Array.BYTES_PER_ELEMENT);
+
+  // 类似地，为 dims 分配内存并复制数据。
+  const dimsPtr = Module._malloc(dims.length * Int32Array.BYTES_PER_ELEMENT);
+  Module.HEAP32.set(dims, dimsPtr / Int32Array.BYTES_PER_ELEMENT);
+  // 调用 surfaceNets 函数。注意，我们需要处理返回值来获取顶点和面。
+  const meshPtr = Module._computeSurfaceNets(
+    dataPtr,
+    dimsPtr,
+    level /* 这里可能需要其他参数 */
+  );
+
+  // 获取顶点和三角形的数量
+  const vertexCount = Module._getMeshVertexCount(meshPtr);
+  const triangleCount = Module._getMeshTriangleCount(meshPtr);
+
+  // 获取顶点和三角形数组的指针
+  const verticesPtr = Module._getMeshVertices(meshPtr);
+  const trianglesPtr = Module._getMeshTriangles(meshPtr);
+
+  // 将顶点数据从 Wasm 内存复制到 JavaScript 数组
+  const vertices = new Float32Array(
+    Module.HEAPF32.buffer,
+    verticesPtr,
+    vertexCount * 3
+  );
+  const copiedVertices = new Float32Array(vertices);
+
+  // 将三角形数据从 Wasm 内存复制到 JavaScript 数组
+  const triangles = new Int32Array(
+    Module.HEAP32.buffer,
+    trianglesPtr,
+    triangleCount * 3
+  );
+  const copiedTriangles = new Int32Array(triangles);
+
+  Module._freeMesh(meshPtr);
+
+  // 记得释放 WebAssembly 内存
+  Module._free(dataPtr);
+  Module._free(dimsPtr);
+
+  // 创建并返回 geometry
+  return new ConcaveGeometry(copiedVertices, copiedTriangles);
 }
