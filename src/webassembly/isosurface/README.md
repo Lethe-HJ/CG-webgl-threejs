@@ -15,8 +15,11 @@ emcc -v
 
 ```bat
 cd ..\emsdk
+
 .\emsdk_env.bat 
+
 emcc -v
+
 cd ..\CG-webgl-threejs\src\webassembly\isosurface
 
 set TOTAL_MEMORY=1073741824
