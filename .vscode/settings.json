@@ -6,11 +6,17 @@
         "eyez",
         "glsl",
         "GLTF",
+        "highp",
         "importmap",
+        "inversed",
         "lowp",
+        "mediump",
+        "Microtasks",
+        "PHONG",
         "Raycaster",
         "threejs",
         "uuidv",
+        "Vuex",
         "webgl"
     ]
 }

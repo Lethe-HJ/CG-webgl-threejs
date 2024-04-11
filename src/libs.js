@@ -7,7 +7,22 @@ function initShader(gl, VERTEX_SHADER_SOURCE, FRAGMENT_SHADER_SOURCE) {
 
   // 编译着色器
   gl.compileShader(vertexShader);
+  if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
+    console.error(
+      "ERROR compiling vertex shader!",
+      gl.getShaderInfoLog(vertexShader)
+    );
+    return;
+  }
+
   gl.compileShader(fragmentShader);
+  if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
+    console.error(
+      "ERROR compiling fragment shader!",
+      gl.getShaderInfoLog(fragmentShader)
+    );
+    return;
+  }
 
   // 创建一个程序对象
   const program = gl.createProgram();
@@ -16,6 +31,10 @@ function initShader(gl, VERTEX_SHADER_SOURCE, FRAGMENT_SHADER_SOURCE) {
   gl.attachShader(program, fragmentShader);
 
   gl.linkProgram(program);
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    console.error("ERROR linking program!", gl.getProgramInfoLog(program));
+    return null;
+  }
 
   gl.useProgram(program);
 
@@ -42,12 +61,35 @@ function getScaleMatrix(x = 1, y = 1, z = 1) {
     0.0, 0.0, 0.0, 1,
   ])
 }
-// 绕z轴旋转的旋转矩阵
-function getRotateMatrix(deg) {
+
+// 绕x轴旋转的旋转矩阵
+function getRotateMatrixX(deg) {
   // prettier-ignore
   return new Float32Array([
-    Math.cos(deg),  Math.sin(deg), 0.0,0.0,
-    -Math.sin(deg), Math.cos(deg), 0.0,0.0,
+    1.0,  0.0,            0.0,            0.0,
+    0.0,  Math.cos(deg),  -Math.sin(deg), 0.0,
+    0.0,  Math.sin(deg),  Math.cos(deg),  0.0,
+    0.0,  0.0,            0.0,            1,
+  ]);
+}
+
+// 绕y轴旋转的旋转矩阵
+function getRotateMatrixY(deg) {
+  // prettier-ignore
+  return new Float32Array([
+    Math.cos(deg),  0.0,  Math.sin(deg),  0.0,
+    0.0,            1.0,  0.0,            0.0,
+    -Math.sin(deg), 0.0,  Math.cos(deg),  0.0,
+    0.0,            0.0,  0.0,            1,
+  ])
+}
+
+// 绕z轴旋转的旋转矩阵
+function getRotateMatrixZ(deg) {
+  // prettier-ignore
+  return new Float32Array([
+    Math.cos(deg), -Math.sin(deg), 0.0,0.0,
+    Math.sin(deg), Math.cos(deg),  0.0,0.0,
     0.0,            0.0,           1.0,0.0,
     0.0,            0.0,           0.0, 1,
   ])
@@ -156,17 +198,30 @@ function getOrtho(l, r, t, b, n, f) {
   ])
 }
 
+function degToRad(d) {
+  return (d * Math.PI) / 180;
+}
 
 // 获取透视投影矩阵
 function getPerspective(fov, aspect, far, near) {
-  fov = (fov * Math.PI) / 180;
+  // fov = (fov * Math.PI) / 180;
+  // // prettier-ignore
+  // return new Float32Array([
+  //   1/(aspect*Math.tan(fov / 2)), 0,                   0,                      0,
+  //   0,                            1/(Math.tan(fov/2)), 0,                      0,
+  //   0,                            0,                   -(far+near)/(far-near), -(2*far*near)/(far-near),
+  //   0,                            0,                   -1,                     0,
+  // ])
+  fov = degToRad(fov);
+  var f = Math.tan(Math.PI * 0.5 - 0.5 * fov);
+  var rangeInv = 1.0 / (near - far);
   // prettier-ignore
   return new Float32Array([
-    1/(aspect*Math.tan(fov / 2)), 0,                   0,                      0,
-    0,                            1/(Math.tan(fov/2)), 0,                      0,
-    0,                            0,                   -(far+near)/(far-near), -(2*far*near)/(far-near),
-    0,                            0,                   -1,                     0,
-  ])
+    f / aspect, 0,  0,                          0,
+    0,          f,  0,                          0,
+    0,          0,  (near + far) * rangeInv,    -1,
+    0,          0,  near * far * rangeInv * 2,  0,
+  ]);
 }
 
 function distanceSelf(a, b) {
@@ -177,4 +232,20 @@ function distanceSelf(a, b) {
   const v = x * x + y * y + z * z;
 
   return Math.sqrt(v);
+}
+
+function inverseTranspose(vm) {
+  // 创建一个新的矩阵以存储逆矩阵的结果
+  let inversedMatrix = glMatrix.mat4.create(); // 使用glMatrix创建矩阵会自动得到Float32Array类型
+
+  // 计算vm的逆矩阵并将结果存储在inversedMatrix中
+  if (glMatrix.mat4.invert(inversedMatrix, vm)) {
+    // 如果成功计算了逆矩阵，继续进行转置
+    let transposedMatrix = glMatrix.mat4.create(); // 再次创建一个新矩阵用于存储转置结果
+    glMatrix.mat4.transpose(transposedMatrix, inversedMatrix); // 对逆矩阵进行转置
+    return transposedMatrix; // 返回转置后的逆矩阵
+  } else {
+    // 如果无法求逆，返回null表示失败
+    return null;
+  }
 }

@@ -1,0 +1,11 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "# 1. 时间复杂度与空间复杂度\r\n\r\n![alt text](image.png)\r\n\r\n$ n! > 2^n > n^2 > n*{\\log_2n} > n > n^{\\frac{1}{2}} > {\\log_2n}$"
+            ],
+            "outputs": []
+        }
+    ]
+}
