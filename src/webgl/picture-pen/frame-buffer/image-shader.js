@@ -5,7 +5,6 @@ const vertexShaderSource = glsl`
   in vec4 a_position;
   in vec2 a_texCoords;
   uniform mat4 u_matrix;
-  uniform sampler2D u_penData;
   out vec2 v_texCoords;
   void main() {
     gl_Position = u_matrix * a_position;

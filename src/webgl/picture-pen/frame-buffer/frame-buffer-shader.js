@@ -8,7 +8,9 @@ const vertexShaderSource = glsl`
     out vec2 v_texCoord;
 
     void main() {
-        gl_Position = vec4(a_position.x, a_position.y, 0.0, 1.0);
+        float x = a_position.x * 2.0 - 1.0;
+        float y = a_position.y * 2.0 - 1.0;
+        gl_Position = vec4(x, y, 0.0, 1.0);
         v_texCoord = a_texCoords;
     }
 `;
@@ -44,9 +46,6 @@ export default function createFrameBufferShader(gl) {
     attribute: {
       position: gl.getAttribLocation(program, "a_position"),
       texCoord: gl.getAttribLocation(program, "a_texCoord"),
-    },
-    uniform: {
-      texture: gl.getUniformLocation(program, "u_texture"),
     },
     vao: gl.createVertexArray(),
     buffer: {

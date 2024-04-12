@@ -2,6 +2,11 @@ import createImageShader from "./image-shader.js";
 import createPaintShader from "./paint-shader.js";
 import createFrameBufferShader from "./frame-buffer-shader.js";
 
+const config = {
+  penSize: 4,
+  penColor: [1, 0, 0, 1],
+};
+
 // Get A WebGL context
 /** @type {HTMLCanvasElement} */
 const canvas = document.querySelector("#canvas");
@@ -256,9 +261,7 @@ function drawImage(drawInfo, fbo) {
     1
   );
 
-  // scale our 1 unit quad
-  // from 1 unit to texWidth, texHeight units
-  matrix = m4.scale(matrix, texWidth * 3, texHeight * 3, 1);
+  matrix = m4.scale(matrix, texWidth * 2, texHeight * 2, 1);
   // Set the matrix.
   gl.uniformMatrix4fv(imageShader.location.matrix, false, matrix);
 
@@ -291,15 +294,17 @@ canvas.addEventListener("mouseup", () => (isDrawing = false));
 canvas.addEventListener("mouseleave", () => (isDrawing = false));
 
 function addPointToPath(x, y, index) {
-  const webglX = (x / canvas.width) * 2 - 1;
-  const webglY = (y / canvas.height) * -2 + 1;
+  const webglX = (x / gl.canvas.width) * 2 - 1;
+  const webglY = (y / gl.canvas.height) * -2 + 1;
   penPathData[textureIndex][index].push(webglX, webglY);
 }
 
 function drawPath(fbo) {
   // 绘制逻辑
   gl.useProgram(paintShader.program);
+  gl.uniform1f(paintShader.location.penSize, config.penSize);
   gl.bindVertexArray(paintShader.vao);
+  console.log(config.penSize);
   penPathData[textureIndex].forEach((penPathDataItem) => {
     gl.bindBuffer(gl.ARRAY_BUFFER, paintShader.buffer.position);
     gl.bufferData(
@@ -327,3 +332,13 @@ function drawPath(fbo) {
     gl.drawArrays(gl.LINE_STRIP, 0, penPathDataItem.length / 2);
   });
 }
+webglLessonsUI.setupSlider("#size", {
+  slide: (event, ui) => {
+    config.penSize = ui.value;
+    gl.useProgram(paintShader.program);
+    gl.uniform1f(paintShader.location.penSize, config.penSize);
+  },
+  min: 1.0,
+  max: 40.0,
+  value: config.penSize
+});
