@@ -1,13 +1,21 @@
 import { glsl } from "./libs.js";
 
+const sharedPenStruct = glsl`
+  struct Pen {
+    float size;
+    vec3 color;
+  };
+`;
+
 const paintVertexShaderSource = glsl`
   #version 300 es
   in vec4 a_paintPosition;
-  uniform float u_penSize;
+  ${sharedPenStruct}
+  uniform Pen u_pen;
   
   void main() {
     gl_Position = vec4(a_paintPosition.xy, 0, 1);
-    gl_PointSize = u_penSize;
+    gl_PointSize = u_pen.size;
   }
 `;
 
@@ -15,10 +23,11 @@ const paintFragmentShaderSource = glsl`
     #version 300 es
     precision highp float;
     out vec4 outColor;
-    uniform vec4 u_penColor;
+    ${sharedPenStruct}
+    uniform Pen u_pen;
 
     void main() {
-      outColor = vec4(1, 0, 0, 1);
+      outColor = vec4(u_pen.color, 1.0);
     }
 `;
 
@@ -33,8 +42,10 @@ export default function createPaintShader(gl) {
     program,
     location: {
       position: gl.getAttribLocation(program, "a_paintPosition"),
-      penSize: gl.getUniformLocation(program, "u_penSize"),
-      penColor: gl.getUniformLocation(program, "u_penColor"),
+      pen: {
+        size: gl.getUniformLocation(program, "u_pen.size"),
+        color: gl.getUniformLocation(program, "u_pen.color"),
+      },
     },
     vao: gl.createVertexArray(),
     buffer: {

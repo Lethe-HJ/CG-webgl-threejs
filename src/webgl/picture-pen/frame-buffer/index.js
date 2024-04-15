@@ -3,9 +3,12 @@ import createPaintShader from "./paint-shader.js";
 import createFrameBufferShader from "./frame-buffer-shader.js";
 
 const config = {
-  penSize: 4,
-  penColor: [1, 0, 0, 1],
+  pen: {
+    size: 4,
+    color: [1, 0, 0],
+  },
 };
+window.config = config;
 
 // Get A WebGL context
 /** @type {HTMLCanvasElement} */
@@ -294,12 +297,16 @@ function drawImage(drawInfo, fbo) {
   gl.drawArrays(gl.TRIANGLES, offset, count);
 }
 
-const penColor = [1, 0, 0];
 let isDrawing = false;
 let penPathIndex = 0;
 canvas.addEventListener("mousedown", (e) => {
   isDrawing = true;
-  penPathIndex = drawInfos[layerIndex].pointsArray.push([]) - 1;
+  const newPointsItem = {
+    data: [],
+    color: config.pen.color,
+    size: config.pen.size,
+  };
+  penPathIndex = drawInfos[layerIndex].pointsArray.push(newPointsItem) - 1;
   // 将鼠标位置转换为WebGL坐标系中的位置，并添加到顶点列表
   addPointToPath(e.clientX, e.clientY, penPathIndex);
   requestAnimationFrame(draw);
@@ -316,7 +323,7 @@ canvas.addEventListener("mouseleave", () => (isDrawing = false));
 function addPointToPath(x, y, index) {
   const webglX = (x / gl.canvas.width) * 2 - 1;
   const webglY = (y / gl.canvas.height) * -2 + 1;
-  const currentPath = drawInfos[layerIndex].pointsArray[index];
+  const currentPath = drawInfos[layerIndex].pointsArray[index].data;
 
   // 当鼠标快速移动并绘制时 点会比较分散 所以需要在两个分散的点之间进行线性插值
 
@@ -330,8 +337,8 @@ function addPointToPath(x, y, index) {
 
     // 对于宽度，一个裁剪单位（从 -1 到 1）对应 canvas.width / 2 像素 对于宽度则是 canvas.height / 2
     const threshold = Math.min(
-      (2 * config.penSize) / canvas.width,
-      (2 * config.penSize) / canvas.height
+      (2 * config.pen.size) / canvas.width,
+      (2 * config.pen.size) / canvas.height
     );
     let t, numExtraPoints, interpolatedX, interpolatedY;
     if (dist > threshold) {
@@ -350,57 +357,96 @@ function addPointToPath(x, y, index) {
 
 // 绘制新笔迹
 function drawPathAddition(fbo) {
-  gl.useProgram(paintShader.program);
-  gl.uniform1f(paintShader.location.penSize, config.penSize);
-  gl.bindVertexArray(paintShader.vao);
   const drawInfo = drawInfos[layerIndex];
   const { pointsArray, lastArrayDrawnIndex } = drawInfo;
-  const points = pointsArray[pointsArray.length - 1].slice(lastArrayDrawnIndex);
-  drawSinglePath(fbo, points);
-  drawInfo.lastArrayDrawnIndex = pointsArray[pointsArray.length - 1].length;
+  const lastPointsArrayItem = pointsArray[pointsArray.length - 1];
+  const { data, color, size } = lastPointsArrayItem;
+  const additionData = data.slice(lastArrayDrawnIndex);
+
+  gl.useProgram(paintShader.program);
+  gl.uniform1f(paintShader.location.pen.size, size);
+  gl.uniform3fv(paintShader.location.pen.color, color);
+  gl.bindVertexArray(paintShader.vao);
+  drawSinglePath(fbo, additionData);
+  drawInfo.lastArrayDrawnIndex = lastPointsArrayItem.length;
 }
 
-function drawSinglePath(fbo, points) {
+function drawSinglePath(fbo, data) {
   gl.bindBuffer(gl.ARRAY_BUFFER, paintShader.buffer.position);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(points), gl.DYNAMIC_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.DYNAMIC_DRAW);
   gl.enableVertexAttribArray(paintShader.location.position);
-  let size = 2;
-  let type = gl.FLOAT;
-  let normalize = false;
-  let stride = 0;
-  let offset = 0;
-  gl.vertexAttribPointer(
-    paintShader.location.position,
-    size,
-    type,
-    normalize,
-    stride,
-    offset
-  );
+  {
+    let size = 2;
+    let type = gl.FLOAT;
+    let normalize = false;
+    let stride = 0;
+    let offset = 0;
+    gl.vertexAttribPointer(
+      paintShader.location.position,
+      size,
+      type,
+      normalize,
+      stride,
+      offset
+    );
+  }
 
   gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-  gl.drawArrays(gl.POINTS, 0, points.length / 2); // 使用密集的点来模拟线条
+  gl.drawArrays(gl.POINTS, 0, data.length / 2); // 使用密集的点来模拟线条
 }
 
 // 绘制旧的笔迹
 function drawPathAll(fbo) {
-  gl.useProgram(paintShader.program);
-  gl.uniform1f(paintShader.location.penSize, config.penSize);
-  gl.bindVertexArray(paintShader.vao);
   const drawInfo = drawInfos[layerIndex];
+  gl.useProgram(paintShader.program);
+  gl.bindVertexArray(paintShader.vao);
   let pointsArray = drawInfo.pointsArray;
-  pointsArray.forEach((points) => {
-    drawSinglePath(fbo, points);
+  pointsArray.forEach((pointsItem) => {
+    const { data, color, size } = pointsItem;
+    gl.uniform1f(paintShader.location.pen.size, size);
+    gl.uniform1f(paintShader.location.pen.color, color);
+    drawSinglePath(fbo, data);
   });
 }
 webglLessonsUI.setupSlider("#size", {
   slide: (event, ui) => {
-    config.penSize = ui.value;
-    gl.useProgram(paintShader.program);
-    gl.uniform1f(paintShader.location.penSize, config.penSize);
+    config.pen.size = ui.value;
   },
   min: 1.0,
   max: 40.0,
-  value: config.penSize,
+  value: config.pen.size,
+});
+
+webglLessonsUI.setupSlider("#color_r", {
+  slide: (event, ui) => {
+    config.pen.color = [...config.pen.color];
+    config.pen.color[0] = ui.value;
+  },
+  min: 0.0,
+  max: 1.0,
+  step: 0.01,
+  value: config.pen.color[0],
+});
+
+webglLessonsUI.setupSlider("#color_g", {
+  slide: (event, ui) => {
+    config.pen.color = [...config.pen.color];
+    config.pen.color[1] = ui.value;
+  },
+  min: 0.0,
+  max: 1.0,
+  step: 0.01,
+  value: config.pen.color[1],
+});
+
+webglLessonsUI.setupSlider("#color_b", {
+  slide: (event, ui) => {
+    config.pen.color = [...config.pen.color];
+    config.pen.color[2] = ui.value;
+  },
+  min: 0.0,
+  max: 1.0,
+  step: 0.01,
+  value: config.pen.color[2],
 });
