@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./index.css" />
+    <style>
+      body {
+        margin: 0;
+      }
+      canvas {
+        width: 800px;
+        height: 600px;
+        display: block;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <div id="uiContainer">
+      <div id="ui">
+        <div id="size"></div>
+        <input
+          type="color"
+          name="color"
+          id="color"
+          onchange="handleColorChange(this)"
+        />
+        <label for="color">eraser</label><br />
+        <input
+          type="radio"
+          id="eraser"
+          name="mode"
+          value="eraser"
+          onchange="handleModeChange(this)"
+        />
+        <label for="eraser">eraser</label><br />
+        <input
+          type="radio"
+          id="pen"
+          name="mode"
+          value="pen"
+          onchange="handleModeChange(this)"
+        />
+        <label for="pen">pen</label><br />
+      </div>
+    </div>
+  </body>
+  <script src="../webgl-utils.js"></script>
+  <script src="../../ui.js"></script>
+  <script src="../m4.js"></script>
+  <script src="./index.js" type="module"></script>
+</html>
