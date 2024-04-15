@@ -104,20 +104,33 @@ const textureInfos = [
   loadImageAndCreateTextureInfo("../../../../assets/keyboard.jpg"),
 ];
 
-textureInfos[0].promise.then(() => {
-  requestAnimationFrame(drawAll);
-});
-
 const drawInfos = [];
 const numToDraw = 3;
 for (let ii = 0; ii < numToDraw; ++ii) {
   const drawInfo = {
     textureInfo: textureInfos[ii],
+    pointsArray: [],
+    fbo: undefined,
+    lastArrayDrawnIndex: 0,
   };
   drawInfos.push(drawInfo);
 }
 
-let textureIndex = 0;
+let layerIndex = 0;
+let initialized = false;
+const resizeObserver = new ResizeObserver(() => {
+  webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+  if (!initialized) {
+    textureInfos[layerIndex].promise.then(() => {
+      draw();
+    });
+  } else {
+    draw();
+  }
+});
+
+resizeObserver.observe(canvas);
+
 const throttleDuration = 200;
 let lastEventTime = 0;
 document.addEventListener("wheel", (e) => {
@@ -125,40 +138,35 @@ document.addEventListener("wheel", (e) => {
   if (currentTime - lastEventTime > throttleDuration) {
     const length = textureInfos.length;
     const delta = e.deltaY > 0 ? 1 : -1;
-    textureIndex = (length + textureIndex + delta) % length;
+    layerIndex = (length + layerIndex + delta) % length;
     lastEventTime = currentTime;
-    requestAnimationFrame(drawAll);
+    requestAnimationFrame(draw);
   }
 });
 
-const resizeObserver = new ResizeObserver(() => {
-  webglUtils.resizeCanvasToDisplaySize(gl.canvas);
-  requestAnimationFrame(drawAll);
-});
-resizeObserver.observe(canvas);
+function draw() {
+  const drawInfo = drawInfos[layerIndex];
+  if (!drawInfo.fbo) drawAll();
+  else drawAddition();
+}
 
 // 全量绘制
 function drawAll() {
-  const drawInfo = drawInfos[textureIndex];
-  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-  gl.clearColor(0, 0, 0, 0);
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-  const { frameBuffer, texture } = createFBO();
+  const drawInfo = drawInfos[layerIndex];
+  drawInfo.fbo = createFBO();
+  const { frameBuffer, texture } = drawInfo.fbo;
   drawImage(drawInfo, frameBuffer);
-  drawPath(frameBuffer, true);
+  drawPathAll(frameBuffer, true);
   drawToScreen(texture);
 }
 
 // 增量绘制
 function drawAddition() {
-  const drawInfo = drawInfos[textureIndex];
-  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-  gl.clearColor(0, 0, 0, 0);
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-  const { frameBuffer, texture } = createFBO();
-  drawImage(drawInfo, frameBuffer);
-  drawPath(frameBuffer);
+  const drawInfo = drawInfos[layerIndex];
+  const { frameBuffer, texture } = drawInfo.fbo;
+  drawPathAddition(frameBuffer);
   drawToScreen(texture);
+  if (gl.getError()) console.log(gl.getError());
 }
 
 function drawToScreen(texture) {
@@ -286,24 +294,20 @@ function drawImage(drawInfo, fbo) {
   gl.drawArrays(gl.TRIANGLES, offset, count);
 }
 
-const penPathData = new Array(drawInfos.length).fill(null).map(() => ({
-  points: [],
-  lastIndexDrawn: 0,
-}));
 const penColor = [1, 0, 0];
 let isDrawing = false;
 let penPathIndex = 0;
 canvas.addEventListener("mousedown", (e) => {
   isDrawing = true;
-  penPathIndex = penPathData[textureIndex].points.push([]) - 1;
+  penPathIndex = drawInfos[layerIndex].pointsArray.push([]) - 1;
   // 将鼠标位置转换为WebGL坐标系中的位置，并添加到顶点列表
   addPointToPath(e.clientX, e.clientY, penPathIndex);
-  requestAnimationFrame(drawAll);
+  requestAnimationFrame(draw);
 });
 canvas.addEventListener("mousemove", (e) => {
   if (isDrawing) {
     addPointToPath(e.clientX, e.clientY, penPathIndex);
-    requestAnimationFrame(drawAll);
+    requestAnimationFrame(draw);
   }
 });
 canvas.addEventListener("mouseup", () => (isDrawing = false));
@@ -312,7 +316,7 @@ canvas.addEventListener("mouseleave", () => (isDrawing = false));
 function addPointToPath(x, y, index) {
   const webglX = (x / gl.canvas.width) * 2 - 1;
   const webglY = (y / gl.canvas.height) * -2 + 1;
-  const currentPath = penPathData[textureIndex].points[index];
+  const currentPath = drawInfos[layerIndex].pointsArray[index];
 
   // 当鼠标快速移动并绘制时 点会比较分散 所以需要在两个分散的点之间进行线性插值
 
@@ -344,36 +348,50 @@ function addPointToPath(x, y, index) {
   currentPath.push(webglX, webglY);
 }
 
-function drawPath(fbo) {
-  // 绘制逻辑
+// 绘制新笔迹
+function drawPathAddition(fbo) {
   gl.useProgram(paintShader.program);
   gl.uniform1f(paintShader.location.penSize, config.penSize);
   gl.bindVertexArray(paintShader.vao);
-  penPathData[textureIndex].points.forEach((penPathDataItem) => {
-    gl.bindBuffer(gl.ARRAY_BUFFER, paintShader.buffer.position);
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Float32Array(penPathDataItem),
-      gl.DYNAMIC_DRAW
-    );
-    gl.enableVertexAttribArray(paintShader.location.position);
-    let size = 2;
-    let type = gl.FLOAT;
-    let normalize = false;
-    let stride = 0;
-    let offset = 0;
-    gl.vertexAttribPointer(
-      paintShader.location.position,
-      size,
-      type,
-      normalize,
-      stride,
-      offset
-    );
+  const drawInfo = drawInfos[layerIndex];
+  const { pointsArray, lastArrayDrawnIndex } = drawInfo;
+  const points = pointsArray[pointsArray.length - 1].slice(lastArrayDrawnIndex);
+  drawSinglePath(fbo, points);
+  drawInfo.lastArrayDrawnIndex = pointsArray[pointsArray.length - 1].length;
+}
 
-    gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-    gl.drawArrays(gl.POINTS, 0, penPathDataItem.length / 2); // 使用密集的点来模拟线条
+function drawSinglePath(fbo, points) {
+  gl.bindBuffer(gl.ARRAY_BUFFER, paintShader.buffer.position);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(points), gl.DYNAMIC_DRAW);
+  gl.enableVertexAttribArray(paintShader.location.position);
+  let size = 2;
+  let type = gl.FLOAT;
+  let normalize = false;
+  let stride = 0;
+  let offset = 0;
+  gl.vertexAttribPointer(
+    paintShader.location.position,
+    size,
+    type,
+    normalize,
+    stride,
+    offset
+  );
+
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+  gl.drawArrays(gl.POINTS, 0, points.length / 2); // 使用密集的点来模拟线条
+}
+
+// 绘制旧的笔迹
+function drawPathAll(fbo) {
+  gl.useProgram(paintShader.program);
+  gl.uniform1f(paintShader.location.penSize, config.penSize);
+  gl.bindVertexArray(paintShader.vao);
+  const drawInfo = drawInfos[layerIndex];
+  let pointsArray = drawInfo.pointsArray;
+  pointsArray.forEach((points) => {
+    drawSinglePath(fbo, points);
   });
 }
 webglLessonsUI.setupSlider("#size", {
