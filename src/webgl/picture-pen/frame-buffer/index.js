@@ -105,7 +105,7 @@ const textureInfos = [
 ];
 
 textureInfos[0].promise.then(() => {
-  requestAnimationFrame(draw);
+  requestAnimationFrame(drawAll);
 });
 
 const drawInfos = [];
@@ -127,17 +127,30 @@ document.addEventListener("wheel", (e) => {
     const delta = e.deltaY > 0 ? 1 : -1;
     textureIndex = (length + textureIndex + delta) % length;
     lastEventTime = currentTime;
-    requestAnimationFrame(draw);
+    requestAnimationFrame(drawAll);
   }
 });
 
 const resizeObserver = new ResizeObserver(() => {
   webglUtils.resizeCanvasToDisplaySize(gl.canvas);
-  requestAnimationFrame(draw);
+  requestAnimationFrame(drawAll);
 });
 resizeObserver.observe(canvas);
 
-function draw() {
+// 全量绘制
+function drawAll() {
+  const drawInfo = drawInfos[textureIndex];
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+  gl.clearColor(0, 0, 0, 0);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  const { frameBuffer, texture } = createFBO();
+  drawImage(drawInfo, frameBuffer);
+  drawPath(frameBuffer, true);
+  drawToScreen(texture);
+}
+
+// 增量绘制
+function drawAddition() {
   const drawInfo = drawInfos[textureIndex];
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
   gl.clearColor(0, 0, 0, 0);
@@ -273,21 +286,24 @@ function drawImage(drawInfo, fbo) {
   gl.drawArrays(gl.TRIANGLES, offset, count);
 }
 
-const penPathData = new Array(drawInfos.length).fill(null).map(() => []);
+const penPathData = new Array(drawInfos.length).fill(null).map(() => ({
+  points: [],
+  lastIndexDrawn: 0,
+}));
 const penColor = [1, 0, 0];
 let isDrawing = false;
 let penPathIndex = 0;
 canvas.addEventListener("mousedown", (e) => {
   isDrawing = true;
-  penPathIndex = penPathData[textureIndex].push([]) - 1;
+  penPathIndex = penPathData[textureIndex].points.push([]) - 1;
   // 将鼠标位置转换为WebGL坐标系中的位置，并添加到顶点列表
   addPointToPath(e.clientX, e.clientY, penPathIndex);
-  requestAnimationFrame(draw);
+  requestAnimationFrame(drawAll);
 });
 canvas.addEventListener("mousemove", (e) => {
   if (isDrawing) {
     addPointToPath(e.clientX, e.clientY, penPathIndex);
-    requestAnimationFrame(draw);
+    requestAnimationFrame(drawAll);
   }
 });
 canvas.addEventListener("mouseup", () => (isDrawing = false));
@@ -296,7 +312,36 @@ canvas.addEventListener("mouseleave", () => (isDrawing = false));
 function addPointToPath(x, y, index) {
   const webglX = (x / gl.canvas.width) * 2 - 1;
   const webglY = (y / gl.canvas.height) * -2 + 1;
-  penPathData[textureIndex][index].push(webglX, webglY);
+  const currentPath = penPathData[textureIndex].points[index];
+
+  // 当鼠标快速移动并绘制时 点会比较分散 所以需要在两个分散的点之间进行线性插值
+
+  // 如果路径中已经有点，计算新点和最后一个点之间的距离
+  if (currentPath.length > 0) {
+    const lastX = currentPath[currentPath.length - 2];
+    const lastY = currentPath[currentPath.length - 1];
+    const dist = Math.sqrt(
+      Math.pow(webglX - lastX, 2) + Math.pow(webglY - lastY, 2)
+    );
+
+    // 对于宽度，一个裁剪单位（从 -1 到 1）对应 canvas.width / 2 像素 对于宽度则是 canvas.height / 2
+    const threshold = Math.min(
+      (2 * config.penSize) / canvas.width,
+      (2 * config.penSize) / canvas.height
+    );
+    let t, numExtraPoints, interpolatedX, interpolatedY;
+    if (dist > threshold) {
+      numExtraPoints = Math.ceil(dist / threshold);
+      for (let i = 1; i <= numExtraPoints; i++) {
+        t = i / (numExtraPoints + 1);
+        interpolatedX = lastX + (webglX - lastX) * t; // 线性插值
+        interpolatedY = lastY + (webglY - lastY) * t;
+        currentPath.push(interpolatedX, interpolatedY);
+      }
+    }
+  }
+  // 添加当前点到路径
+  currentPath.push(webglX, webglY);
 }
 
 function drawPath(fbo) {
@@ -304,8 +349,7 @@ function drawPath(fbo) {
   gl.useProgram(paintShader.program);
   gl.uniform1f(paintShader.location.penSize, config.penSize);
   gl.bindVertexArray(paintShader.vao);
-  console.log(config.penSize);
-  penPathData[textureIndex].forEach((penPathDataItem) => {
+  penPathData[textureIndex].points.forEach((penPathDataItem) => {
     gl.bindBuffer(gl.ARRAY_BUFFER, paintShader.buffer.position);
     gl.bufferData(
       gl.ARRAY_BUFFER,
@@ -329,7 +373,7 @@ function drawPath(fbo) {
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-    gl.drawArrays(gl.LINE_STRIP, 0, penPathDataItem.length / 2);
+    gl.drawArrays(gl.POINTS, 0, penPathDataItem.length / 2); // 使用密集的点来模拟线条
   });
 }
 webglLessonsUI.setupSlider("#size", {
@@ -340,5 +384,5 @@ webglLessonsUI.setupSlider("#size", {
   },
   min: 1.0,
   max: 40.0,
-  value: config.penSize
+  value: config.penSize,
 });
