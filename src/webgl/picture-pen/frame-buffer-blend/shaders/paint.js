@@ -26,9 +26,11 @@ const paintFragmentShaderSource = glsl`
     uniform Pen u_pen;
     void main() {
       outColor = u_pen.color;
+      // outColor =vec4(u_pen.color.rgb, 0.8);
     }
 `;
 
+// // 如果用圆形的话 会导致快速绘制时出现断断续续的现象
 // const paintFragmentShaderSource = glsl`
 //     #version 300 es
 //     precision highp float;

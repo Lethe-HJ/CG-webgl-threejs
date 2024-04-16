@@ -25,7 +25,7 @@ const fragmentShaderSource = glsl`
     out vec4 outColor;
 
     void main() {
-        outColor = texture(u_texture, v_texCoord);
+        outColor = vec4(texture(u_texture, v_texCoord));
     }
 `;
 

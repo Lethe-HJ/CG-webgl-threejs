@@ -1,10 +1,11 @@
-import MaskDrawManager from "./draw-manager.js";
+import AnnotationManager from "./annotation-manager.js";
 import { loadImageAndCreateTextureInfo } from "./libs.js";
 
 export default class ImageLayerManger {
   layerIndex = 0;
-  constructor(gl, imagePaths) {
+  constructor(gl, imagePaths, config) {
     this.gl = gl;
+    this.config = config;
     this.init(imagePaths);
   }
   init(imagePaths) {
@@ -12,21 +13,22 @@ export default class ImageLayerManger {
     this.textureInfos = imagePaths.map((path) =>
       loadImageAndCreateTextureInfo(gl, path)
     );
-    this.maskDrawer = new MaskDrawManager(
+    this.annotationManager = new AnnotationManager(
       this.gl,
       this.textureInfos,
-      this.layerIndex
+      this.layerIndex,
+      this.config
     );
     this.handleDomEvent();
   }
 
   render() {
-    this.maskDrawer.setLayerIndex(this.layerIndex);
-    this.maskDrawer.render(this.layerIndex);
+    this.annotationManager.setLayerIndex(this.layerIndex);
+    this.annotationManager.render(this.layerIndex);
   }
 
   clearOldestDrawInfo() {
-    const drawInfos = this.maskDrawer.drawInfos;
+    const drawInfos = this.annotationManager.drawInfos;
     const drawInfosLen = drawInfos.length;
     // 离当前最远的是 距离现在一半长度的位置
     const oldestDrawInfoIndex =

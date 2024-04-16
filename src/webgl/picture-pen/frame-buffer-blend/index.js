@@ -8,7 +8,6 @@ const config = {
     color: [1, 0, 0, 1],
   },
 };
-window.config = config;
 
 (function main() {
   const canvas = document.querySelector("#canvas");
@@ -20,7 +19,7 @@ window.config = config;
     "../../../../assets/leaves.jpg",
     "../../../../assets/keyboard.jpg",
   ];
-  const imageLayerManger = new ImageLayerManger(gl, imagePaths);
+  const imageLayerManger = new ImageLayerManger(gl, imagePaths, config);
   window.imageLayerManger = imageLayerManger;
   let initialized = false;
   const resizeObserver = new ResizeObserver(() => {
@@ -39,6 +38,7 @@ window.config = config;
   webglLessonsUI.setupSlider("#size", {
     slide: (event, ui) => {
       config.pen.size = ui.value;
+      updateConfig();
     },
     min: 1.0,
     max: 40.0,
@@ -47,15 +47,17 @@ window.config = config;
 
   window.handleColorChange = function (element) {
     config.pen.color = [...hexToRgb(element.value), 1];
+    updateConfig();
   };
   window.handleModeChange = function (element) {
     config.mode = DRAW_MODE[element.value];
-    if (element.value !== DRAW_MODE.none) {
-      imageLayerManger.maskDrawer.activeMouseLeft();
-    } else {
-      imageLayerManger.maskDrawer.deactivateMouseLeft();
-    }
+    imageLayerManger.annotationManager.setMode(config.mode);
+    updateConfig();
   };
+
+  function updateConfig() {
+    imageLayerManger.annotationManager.setConfig(config);
+  }
 })();
 
 function hexToRgb(hex) {

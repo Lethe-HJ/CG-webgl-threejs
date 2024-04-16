@@ -1,14 +1,18 @@
 import { DRAW_MODE } from "./constant.js";
+import { EraserDrawer } from "./eraser.js";
+import { PenDrawer } from "./pen.js";
 import createFrameBufferShader from "./shaders/frame-buffer.js";
 import createImageShader from "./shaders/image.js";
 import createPaintShader from "./shaders/paint.js";
+import { TraceDrawer } from "./trace.js";
 
-export default class MaskDrawManager {
-  constructor(gl, textureInfos, layerIndex) {
+export default class AnnotationManager {
+  constructor(gl, textureInfos, layerIndex, config) {
     this.gl = gl;
     this.textureInfos = textureInfos;
     this.drawInfos = [];
     this.layerIndex = layerIndex;
+    this.config = config;
     this.init();
     this.handleCanvasEvent();
   }
@@ -31,6 +35,16 @@ export default class MaskDrawManager {
       this.drawInfos.push(drawInfo);
     }
     this.createImageFrameBuffer();
+    this.initDrawers();
+  }
+
+  initDrawers() {
+    this.drawers = {
+      [DRAW_MODE.pen]: new PenDrawer(this.gl),
+      [DRAW_MODE.eraser]: new EraserDrawer(this.gl),
+      [DRAW_MODE.trace]: new TraceDrawer(this.gl),
+    };
+    this.currentDrawer = this.drawers[this.config.mode];
   }
 
   createImageFrameBuffer() {
@@ -84,9 +98,23 @@ export default class MaskDrawManager {
   render() {
     requestAnimationFrame(() => {
       const drawInfo = this.drawInfos[this.layerIndex];
-      if (!drawInfo.fbo.image) this.drawAll();
-      else this.drawAddition();
+      if (!drawInfo.fbo.image) this.drawAll(drawInfo);
+      else this.drawAddition(drawInfo);
+      checkGLError(this.gl);
     });
+  }
+
+  setMode(mode) {
+    if (mode !== DRAW_MODE.none) {
+      this.activeMouseLeft();
+    } else {
+      this.deactivateMouseLeft();
+    }
+    this.currentDrawer = this.drawers[mode];
+  }
+
+  setConfig(newConfig) {
+    this.config = newConfig;
   }
 
   // 全量绘制
@@ -99,7 +127,7 @@ export default class MaskDrawManager {
     this.drawImage(drawInfo, imageFbo.frameBuffer);
     const paintFbo = drawInfo.fbo.paint;
     gl.disable(gl.BLEND);
-    this.drawPathAll(paintFbo.frameBuffer, this.layerIndex);
+    this.drawers[DRAW_MODE.pen].drawAllPath(paintFbo.frameBuffer, drawInfo);
     this.drawToScreen(imageFbo.texture);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
@@ -107,18 +135,20 @@ export default class MaskDrawManager {
   }
 
   // 增量绘制
-  drawAddition() {
+  drawAddition(drawInfo) {
     const gl = this.gl;
-    const drawInfo = this.drawInfos[this.layerIndex];
     const imageFbo = drawInfo.fbo.image;
     const paintFbo = drawInfo.fbo.paint;
-    gl.disable(gl.BLEND); // 绘制笔迹时不需要混合 否则橡皮擦无法覆盖之前的笔迹
-    this.drawPathAddition(paintFbo.frameBuffer);
+    gl.disable(gl.BLEND); // 绘制笔迹时不需能混合 否则橡皮擦无法覆盖之前的笔迹
+    this.currentDrawer.drawAdditionPath(
+      paintFbo.frameBuffer,
+      drawInfo,
+      this.config
+    );
     this.drawToScreen(imageFbo.texture);
     gl.enable(gl.BLEND); // 合并paintFbo和imageFbo时需要混合
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     this.drawToScreen(paintFbo.texture);
-    if (gl.getError()) console.log(gl.getError());
   }
 
   drawToScreen(texture) {
@@ -177,6 +207,7 @@ export default class MaskDrawManager {
 
   createFBO() {
     const gl = this.gl;
+
     const targetTexture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, targetTexture);
     gl.texImage2D(
@@ -190,15 +221,14 @@ export default class MaskDrawManager {
       gl.UNSIGNED_BYTE,
       null
     );
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
     // 创建帧缓冲区
     const frameBuffer = gl.createFramebuffer();
     gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
-    gl.clearColor(0.0, 0.0, 0.0, 0.0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
     // 将纹理附加到帧缓冲区
     gl.framebufferTexture2D(
       gl.FRAMEBUFFER,
@@ -207,9 +237,12 @@ export default class MaskDrawManager {
       targetTexture,
       0
     );
-    if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) {
-      console.error("Framebuffer is not complete");
-      return;
+    gl.clearColor(0.0, 0.0, 0.0, 0.0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+    if (status !== gl.FRAMEBUFFER_COMPLETE) {
+      console.error("Failed to create framebuffer: " + status.toString());
+      return null;
     }
     return { frameBuffer, texture: targetTexture };
   }
@@ -257,107 +290,6 @@ export default class MaskDrawManager {
     gl.drawArrays(gl.TRIANGLES, offset, count);
   }
 
-  addPointToPath(x, y, index) {
-    const gl = this.gl;
-    const webglX = (x / gl.canvas.width) * 2 - 1;
-    const webglY = (y / gl.canvas.height) * -2 + 1;
-    const currentPath = this.drawInfos[this.layerIndex].pointsArray[index].data;
-
-    // 当鼠标快速移动并绘制时 点会比较分散 所以需要在两个分散的点之间进行线性插值
-
-    // 如果路径中已经有点，计算新点和最后一个点之间的距离
-    // if (currentPath.length > 0) {
-    //   const lastX = currentPath[currentPath.length - 2];
-    //   const lastY = currentPath[currentPath.length - 1];
-    //   const dist = Math.sqrt(
-    //     Math.pow(webglX - lastX, 2) + Math.pow(webglY - lastY, 2)
-    //   );
-
-    //   // 对于宽度，一个裁剪单位（从 -1 到 1）对应 canvas.width / 2 像素 对于宽度则是 canvas.height / 2
-    //   const threshold = Math.min(
-    //     (2 * config.pen.size) / canvas.width,
-    //     (2 * config.pen.size) / canvas.height
-    //   );
-    //   let t, numExtraPoints, interpolatedX, interpolatedY;
-    //   if (dist > threshold) {
-    //     numExtraPoints = Math.ceil(dist / threshold);
-    //     for (let i = 1; i <= numExtraPoints; i++) {
-    //       t = i / (numExtraPoints + 1);
-    //       interpolatedX = lastX + (webglX - lastX) * t; // 线性插值
-    //       interpolatedY = lastY + (webglY - lastY) * t;
-    //       currentPath.push(interpolatedX, interpolatedY);
-    //     }
-    //   }
-    // }
-    // 添加当前点到路径
-    currentPath.push(webglX, webglY);
-  }
-
-  // 绘制新笔迹
-  drawPathAddition(fbo) {
-    const gl = this.gl;
-    const paintShader = this.paintShader;
-    const drawInfo = this.drawInfos[this.layerIndex];
-    const { pointsArray, lastArrayDrawnIndex } = drawInfo;
-    if (!pointsArray.length) return;
-    const lastPointsArrayItem = pointsArray[pointsArray.length - 1];
-    let { data, color, size } = lastPointsArrayItem;
-    const additionData = data.slice(lastArrayDrawnIndex);
-
-    gl.useProgram(paintShader.program);
-    gl.uniform1f(paintShader.location.pen.size, size);
-    if (config.mode === DRAW_MODE.eraser) {
-      color = [1, 1, 1, 0];
-    }
-    gl.uniform4fv(paintShader.location.pen.color, color);
-    gl.bindVertexArray(paintShader.vao);
-    this.drawSinglePath(fbo, additionData);
-    drawInfo.lastArrayDrawnIndex = lastPointsArrayItem.length;
-  }
-
-  drawSinglePath(fbo, data) {
-    const gl = this.gl;
-    const paintShader = this.paintShader;
-    gl.bindBuffer(gl.ARRAY_BUFFER, paintShader.buffer.position);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.DYNAMIC_DRAW);
-    gl.enableVertexAttribArray(paintShader.location.position);
-    {
-      let size = 2;
-      let type = gl.FLOAT;
-      let normalize = false;
-      let stride = 0;
-      let offset = 0;
-      gl.vertexAttribPointer(
-        paintShader.location.position,
-        size,
-        type,
-        normalize,
-        stride,
-        offset
-      );
-    }
-
-    gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-    gl.drawArrays(gl.LINE_STRIP, 0, data.length / 2); // 使用密集的点来模拟线条
-  }
-
-  // 绘制旧的笔迹
-  drawPathAll(fbo) {
-    const gl = this.gl;
-    const paintShader = this.paintShader;
-    const drawInfo = this.drawInfos[this.layerIndex];
-    gl.useProgram(paintShader.program);
-    gl.bindVertexArray(paintShader.vao);
-    let pointsArray = drawInfo.pointsArray;
-    pointsArray.forEach((pointsItem) => {
-      const { data, color, size } = pointsItem;
-      gl.uniform1f(paintShader.location.pen.size, size);
-      gl.uniform1f(paintShader.location.pen.color, color);
-      this.drawSinglePath(fbo, data);
-    });
-  }
-
   handleCanvasEvent() {
     let isDrawing = false;
     let penPathIndex = 0;
@@ -365,25 +297,40 @@ export default class MaskDrawManager {
 
     function mousedown(e) {
       if (e.button !== 0) return;
+      const config = scope.config;
       e.preventDefault();
       e.stopPropagation();
       isDrawing = true;
       const newPointsItem = {
         data: [],
-        color: config.pen.color,
+        color: null,
         size: config.pen.size,
       };
       penPathIndex =
         scope.drawInfos[scope.layerIndex].pointsArray.push(newPointsItem) - 1;
       // 将鼠标位置转换为WebGL坐标系中的位置，并添加到顶点列表
-      scope.addPointToPath(e.clientX, e.clientY, penPathIndex);
+      const drawInfo = scope.drawInfos[scope.layerIndex];
+      scope.currentDrawer.addPointToPath(
+        e.clientX,
+        e.clientY,
+        penPathIndex,
+        drawInfo,
+        scope.config
+      );
       scope.render();
     }
 
     function mousemove(e) {
       if (e.button !== 0) return;
       if (isDrawing) {
-        scope.addPointToPath(e.clientX, e.clientY, penPathIndex);
+        const drawInfo = scope.drawInfos[scope.layerIndex];
+        scope.currentDrawer.addPointToPath(
+          e.clientX,
+          e.clientY,
+          penPathIndex,
+          drawInfo,
+          scope.config
+        );
         scope.render();
       }
     }
@@ -393,6 +340,11 @@ export default class MaskDrawManager {
       e.preventDefault();
       e.stopPropagation();
       isDrawing = false;
+      if (scope.currentDrawer.drawEnd) {
+        const drawInfo = scope.drawInfos[scope.layerIndex];
+        scope.currentDrawer.drawEnd(drawInfo);
+        scope.render();
+      }
     }
 
     function mouseleave(e) {
@@ -414,5 +366,23 @@ export default class MaskDrawManager {
       canvas.removeEventListener("mouseup", mouseup);
       canvas.removeEventListener("mouseleave", mouseleave);
     };
+  }
+}
+
+function checkGLError(gl) {
+  const error = gl.getError();
+  const errorMap = {
+    [gl.NO_ERROR]: "NO_ERROR",
+    [gl.INVALID_ENUM]: "INVALID_ENUM",
+    [gl.INVALID_VALUE]: "INVALID_VALUE",
+    [gl.INVALID_OPERATION]: "INVALID_OPERATION",
+    [gl.INVALID_FRAMEBUFFER_OPERATION]: "INVALID_FRAMEBUFFER_OPERATION",
+    [gl.OUT_OF_MEMORY]: "OUT_OF_MEMORY",
+    [gl.CONTEXT_LOST_WEBGL]: "CONTEXT_LOST_WEBGL",
+  };
+
+  if (error !== gl.NO_ERROR) {
+    const errorMessage = errorMap[error] || `Unknown Error (${error})`;
+    console.error(`WebGL Error: ${errorMessage}`);
   }
 }
