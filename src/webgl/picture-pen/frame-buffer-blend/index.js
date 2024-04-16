@@ -9,7 +9,7 @@ const mode = {
 };
 
 const config = {
-  mode: mode.none,
+  mode: mode.pen,
   pen: {
     size: 4,
     color: [1, 0, 0, 1],
@@ -128,6 +128,7 @@ for (let ii = 0; ii < numToDraw; ++ii) {
   };
   drawInfos.push(drawInfo);
 }
+window.drawInfos = drawInfos;
 
 let layerIndex = 0;
 let initialized = false;
@@ -153,9 +154,25 @@ document.addEventListener("wheel", (e) => {
     const delta = e.deltaY > 0 ? 1 : -1;
     layerIndex = (length + layerIndex + delta) % length;
     lastEventTime = currentTime;
+    clearOldestDrawInfo();
     requestAnimationFrame(draw);
   }
 });
+
+function clearOldestDrawInfo() {
+  const drawInfosLen = drawInfos.length;
+  // 离当前最远的是 距离现在一半长度的位置
+  const oldestDrawInfoIndex =
+    (layerIndex + Math.floor(drawInfosLen / 2)) % drawInfosLen;
+  drawInfos[oldestDrawInfoIndex] = {
+    ...drawInfos[oldestDrawInfoIndex],
+    fbo: {
+      image: null,
+      paint: null,
+    },
+    lastArrayDrawnIndex: 0,
+  };
+}
 
 function draw() {
   const drawInfo = drawInfos[layerIndex];
@@ -171,8 +188,11 @@ function drawAll() {
   const imageFbo = drawInfo.fbo.image;
   drawImage(drawInfo, imageFbo.frameBuffer);
   const paintFbo = drawInfo.fbo.paint;
+  gl.disable(gl.BLEND);
   drawPathAll(paintFbo.frameBuffer, true);
   drawToScreen(imageFbo.texture);
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
   drawToScreen(paintFbo.texture);
 }
 
@@ -181,8 +201,11 @@ function drawAddition() {
   const drawInfo = drawInfos[layerIndex];
   const imageFbo = drawInfo.fbo.image;
   const paintFbo = drawInfo.fbo.paint;
+  gl.disable(gl.BLEND); // 绘制笔迹时不需要混合 否则橡皮擦无法覆盖之前的笔迹
   drawPathAddition(paintFbo.frameBuffer);
   drawToScreen(imageFbo.texture);
+  gl.enable(gl.BLEND); // 合并paintFbo和imageFbo时需要混合
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
   drawToScreen(paintFbo.texture);
   if (gl.getError()) console.log(gl.getError());
 }
@@ -232,8 +255,7 @@ function drawToScreen(texture) {
 
   gl.activeTexture(gl.TEXTURE0);
   gl.bindTexture(gl.TEXTURE_2D, texture);
-  gl.enable(gl.BLEND);
-  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
   gl.drawArrays(gl.TRIANGLES, 0, 6);
 }
 
@@ -406,6 +428,7 @@ function addPointToPath(x, y, index) {
 function drawPathAddition(fbo) {
   const drawInfo = drawInfos[layerIndex];
   const { pointsArray, lastArrayDrawnIndex } = drawInfo;
+  if (!pointsArray.length) return;
   const lastPointsArrayItem = pointsArray[pointsArray.length - 1];
   let { data, color, size } = lastPointsArrayItem;
   const additionData = data.slice(lastArrayDrawnIndex);
@@ -469,20 +492,21 @@ webglLessonsUI.setupSlider("#size", {
 });
 
 window.handleColorChange = function (element) {
-  config.pen.color = [hexToRgb(element.value), 1];
+  config.pen.color = [...hexToRgb(element.value), 1];
 };
 function hexToRgb(hex) {
   let r = 0,
     g = 0,
     b = 0;
   if (hex.length == 7) {
-    r = parseInt(hex.substr(1, 2), 16);
-    g = parseInt(hex.substr(3, 2), 16);
-    b = parseInt(hex.substr(5, 2), 16);
+    r = parseInt(hex.substr(1, 2), 16) / 255;
+    g = parseInt(hex.substr(3, 2), 16) / 255;
+    b = parseInt(hex.substr(5, 2), 16) / 255;
   }
   return [r, g, b];
 }
 
+activeMouseLeft();
 window.handleModeChange = function (element) {
   config.mode = mode[element.value];
   if (element.value !== mode.none) {

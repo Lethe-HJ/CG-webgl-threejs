@@ -23,13 +23,25 @@
     <div id="uiContainer">
       <div id="ui">
         <div id="size"></div>
+        <label for="color">color</label>
         <input
           type="color"
           name="color"
           id="color"
+          value="#ff0000"
           onchange="handleColorChange(this)"
         />
-        <label for="color">eraser</label><br />
+        <br />
+
+        <input
+          type="radio"
+          id="pen"
+          name="mode"
+          value="pen"
+          checked
+          onchange="handleModeChange(this)"
+        />
+        <label for="pen">pen</label><br />
         <input
           type="radio"
           id="eraser"
@@ -40,12 +52,12 @@
         <label for="eraser">eraser</label><br />
         <input
           type="radio"
-          id="pen"
+          id="none"
           name="mode"
-          value="pen"
+          value="none"
           onchange="handleModeChange(this)"
         />
-        <label for="pen">pen</label><br />
+        <label for="none">none</label><br />
       </div>
     </div>
   </body>
