@@ -52,6 +52,14 @@
         <label for="eraser">eraser</label><br />
         <input
           type="radio"
+          id="trace"
+          name="mode"
+          value="trace"
+          onchange="handleModeChange(this)"
+        />
+        <label for="none">trace</label><br />
+        <input
+          type="radio"
           id="none"
           name="mode"
           value="none"

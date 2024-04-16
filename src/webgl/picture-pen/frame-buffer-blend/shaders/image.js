@@ -1,4 +1,4 @@
-import { glsl } from "./libs.js";
+import { glsl } from "../libs.js";
 
 const vertexShaderSource = glsl`
   #version 300 es

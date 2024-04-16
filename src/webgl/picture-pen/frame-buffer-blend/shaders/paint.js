@@ -1,4 +1,4 @@
-import { glsl } from "./libs.js";
+import { glsl } from "../libs.js";
 
 const sharedPenStruct = glsl`
   struct Pen {
@@ -18,18 +18,37 @@ const paintVertexShaderSource = glsl`
     gl_PointSize = u_pen.size;
   }
 `;
-
 const paintFragmentShaderSource = glsl`
     #version 300 es
     precision highp float;
     out vec4 outColor;
     ${sharedPenStruct}
     uniform Pen u_pen;
-
     void main() {
       outColor = u_pen.color;
     }
 `;
+
+// const paintFragmentShaderSource = glsl`
+//     #version 300 es
+//     precision highp float;
+//     out vec4 outColor;
+//     ${sharedPenStruct}
+//     uniform Pen u_pen;
+
+//     vec2 center = vec2(0.5, 0.5);
+//     float radius = 0.5;
+
+
+//     void main() {
+//       vec2 coord = gl_PointCoord - center;
+//       if (length(coord) <= radius) { // 绘制圆形
+//           outColor = u_pen.color;
+//       } else {
+//           discard; 
+//       }
+//     }
+// `;
 
 // createPaintShader Exported function to create a paint shader.
 export default function createPaintShader(gl) {
