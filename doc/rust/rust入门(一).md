@@ -59,7 +59,6 @@ Deno
 # 3. rust相关vscode插件
 
 rust-analyzer
-Prettier - Code formatter (Rust)
 TOML Language Support
 
 
@@ -984,3 +983,148 @@ println!("{}", &hello[0..2]); // he
 
 # 20. HashMap
 
+## 20.1 新建
+
+### 20.1.1 新建HashMap
+
+```rust
+use std::collections::HashMap;
+
+let mut scores: HashMap<String, i32> = HashMap::new();
+scores.insert(String::from("Blue"), 10);
+```
+
+```rust
+use std::collections::HashMap;
+
+let field_name = String::from("Favorite color");
+let field_value = String::from("Blue");
+let mut map = HashMap::new();
+map.insert(&field_name, &field_value);
+println!("{}: {}", field_name, field_value);
+```
+
+### 20.1.2 colect
+
+```rust
+use std::collections::HashMap;
+
+let teams = vec![String::from("Blue"), String::from("Yellow")];
+let intial_scores = vec![10, 50];
+let scores: HashMap<_, _> = teams.iter().zip(intial_scores.iter()).collect;
+```
+
+## 20.2 访问HashMap
+
+```rust
+use std::collections::HashMap;
+
+let mut scores = HashMap::new();
+scores.insert(String::from("Blue"), 10);    
+scores.insert(String::from("Yellow"), 50); 
+let team_name = String::from("Blue");
+let score = scores.get(&team_name);
+
+match score {
+    Some(s) => println!("{}", s),
+    None => println!("team not exist"),
+};
+
+for (k, v) in &scores {
+    println!("{}: {}", k, v);
+}
+
+```
+
+```rust
+let mut scores = HashMap::new();
+scores.insert(String::from("Blue"), 10);    
+
+scores.entry(String::from("Yellow")).or_insert(50);
+scores.entry(String::from("Blue")).or_insert(50);
+
+println!("{:?}", scores);
+```
+
+```rust
+let text = "hello world nice work";
+let mut map = HashMap::new();
+for word in text.split_whitespace() {
+    let count = map.entry(word).or_insert(0);
+    *count += 1;
+}
+println!("{:#?}", map);
+
+```
+
+# 21. Panic
+
+Cargo.toml中写入
+
+```toml
+[profile.release]
+panic = 'abort'
+```
+
+```rust
+Panic!("crash and burn");
+```
+
+`set RUST_BACKTRACE=1 && cargo run` 运行程序 panic时打印回溯信息 `RUST_BACKTRACE=full` 可以打印完整的panic信息
+
+# 22. Result枚举
+
+```rust
+use std::fs::File;
+use std::io;
+use std::io::Read;
+
+fn read_username_from_file() -> Result<String, io::Error> {
+    let f = File::open("hello.txt");
+    let mut f = match f {
+        Ok(file) => file,
+        Err(e) => return Err(e),
+    };
+    let mut s = String::new();
+    match f.read_to_string(&mut s) {
+        Ok(_) => Ok(s),
+        Err(e) => Err(e),
+    }
+}
+
+```
+
+用 ? 操作符 快速传播错误
+
+```rust
+fn read_username_from_file() -> Result<String, io::Error> {
+    let mut f = File::open("hello.txt")?;
+    let mut s = String::new();
+    f.read_to_string(&mut s)?; // ? 会将错误类型自动转换成该函数返回值声明的错误类型
+    Ok(s)
+}
+
+```
+
+可以用链式调用精简
+
+```rust
+fn read_username_from_file() -> Result<String, io::Error> {
+    let mut s = String::new();
+    File::open("hello.txt")?.read_to_string(&mut s)?;
+    Ok(s)
+}
+```
+
+
+```rust
+use std::error::Error;
+use std::fs::File;
+
+
+fn main() -> Result<(), Box<dyn Error>> {
+    File::open("hello.txt")?;
+    Ok(())
+}
+
+```
