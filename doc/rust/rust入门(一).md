@@ -1054,7 +1054,6 @@ for word in text.split_whitespace() {
     *count += 1;
 }
 println!("{:#?}", map);
-
 ```
 
 # 21. Panic
@@ -1071,6 +1070,39 @@ Panic!("crash and burn");
 ```
 
 `set RUST_BACKTRACE=1 && cargo run` 运行程序 panic时打印回溯信息 `RUST_BACKTRACE=full` 可以打印完整的panic信息
+
+```rust
+use std::net::IpAddr;
+
+let home: IpAddr = "127.0.0.2".parse().unwrap();
+
+```
+
+```rust
+pub struct Guess {
+    value: i32,
+}
+
+impl Guess {
+    pub fn new(value: i32) -> Guess {
+        if value < 1 || value > 100 {
+            panic!("Guess value must between 1 and 100, but got {}", value);
+        }
+        Guess { value }
+    }
+
+    pub fn value(&self) -> i32 {
+        self.value
+    }
+}
+
+
+fn main() {
+    let guess = Guess::new(guess);
+}
+
+```
+
 
 # 22. Result枚举
 
@@ -1127,4 +1159,25 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
+```
+
+# 23. 泛型
+
+```rust
+struct Point<T> {
+    x: T,
+    y: T,
+}
+
+impl<T> Point<T> {
+    fn x(&self) -> &T {
+        &self.x
+    }
+}
+
+impl Point<i32> {
+    fn x1(&self) -> &i32 {
+        &self.x
+    }
+}
 ```
