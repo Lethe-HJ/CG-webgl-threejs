@@ -1,6 +1,7 @@
 {
   "devDependencies": {
-    "@types/node": "^20.5.1"
+    "@types/node": "^20.5.1",
+    "esbuild": "0.23.1"
   },
   "dependencies": {
     "crypto": "^1.0.1",
