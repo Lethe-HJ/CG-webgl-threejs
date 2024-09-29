@@ -311,3 +311,111 @@ mod tests {
 3. 可在一个地方创建闭包, 然后再另一个上下文中调用闭包来完成运算
 4. 可从其定义的作用域捕获值
 
+```rust
+fn generate_workout(random_number: u32) {
+    let expensive_closure = |num| {
+        println!("calculating slowly ...");
+        num
+    };
+    if random_number == 3 {
+        println!("haha");
+    } else {
+        println!("{}", expensive_closure(random_number));
+    }
+}
+
+```
+
+闭包不要求标注参数和返回值的类型
+闭包的定义最终只会为参数/返回值推断出唯一具体的类型
+
+```rust
+fn main(){
+    let example_closure = |num| {
+        println!("calculation slowly ...");
+        thread::sleep(Duration::from_secs(2));
+        num
+    };
+    let s = example_closure(String::from("hello")); // 闭包已经被推断为String类型
+    let n = example_closure(5); // 报错
+}
+```
+
+## fn Trait
+
+Fn
+FnMut
+FnOnce
+
+
+```rust
+
+struct Cacher<T>
+where
+    T: Fn(u32) -> u32,
+{
+    calculation: T,
+    value: Option<u32>,
+}
+
+impl<T> Cacher<T>
+where
+    T: Fn(u32) -> u32,
+{
+    fn new(calculation: T) -> Cacher<T> {
+        Cacher {
+            calculation,
+            value: None,
+        }
+    }
+
+    fn value(&mut self, arg: u32) -> u32 {
+        match self.value {
+            Some(v) => v,
+            None => {
+                let v = (self.calculation)(arg);
+                self.value = Some(v);
+                v
+            }
+        }
+    }
+}
+
+
+let mut expensive_closure = Cacher::new(|num| {
+    println!("calculation slowly ...");
+    thread::sleep(Duration::from_secs(2));
+    num
+})
+
+let s = example_closure.value(5);
+```
+
+
+闭包捕获所在作用域中的变量, 而普通函数不能
+
+```rust
+fn main() {
+    let x = 4;
+    let equal_to_x = |z| z === x;
+    fn equal_to_x_fn(z: i32) -> bool {
+        z === x // 报错
+    }
+}
+```
+
+捕获值的方式 rust会自动推断
+1. 取得所有权FnOnce
+2. 可变借用: FnMut
+3. 不可变借用: Fn
+
+
+
+```rust
+fn main(){
+    let x = vec![1, 2, 3];
+    let equal_to_x = move |z| z == x;
+    println!('{}', x); // 报错 x已经被移动到了闭包中
+}
+
+```
