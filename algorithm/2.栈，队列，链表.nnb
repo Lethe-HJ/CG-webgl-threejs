@@ -10,6 +10,13 @@
         {
             "language": "markdown",
             "source": [
+                "```rust\r\n\r\n// cargo 1.80.1\r\n\r\nuse std::fmt::Debug;\r\nuse std::fmt::Display;\r\n\r\n#[derive(Debug)]\r\nstruct Stack<T> {\r\n    name: String,\r\n    size: usize,\r\n    value: Vec<T>,\r\n}\r\n\r\nimpl<T> Stack<T> \r\nwhere T:  Debug + Display + Clone,\r\n{\r\n    fn new(name: String, size: usize) -> Self {\r\n        let stack = Stack {\r\n            name,\r\n            size,\r\n            value: Vec::with_capacity(size),\r\n        };\r\n        println!(\"新建Stack {:?}\", stack.name);\r\n        return stack;\r\n    }\r\n\r\n    fn push(&mut self, item: T) -> bool {\r\n        if self.value.len() < self.size {\r\n            self.value.push(item.clone());\r\n            println!(\"元素 {:?} 已压入栈\", item);\r\n            return true;\r\n        } else {\r\n            println!(\"栈已满，无法添加元素 {:?}\", item);\r\n            return false;\r\n        }\r\n    }\r\n\r\n    fn pop(&mut self) -> Option<T> {\r\n        let item = self.value.pop();\r\n        if let Some(ref val) = item {\r\n            println!(\"元素 {:?} 已从栈中弹出\", val);\r\n        } else {\r\n            println!(\"栈为空\");\r\n        }\r\n        return item;\r\n    }\r\n}\r\n\r\nfn main() {\r\n    let mut stack = Stack::new(String::from(\"MyStack\"), 3);\r\n    stack.push(1);\r\n    stack.push(2);\r\n    stack.push(3);\r\n    stack.push(4); // 将提示栈已满\r\n\r\n    stack.pop();\r\n    stack.pop();\r\n    stack.pop();\r\n    stack.pop(); // 将提示栈为空\r\n}\r\n\r\n```"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
                 "### 题目 有效的括号(20)\r\n\r\n**给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串 s ，判断字符串是否有效。**\r\n\r\n有效字符串需满足：\r\n\r\n左括号必须用相同类型的右括号闭合。\r\n左括号必须以正确的顺序闭合。\r\n每个右括号都有一个对应的相同类型的左括号。\r\n \r\n\r\n示例 1：\r\n\r\n输入：s = \"()\"\r\n输出：true\r\n示例 2：\r\n\r\n输入：s = \"()[]{}\"\r\n输出：true\r\n示例 3：\r\n\r\n输入：s = \"(]\"\r\n输出：false\r\n \r\n\r\n提示：\r\n\r\n1 <= s.length <= 104\r\ns 仅由括号 '()[]{}' 组成"
             ],
             "outputs": []
@@ -17,7 +24,7 @@
         {
             "language": "javascript",
             "source": [
-                "const baket_map = {\r\n    \")\": \"(\",\r\n    \"]\": \"[\",\r\n    \"}\": \"{\",\r\n};\r\n\r\n/**\r\n * @param {string} s\r\n * @return {boolean}\r\n */\r\nvar isValid = function (s) {\r\n    if (s.length % 2 === 1) return false;\r\n    const queue = [];\r\n    let i = 0,\r\n        key;\r\n    while (i < s.length) {\r\n        key = baket_map[s[i]];\r\n        if (!key) queue.push(s[i]);\r\n        else if (queue[queue.length - 1] === key) queue.pop();\r\n        else return false;\r\n        i += 1;\r\n    }\r\n    return queue.length === 0;\r\n};\r\n\r\nconsole.assert(isValid(\"()\") === true);\r\nconsole.assert(isValid(\"()[]{}\") === true);\r\nconsole.assert(isValid(\"(]\") === false);\r\n"
+                "const banket_map = {\r\n    \")\": \"(\",\r\n    \"]\": \"[\",\r\n    \"}\": \"{\",\r\n};\r\n\r\n/**\r\n * @param {string} s\r\n * @return {boolean}\r\n */\r\nvar isValid = function (s) {\r\n    if (s.length % 2 === 1) return false;\r\n    const queue = [];\r\n    let i = 0,\r\n        key;\r\n    while (i < s.length) {\r\n        key = baket_map[s[i]];\r\n        if (!key) queue.push(s[i]);\r\n        else if (queue[queue.length - 1] === key) queue.pop();\r\n        else return false;\r\n        i += 1;\r\n    }\r\n    return queue.length === 0;\r\n};\r\n\r\nconsole.assert(isValid(\"()\") === true);\r\nconsole.assert(isValid(\"()[]{}\") === true);\r\nconsole.assert(isValid(\"(]\") === false);\r\n"
             ],
             "outputs": [
                 {
