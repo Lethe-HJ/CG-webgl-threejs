@@ -419,3 +419,67 @@ fn main(){
 }
 
 ```
+
+
+# 28. 迭代器
+
+迭代器模式: 对一系列项执行某些任务
+迭代器负责:
+1. 遍历每个项
+2. 确定序列(遍历)何时完成
+
+
+rust的迭代器
+- 惰性的 除非你消费它
+
+
+```rust
+fn main(){
+    let v1  = vec![1, 2, 3];
+    let v1_iter = v1.iter();
+
+    for val in v1_iter {
+        println!("Got: {}", val);
+    }
+}
+```
+
+
+iterator trait
+
+所有迭代器都实现了iterator trait 要求实现next方法
+
+
+```rust
+fn main(){
+    let v1  = vec![1, 2, 3];
+    let v1_iter = v1.iter();
+    assert_eq1(v1_iter.next(), Some(&1));
+    assert_eq1(v1_iter.next(), Some(&2));
+}
+```
+
+迭代方法
+- iter: 在不可变引用上创建迭代器
+- into_iter: 创建的迭代器会获取所有权
+- iter_mut: 迭代可变的引用
+
+消耗性适配器
+- next
+- sum
+
+
+```rust
+fn main(){
+    let v1  = vec![1, 2, 3];
+    let v1_iter = v1.iter();
+    let total: i32 = v1_iter.sum();
+    assert_eq!(total, 6);
+}
+```
+
+产生其它迭代器的方法
+
+迭代器适配器
+- map 接受一个闭包
+

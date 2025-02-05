@@ -6,6 +6,13 @@
                 "# 1. 时间复杂度与空间复杂度\r\n\r\n![alt text](image.png)\r\n\r\n$ n! > 2^n > n^2 > n*{\\log_2n} > n > n^{\\frac{1}{2}} > {\\log_2n}$"
             ],
             "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "# 2. 递归\r\n\r\n## 定义\r\n\r\n递归（Recursion）：指的是一种通过重复将原问题分解为同类的子问题而解决的方法。在绝大数编程语言中，可以通过在函数中再次调用函数自身的方式来实现递归。\r\n\r\n递归」分为两个部分：「递推过程」和「回归过程」。\r\n\r\n递推过程：指的是将原问题一层一层地分解为与原问题形式相同、规模更小的子问题，直到达到结束条件时停止，此时返回最底层子问题的解。\r\n回归过程：指的是从最底层子问题的解开始，逆向逐一回归，最终达到递推开始时的原问题，返回原问题的解。\r\n「递推过程」和「回归过程」是递归算法的精髓。从这个角度来理解递归，递归的基本思想就是： 把规模大的问题不断分解为子问题来解决。\r\n\r\n同时，因为解决原问题和不同规模的小问题往往使用的是相同的方法，所以就产生了函数调用函数自身的情况，这也是递归的定义所在。\r\n\r\n递归的数学模型其实就是「数学归纳法」\r\n\r\n递归三步走具体步骤如下：\r\n\r\n1. 写出递推公式：找到将原问题分解为子问题的规律，并且根据规律写出递推公式。\r\n2. 明确终止条件：推敲出递归的终止条件，以及递归终止时的处理方法。\r\n3. 将递推公式和终止条件翻译成代码：\r\n   1. 定义递归函数（明确函数意义、传入参数、返回结果等）。\r\n   2. 书写递归主体（提取重复的逻辑，缩小问题规模）。\r\n   3. 明确递归终止条件（给出递归终止条件，以及递归终止时的处理方法）。\r\n\r\n\r\n## 递归的注意点\r\n1. 避免栈溢出\r\n2. 避免重复运算\r\n\r\n## 典型例子\r\n\r\n### 斐波拉契数列\r\n\r\n```python\r\nclass Solution:\r\n    def fib(self, n: int) -> int:\r\n        if n == 0:\r\n            return 0\r\n        if n == 1:\r\n            return 1\r\n        return self.fib(n - 1) + self.fib(n - 2)\r\n```\r\n\r\n```typescript\r\nclass Solution {\r\n    fib(n: number): number {\r\n        if (n === 0) {\r\n            return 0;\r\n        }\r\n        if (n === 1) {\r\n            return 1;\r\n        }\r\n        return this.fib(n - 1) + this.fib(n - 2);\r\n    }\r\n}\r\n\r\n// 示例用法\r\nconst solution = new Solution();\r\nconsole.log(solution.fib(10)); // 输出 55\r\n```"
+            ],
+            "outputs": []
         }
     ]
 }

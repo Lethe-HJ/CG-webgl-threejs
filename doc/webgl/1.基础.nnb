@@ -117,49 +117,10 @@
                 {
                     "items": [
                         {
-                            "mime": "text/html",
+                            "mime": "application/vnd.code.notebook.stdout",
                             "value": [
-                                "<style> table, th, tr { text-align: left; }</style>",
-                                "        <canvas id=\"99ca2a90-bf31-11ee-b233-ebd3926c94ae\" width=\"400\" height=\"400\" style=\"border:1px solid grey\">",
-                                "            此浏览器不支持canvas",
-                                "        </canvas>",
-                                "        <script>",
-                                "            { // 限制变量定义域",
-                                "                ",
-                                "        const ctx = document.getElementById('99ca2a90-bf31-11ee-b233-ebd3926c94ae');",
-                                "        const gl = ctx.getContext('webgl');",
-                                "        const vertexShader = gl.createShader(gl.VERTEX_SHADER);",
-                                "        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);",
-                                "    ",
-                                "        gl.shaderSource(vertexShader,  \"\\n  attribute vec4 aPosition;\\n  void main() {\\n    gl_Position = aPosition; \\n    gl_PointSize = 30.0;\\n  }\\n\"); // 指定顶点着色器的源码",
-                                "        gl.shaderSource(fragmentShader,  \"\\n  void main() {\\n    gl_FragColor = vec4(1.0,0.0,0.0,1.0);\\n  }\\n\"); // 指定片元着色器的源码",
-                                "    ",
-                                "        // 编译着色器",
-                                "        gl.compileShader(vertexShader);",
-                                "        gl.compileShader(fragmentShader);",
-                                "    ",
-                                "        // 创建一个程序对象",
-                                "        const program = gl.createProgram();",
-                                "    ",
-                                "        gl.attachShader(program, vertexShader);",
-                                "        gl.attachShader(program, fragmentShader);",
-                                "    ",
-                                "        gl.linkProgram(program);",
-                                "    ",
-                                "        gl.useProgram(program);",
-                                "    ",
-                                "    const aPosition = gl.getAttribLocation(program, 'aPosition');",
-                                "    let x = 0;",
-                                "    setInterval(() => {",
-                                "        x+=0.1;",
-                                "        if(x>1.0) x=0;",
-                                "        gl.vertexAttrib1f(aPosition, x);",
-                                "        gl.drawArrays(gl.POINTS, 0, 1);",
-                                "    }, 200);",
                                 "",
-                                "            }",
-                                "        </script>",
-                                "    "
+                                ""
                             ]
                         }
                     ]
@@ -167,11 +128,12 @@
                 {
                     "items": [
                         {
-                            "mime": "application/vnd.code.notebook.stdout",
-                            "value": [
-                                "",
-                                ""
-                            ]
+                            "mime": "application/vnd.code.notebook.error",
+                            "value": {
+                                "name": "Error",
+                                "message": "Cannot find module 'uuid'\nRequire stack:\n- d:\\workspace\\CG-webgl-threejs\\src\\display.js\n- <repl>",
+                                "stack": "    at Function.Module._resolveFilename (node:internal/modules/cjs/loader:1142:15)\n    at Function.Module._resolveFilename.sharedData.moduleResolveFilenameHook.installedValue [as _resolveFilename] (c:\\Users\\hujing1\\.vscode\\extensions\\donjayamanne.typescript-notebook-2.0.6\\resources\\scripts\\node_modules\\@cspotcode\\source-map-support\\source-map-support.js:679:30)\n    at Function.Module._load (node:internal/modules/cjs/loader:983:27)\n    at Function._._load (c:\\Users\\hujing1\\.vscode\\extensions\\donjayamanne.typescript-notebook-2.0.6\\out\\extension\\server\\index.js:2:115372)\n    at Module.require (node:internal/modules/cjs/loader:1230:19)\n    at require (node:internal/modules/helpers:179:18)\n    at renderWebgl (d:\\workspace\\CG-webgl-threejs\\src\\display.js:62:26)\n    at <Cell 8> [26, 11]\n    at <Cell 8> [27, 46]\n    at Script.runInContext (node:vm:148:12)"
+                            }
                         }
                     ]
                 }

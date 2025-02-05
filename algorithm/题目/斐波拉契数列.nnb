@@ -1,0 +1,55 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "### 题目描述\r\n\r\n斐波那契数列是一个经典的数学问题，定义如下：\r\n\r\n- $ F(0) = 0 $\r\n- $ F(1) = 1 $\r\n- 对于 $  n \\geq 2 ， F(n) = F(n-1) + F(n-2)  $\r\n\r\n即，斐波那契数列的第 $ n $ 项是前两项的和。数列的前几项为：\r\n\r\n```\r\n0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, ...\r\n```\r\n\r\n#### 任务\r\n编写一个函数，输入一个整数 $ n $，返回斐波那契数列的第 $ n $ 项。\r\n\r\n#### 示例\r\n**示例 1：**\r\n```\r\n输入: n = 2\r\n输出: 1\r\n解释: F(2) = F(1) + F(0) = 1 + 0 = 1\r\n```\r\n\r\n**示例 2：**\r\n```\r\n输入: n = 10\r\n输出: 55\r\n解释: F(10) = F(9) + F(8) = 34 + 21 = 55\r\n```\r\n\r\n#### 限制条件\r\n- $ 0 \\leq n \\leq 30 $（如果使用递归实现，$ n $ 不宜过大，否则会导致性能问题）\r\n\r\n---\r\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "function fib(n: number): number {\r\n    if (n === 0) {\r\n        return 0;\r\n    }\r\n    if (n === 1) {\r\n        return 1;\r\n    }\r\n    return fib(n - 1) + fib(n - 2);\r\n}\r\n\r\n// 示例用法\r\nconsole.log(fib(10)); // 输出 55"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "55",
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "const { measurePerformance } = require(\"../libs.js\");\r\nconst minTime = measurePerformance(() => {\r\n  return fib(30);\r\n}, 200);\r\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                "0%|██████████████████████████████████████████████████|100%",
+                                "",
+                                "结果: 832040",
+                                "执行次数: 200",
+                                "最短耗时: 8.5204 ms",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
