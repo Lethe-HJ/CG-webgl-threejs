@@ -6,6 +6,158 @@
                 "# 1. 时间复杂度与空间复杂度\r\n\r\n![alt text](image.png)\r\n\r\n$ n! > 2^n > n^2 > n*{\\log_2n} > n > n^{\\frac{1}{2}} > {\\log_2n}$"
             ],
             "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "# 2. 数组\n\n数组\n数组是最简单的内存数据结构，几乎所有的编程语言都原生支持数组类型。\n\n大多数强类型的编程语言里面数组通常情况下都用于存储一系列同一种数据类型的值，但在 JavaScript 里，数组中可以保存不同类型的值。\n\n## 创建和初始化数组\n\n使用 new Array() 创建数组\n\n```js\nconst daysOfWeek = new Array(\n  \"Sunday\",\n  \"Monday\",\n  \"Tuesday\",\n  \"Wednesday\",\n  \"Thursday\",\n  \"Friday\",\n  \"Saturday\"\n);\n// ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']\n```\n\n使用 [] 创建数组\n\n```js\nconst daysOfWeek = [\n  \"Sunday\",\n  \"Monday\",\n  \"Tuesday\",\n  \"Wednesday\",\n  \"Thursday\",\n  \"Friday\",\n  \"Saturday\",\n];\n// ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']\n```\n\n## 数组常见操作\n\n### 添加元素\n\n添加一个元素到数组的最后位置 `array.push(item)`\n在数组首位插入一个元素 `array.unshift(item)`\n在指定索引位置插入元素 `array.splice(index, 0, item)`\nsplice() 第二个参数为 0 时，表示插入数据。\n\n```js\nconst myArray = [1, 2, 3];\n// 在索引 0 的位置，插入 A\nmyArray.splice(0, 0, \"A\");\nconsole.log(myArray); //--> ['A', 1, 2, 3]\n```\n\n### 删除元素\n\n删除数组最后的元素 `array.pop()`\n删除数组首位的元素 `array.shift()`\n删除指定索引位置的元素 `array.splice(start, deleteCount)`\n\n```js\nconst myArray2 = [1, 2, 3, 4, 5];\n// 删除索引 3 位置起的 2 个元素\nmyArray2.splice(3, 2);\nconsole.log(myArray2); //--> [1, 2, 3]\n```\n\n### 修改元素\n\n修改指定索引位置的元素 array.splice(index, 1, item)\n\n```js\nconst myArray3 = [1, 2, 3, 4, 5, 6];\n// 修改索引 1 的位置的元素为 AA\nmyArray3.splice(1, 1, \"AA\");\nconsole.log(myArray3); //--> [1, \"AA\", 3, 4, 5, 6]\n```\n\n修改指定索引位置的几个元素 array.splice(index, number, item)\n\n```js\nconst myArray4 = [1, 2, 3, 4, 5, 6, 7];\n// 在索引 2 的位置起，修改两个元素为 AA BB\nmyArray4.splice(2, 2, \"AA\", \"BB\");\nconsole.log(myArray4); //--> [1, 2, \"AA\", \"BB\", 5, 6, 7]\n```"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "js 引擎会对数组的操作做优化，提前分配大小并不能提升性能。"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const startTime = new Date().getTime();\nconst a = new Array();\nfor(let i=0; i< 1e8 ;i+=1) {\n    a.push(1);\n}\nconst endTime = new Date().getTime();\nendTime - startTime"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/plain",
+                            "value": [
+                                "\u001b[33m7956\u001b[39m"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const startTime = new Date().getTime();\nconst a = new Array(1e8);\nconst len = a.length;\nfor(let i=0; i< len;i+=1) {\n    a[i] = 1;\n}\nconst endTime = new Date().getTime();\nendTime - startTime"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/plain",
+                            "value": [
+                                "\u001b[33m15463\u001b[39m"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "// (method) Array<any>.splice(start: number, deleteCount?: number): any[] (+1 overload)\n// Removes elements from an array and, if necessary, inserts new elements in their place, returning the deleted elements.\n// @param start — The zero-based location in the array from which to start removing elements.\n// @param deleteCount — The number of elements to remove. default is array.length\n// @returns — An array containing the elements that were deleted.\n\nconst a = [1,2,3,4,5,6,7,8,9,10];\na.splice(0); // 返回 [1,2,3,4,5,6,7,8,9,10]\na // 返回 []\n\nconst b = [1,2,3,4,5,6,7,8,9,10];\nb.splice(0, 1); // 返回 [1]\nb // 返回 [2,3,4,5,6,7,8,9,10]\n\n// (method) Array<number>.splice(start: number, deleteCount: number, ...items: number[]): number[] (+1 overload)\n// Removes elements from an array and, if necessary, inserts new elements in their place, returning the deleted elements.\n// @param start — The zero-based location in the array from which to start removing elements.\n// @param deleteCount — The number of elements to remove.\n// @param items — Elements to insert into the array in place of the deleted elements.\n// @returns — An array containing the elements that were deleted.\nconst c = [1,2,3,4,5,6,7,8,9,10];\nc.splice(0, 1, 100); // 返回 [1]\nc // 返回 [100,2,3,4,5,6,7,8,9,10]\n\nconst d = [1,2,3,4,5,6,7,8,9,10];\nd.splice(0, 1, 100, 200); // 返回 [1]\nd // 返回 [100,200,2,3,4,5,6,7,8,9,10]"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/plain",
+                            "value": [
+                                "[",
+                                "  \u001b[33m100\u001b[39m,",
+                                "  \u001b[33m200\u001b[39m,",
+                                "  \u001b[33m2\u001b[39m,",
+                                "  \u001b[33m3\u001b[39m,",
+                                "  \u001b[33m4\u001b[39m,",
+                                "  \u001b[33m5\u001b[39m,",
+                                "  \u001b[33m6\u001b[39m,",
+                                "  \u001b[33m7\u001b[39m,",
+                                "  \u001b[33m8\u001b[39m,",
+                                "  \u001b[33m9\u001b[39m,",
+                                "  \u001b[33m10\u001b[39m",
+                                "]"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const int32Array1 = new Int32Array(10);\nconsole.log(\"指定长度创建:\", int32Array1);\nconsole.log(\"长度:\", int32Array1.length);\nconsole.log(\"字节长度:\", int32Array1.byteLength);\nconsole.log(\"每个元素字节数:\", int32Array1.BYTES_PER_ELEMENT);\n// int32 是用32位来存储的整形数字 一个字节是8位(8个二进制位)\n\n// 类似的类型数组还有 Uint8Array Float32Array Uint16Array Uint32Array\n\n// 赋值\nint32Array1[0] = 1;\n\n// 取值\nint32Array1[0]\n\n// 类型数组的作用\n// 1. 性能更好 因为类型数组是连续的内存空间 所以访问速度更快\n// 2. 更节省内存 因为类型数组是连续的内存空间 所以占用的内存更少\n// 3. 更方便 因为类型数组是连续的内存空间 所以更方便进行内存管理\n\n// 类型数组的缺点\n// 1. 不能存储复杂类型 只能存储基本类型\n// 2. 不能存储对象\n// 3. 不能存储函数\n// 4. 不能存储"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "指定长度创建: Int32Array(10) [",
+                                "  0, 0, 0, 0, 0,",
+                                "  0, 0, 0, 0, 0",
+                                "]",
+                                "长度: 10",
+                                "字节长度: 40",
+                                "每个元素字节数: 4",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "text/plain",
+                            "value": [
+                                "\u001b[33m1\u001b[39m"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "// 数组的常用方法\n// slice 返回一个新的数组 不会改变原数组\n\n// (method) Array<any>.slice(start?: number, end?: number): any[]\n// Returns a copy of a section of an array. For both start and end, a negative index can be used to indicate an offset from the end of the array. For example, -2 refers to the second to last element of the array.\n// @param start\n// The beginning index of the specified portion of the array. If start is undefined, then the slice begins at index 0.\n// @param end\n// The end index of the specified portion of the array. This is exclusive of the element at the index 'end'. If end is undefined, then the slice extends to the end of the array.\n\nconst a = [1,2,3,4,5,6,7,8,9,10];\nconst b = a.slice(0, 5); // 返回 [1,2,3,4,5]  左闭右开\nb // 返回 [1,2,3,4,5,6,7,8,9,10]\n\n// start 实际对应的index 需要不比end实际对应的index大 否则返回空数组\nconst c = a.slice(-2, 2); // 这里是[] 因为 8 不小于 2 所以不返回\nconsole.log(c)\n\n// concat 返回新数组 不会改变原数组\n// join 返回一个字符串 不会改变原数组\n// reverse 返回新数组 会改变原数组\n\n// (method) Array<number>.reverse(): number[]\n// Reverses the elements in an array in place. This method mutates the array and returns a reference to the same array.\nconst d = [1,2,3,4,5,6,7,8,9,10];\nd.reverse();\nconsole.log(d) // 返回 [10,9,8,7,6,5,4,3,2,1]\n\n// sort 返回新数组 会改变原数组\n\n// (method) Array<number>.sort(compareFn?: ((a: number, b: number) => number) | undefined): number[]\n// Sorts an array in place. This method mutates the array and returns a reference to the same array.\n// @param compareFn\n// Function used to determine the order of the elements. \n// It is expected to return a negative value if the first\n// argument is less than the second argument, zero if they're equal,\n// and a positive value otherwise. If omitted, the elements are sorted\n// in ascending, UTF-16 code unit order.\n// [11,2,22,1].sort((a, b) => a - b)\n\nconst e = [1,2,3,4,5,6,7,8,9,10];\ne.sort();\nconsole.log(e) // 返回 [1,10,2,3,4,5,6,7,8,9]\n\nconst f = [1,2,3,4,5,6,7,8,9,10];\nf.sort((a, b) => a - b);\nconsole.log(f) // 返回 [1,2,3,4,5,6,7,8,9,10]\n\nconst g = [1,2,3,4,5,6,7,8,9,10];\ng.sort((a, b) => b - a);\nconsole.log(g) // 返回 [ 10, 9, 8, 7, 6, 5, 4, 3, 2, 1] \n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "[]",
+                                "[",
+                                "  10, 9, 8, 7, 6,",
+                                "   5, 4, 3, 2, 1",
+                                "]",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "# 练习"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                ""
+            ],
+            "outputs": []
         }
     ]
 }
