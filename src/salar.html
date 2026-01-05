@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>跳槽收益计算工具</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        height: 100vh;
+        padding: 8px;
+        overflow: hidden;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 6px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        padding: 8px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 6px;
+        font-size: 1.1em;
+        flex-shrink: 0;
+      }
+
+      .form-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 6px;
+        margin-bottom: 8px;
+        flex-shrink: 0;
+      }
+
+      .company-form {
+        background: #f8f9fa;
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #e9ecef;
+      }
+
+      .company-form h2 {
+        color: #495057;
+        margin-bottom: 6px;
+        font-size: 0.9em;
+        border-bottom: 1px solid #667eea;
+        padding-bottom: 3px;
+        text-align: center;
+      }
+
+      .form-group {
+        margin-bottom: 5px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 2px;
+        color: #495057;
+        font-weight: 500;
+        font-size: 0.8em;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 4px 6px;
+        border: 1px solid #ced4da;
+        border-radius: 3px;
+        font-size: 12px;
+        transition: border-color 0.3s;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .btn-calculate {
+        display: block;
+        width: 100%;
+        padding: 4px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        margin-bottom: 6px;
+        flex-shrink: 0;
+      }
+
+      .btn-calculate:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+      }
+
+      .btn-calculate:active {
+        transform: translateY(0);
+      }
+
+      .results {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        margin-bottom: 0;
+        flex: 1;
+      }
+
+      .result-card {
+        background: #f8f9fa;
+        padding: 6px;
+        border-radius: 4px;
+        border-left: 2px solid #667eea;
+      }
+
+      .result-card h3 {
+        color: #495057;
+        margin-bottom: 5px;
+        font-size: 0.85em;
+      }
+
+      .result-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid #e9ecef;
+      }
+
+      .result-item:last-child {
+        border-bottom: none;
+      }
+
+      .result-label {
+        color: #6c757d;
+      }
+
+      .result-value {
+        font-weight: 600;
+        color: #212529;
+      }
+
+      .result-value.positive {
+        color: #28a745;
+      }
+
+      .result-value.negative {
+        color: #dc3545;
+      }
+
+      .result-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 4px;
+      }
+
+      .result-table th {
+        background: #667eea;
+        color: white;
+        padding: 4px 2px;
+        text-align: center;
+        font-weight: 600;
+        font-size: 0.75em;
+      }
+
+      .result-table td {
+        padding: 4px 2px;
+        text-align: center;
+        border-bottom: 1px solid #e9ecef;
+        font-size: 0.75em;
+      }
+
+      .result-table tbody tr:hover {
+        background: #f8f9fa;
+      }
+
+      .result-table td:first-child {
+        font-weight: 600;
+        color: #495057;
+        text-align: left;
+      }
+
+      .result-table td:nth-child(2),
+      .result-table td:nth-child(4) {
+        font-family: "Courier New", monospace;
+        font-weight: 600;
+      }
+
+      .result-table td:nth-child(3) {
+        color: #667eea;
+        font-weight: bold;
+        font-size: 0.9em;
+        padding: 4px 1px;
+      }
+
+      .growth-cell {
+        font-weight: 600;
+      }
+
+      .growth-cell.positive {
+        color: #28a745;
+      }
+
+      .growth-cell.negative {
+        color: #dc3545;
+      }
+
+      .salary-section {
+        margin-top: 0;
+      }
+
+      .insurance-section {
+        margin-top: 0;
+      }
+
+      .insurance-config-section {
+        margin-bottom: 6px;
+        flex-shrink: 0;
+      }
+
+      .insurance-config-section h3 {
+        margin-bottom: 6px !important;
+        font-size: 0.95em !important;
+      }
+
+      .insurance-type-group {
+        margin-bottom: 6px;
+      }
+
+      .insurance-type-group h4 {
+        font-size: 0.8em;
+        color: #495057;
+        margin-bottom: 4px;
+        font-weight: 600;
+        border-bottom: 1px solid #e9ecef;
+        padding-bottom: 2px;
+      }
+
+      .insurance-form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 5px;
+      }
+
+      .insurance-conversion-section {
+        margin-top: 6px;
+        padding-top: 6px;
+        border-top: 1px solid #dee2e6;
+      }
+
+      .insurance-conversion-section h3 {
+        margin: 6px 0 4px 0 !important;
+        font-size: 0.9em !important;
+      }
+
+      .insurance-conversion-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+      }
+
+      .insurance-conversion-item {
+        background: #f8f9fa;
+        padding: 5px;
+        border-radius: 3px;
+        border: 1px solid #e9ecef;
+      }
+
+      .insurance-conversion-item h4 {
+        font-size: 0.75em;
+        color: #495057;
+        margin-bottom: 4px;
+        font-weight: 600;
+      }
+
+      .insurance-conversion-item .insurance-form-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 4px;
+      }
+
+      #results-section {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+      }
+
+      #results-section.hidden {
+        display: none !important;
+      }
+
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>💰 跳槽收益计算工具</h1>
+
+      <div class="form-section">
+        <div class="company-form">
+          <h2>🏢 旧公司 - 工资</h2>
+          <div class="salary-section">
+            <div class="form-group">
+              <label>月基础工资（元）</label>
+              <input type="number" id="company1-base-salary" value="21000" />
+            </div>
+            <div class="form-group">
+              <label>月额外收入（元）</label>
+              <input type="number" id="company1-extra-income" value="1000" />
+            </div>
+            <div class="form-group">
+              <label>奖金系数（相对于基础工资）</label>
+              <input
+                type="number"
+                id="company1-bonus-ratio"
+                value="1"
+                step="0.1"
+              />
+            </div>
+            <div class="form-group">
+              <label>月专项扣除（元，如租房、子女教育等）</label>
+              <input type="number" id="company1-deduction" value="2500" />
+            </div>
+          </div>
+        </div>
+
+        <div class="company-form">
+          <h2>🏢 旧公司 - 五险一金</h2>
+          <div class="insurance-section">
+            <div class="insurance-type-group">
+              <h4>养老保险</h4>
+              <div class="insurance-form-row">
+                <div class="form-group">
+                  <label>个人比例</label>
+                  <input
+                    type="number"
+                    id="insurance-养老-c1-个人比例"
+                    value="0.08"
+                    step="0.001"
+                    min="0"
+                    max="1"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>公司比例</label>
+                  <input
+                    type="number"
+                    id="insurance-养老-c1-公司比例"
+                    value="0.16"
+                    step="0.001"
+                    min="0"
+                    max="1"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>缴纳基数</label>
+                  <input
+                    type="number"
+                    id="insurance-养老-c1-缴纳基数"
+                    value="1.0"
+                    step="0.1"
+                    min="0"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="insurance-type-group">
+              <h4>医疗保险</h4>
+              <div class="insurance-form-row">
+                <div class="form-group">
+                  <label>个人比例</label>
+                  <input
+                    type="number"
+                    id="insurance-医疗-c1-个人比例"
+                    value="0.02"
+                    step="0.001"
+                    min="0"
+                    max="1"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>公司比例</label>
+                  <input
+                    type="number"
+                    id="insurance-医疗-c1-公司比例"
+                    value="0.05"
+                    step="0.001"
+                    min="0"
+                    max="1"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>缴纳基数</label>
+                  <input
+                    type="number"
+                    id="insurance-医疗-c1-缴纳基数"
+                    value="1.0"
+                    step="0.1"
+                    min="0"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="insurance-type-group">
+              <h4>公积金</h4>
+              <div class="insurance-form-row">
+                <div class="form-group">
+                  <label>个人比例</label>
+                  <input
+                    type="number"
+                    id="insurance-公积金-c1-个人比例"
+                    value="0.12"
+                    step="0.001"
+                    min="0"
+                    max="1"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>公司比例</label>
+                  <input
+                    type="number"
+                    id="insurance-公积金-c1-公司比例"
+                    value="0.12"
+                    step="0.001"
+                    min="0"
+                    max="1"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>缴纳基数</label>
+                  <input
+                    type="number"
+                    id="insurance-公积金-c1-缴纳基数"
+                    value="1.0"
+                    step="0.1"
+                    min="0"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="company-form">
+          <h2>🚀 新公司 - 工资</h2>
+          <div class="salary-section">
+            <div class="form-group">
+              <label>月基础工资（元）</label>
+              <input type="number" id="company2-base-salary" value="36000" />
+            </div>
+            <div class="form-group">
+              <label>月额外收入（元）</label>
+              <input type="number" id="company2-extra-income" value="0" />
+            </div>
+            <div class="form-group">
+              <label>奖金系数（相对于基础工资）</label>
+              <input
+                type="number"
+                id="company2-bonus-ratio"
+                value="2"
+                step="0.1"
+              />
+            </div>
+            <div class="form-group">
+              <label>月专项扣除（元，如租房、子女教育等）</label>
+              <input type="number" id="company2-deduction" value="2500" />
+            </div>
+          </div>
+        </div>
+
+        <div class="company-form">
+          <h2>🚀 新公司 - 五险一金</h2>
+          <div class="insurance-section">
+            <div class="insurance-type-group">
+              <h4>养老保险</h4>
+              <div class="insurance-form-row">
+                <div class="form-group">
+                  <label>个人比例</label>
+                  <input
+                    type="number"
+                    id="insurance-养老-c2-个人比例"
+                    value="0.08"
+                    step="0.001"
+                    min="0"
+                    max="1"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>公司比例</label>
+                  <input
+                    type="number"
+                    id="insurance-养老-c2-公司比例"
+                    value="0.16"
+                    step="0.001"
+                    min="0"
+                    max="1"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>缴纳基数</label>
+                  <input
+                    type="number"
+                    id="insurance-养老-c2-缴纳基数"
+                    value="1.0"
+                    step="0.1"
+                    min="0"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="insurance-type-group">
+              <h4>医疗保险</h4>
+              <div class="insurance-form-row">
+                <div class="form-group">
+                  <label>个人比例</label>
+                  <input
+                    type="number"
+                    id="insurance-医疗-c2-个人比例"
+                    value="0.02"
+                    step="0.001"
+                    min="0"
+                    max="1"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>公司比例</label>
+                  <input
+                    type="number"
+                    id="insurance-医疗-c2-公司比例"
+                    value="0.05"
+                    step="0.001"
+                    min="0"
+                    max="1"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>缴纳基数</label>
+                  <input
+                    type="number"
+                    id="insurance-医疗-c2-缴纳基数"
+                    value="1.0"
+                    step="0.1"
+                    min="0"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="insurance-type-group">
+              <h4>公积金</h4>
+              <div class="insurance-form-row">
+                <div class="form-group">
+                  <label>个人比例</label>
+                  <input
+                    type="number"
+                    id="insurance-公积金-c2-个人比例"
+                    value="0.12"
+                    step="0.001"
+                    min="0"
+                    max="1"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>公司比例</label>
+                  <input
+                    type="number"
+                    id="insurance-公积金-c2-公司比例"
+                    value="0.12"
+                    step="0.001"
+                    min="0"
+                    max="1"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>缴纳基数</label>
+                  <input
+                    type="number"
+                    id="insurance-公积金-c2-缴纳基数"
+                    value="1.0"
+                    step="0.1"
+                    min="0"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="insurance-conversion-section">
+        <h3 style="margin: 6px 0 4px 0; font-size: 0.9em; color: #495057">
+          折算比例（共用）
+        </h3>
+        <div class="insurance-conversion-grid">
+          <div class="insurance-conversion-item">
+            <h4>养老保险</h4>
+            <div class="insurance-form-row">
+              <div class="form-group">
+                <label>个人折算</label>
+                <input
+                  type="number"
+                  id="insurance-养老-个人折算"
+                  value="0.5"
+                  step="0.1"
+                  min="0"
+                  max="1"
+                />
+              </div>
+              <div class="form-group">
+                <label>公司折算</label>
+                <input
+                  type="number"
+                  id="insurance-养老-公司折算"
+                  value="0.2"
+                  step="0.1"
+                  min="0"
+                  max="1"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="insurance-conversion-item">
+            <h4>医疗保险</h4>
+            <div class="insurance-form-row">
+              <div class="form-group">
+                <label>个人折算</label>
+                <input
+                  type="number"
+                  id="insurance-医疗-个人折算"
+                  value="0.8"
+                  step="0.1"
+                  min="0"
+                  max="1"
+                />
+              </div>
+              <div class="form-group">
+                <label>公司折算</label>
+                <input
+                  type="number"
+                  id="insurance-医疗-公司折算"
+                  value="0.5"
+                  step="0.1"
+                  min="0"
+                  max="1"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="insurance-conversion-item">
+            <h4>公积金</h4>
+            <div class="insurance-form-row">
+              <div class="form-group">
+                <label>个人折算</label>
+                <input
+                  type="number"
+                  id="insurance-公积金-个人折算"
+                  value="1.0"
+                  step="0.1"
+                  min="0"
+                  max="1"
+                />
+              </div>
+              <div class="form-group">
+                <label>公司折算</label>
+                <input
+                  type="number"
+                  id="insurance-公积金-公司折算"
+                  value="1.0"
+                  step="0.1"
+                  min="0"
+                  max="1"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="form-note"
+        style="
+          margin-top: 8px;
+          padding: 6px;
+          background: #fff3cd;
+          border: 1px solid #ffc107;
+          border-radius: 4px;
+          font-size: 0.75em;
+          color: #856404;
+        "
+      >
+        <strong>注：</strong>缴纳基数的值的填写：≤1为比例（相对于月基础工资），&gt;1为实际金额（元）<br />
+        <strong>说明：</strong>个人名义收益（不考虑折算，不考虑纳税）等于公司实际成本。
+      </div>
+
+      <button class="btn-calculate" onclick="calculate()">📊 开始计算</button>
+
+      <div id="results-section" class="hidden">
+        <div class="results">
+          <div class="result-card">
+            <h3>个人名义收益（不考虑折算，不考虑纳税）</h3>
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>旧公司</th>
+                  <th></th>
+                  <th>新公司</th>
+                  <th>涨幅</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>按月</td>
+                  <td id="nominal-no-tax-monthly-c1">-</td>
+                  <td>→</td>
+                  <td id="nominal-no-tax-monthly-c2">-</td>
+                  <td id="nominal-no-tax-growth-monthly" class="growth-cell">-</td>
+                </tr>
+                <tr>
+                  <td>按年</td>
+                  <td id="nominal-no-tax-yearly-c1">-</td>
+                  <td>→</td>
+                  <td id="nominal-no-tax-yearly-c2">-</td>
+                  <td id="nominal-no-tax-growth-yearly" class="growth-cell">-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="result-card">
+            <h3>个人名义收益（不考虑折算，考虑纳税）</h3>
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>旧公司</th>
+                  <th></th>
+                  <th>新公司</th>
+                  <th>涨幅</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>按月</td>
+                  <td id="nominal-monthly-c1">-</td>
+                  <td>→</td>
+                  <td id="nominal-monthly-c2">-</td>
+                  <td id="nominal-growth-monthly" class="growth-cell">-</td>
+                </tr>
+                <tr>
+                  <td>按年</td>
+                  <td id="nominal-yearly-c1">-</td>
+                  <td>→</td>
+                  <td id="nominal-yearly-c2">-</td>
+                  <td id="nominal-growth-yearly" class="growth-cell">-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="result-card">
+            <h3>个人实际收益（考虑折算和纳税）</h3>
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>旧公司</th>
+                  <th></th>
+                  <th>新公司</th>
+                  <th>涨幅</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>按月</td>
+                  <td id="actual-monthly-c1">-</td>
+                  <td>→</td>
+                  <td id="actual-monthly-c2">-</td>
+                  <td id="actual-growth-monthly" class="growth-cell">-</td>
+                </tr>
+                <tr>
+                  <td>按年</td>
+                  <td id="actual-yearly-c1">-</td>
+                  <td>→</td>
+                  <td id="actual-yearly-c2">-</td>
+                  <td id="actual-growth-yearly" class="growth-cell">-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <script>
+    const 默认五险一金比例配置 = {
+      养老保险: {
+        缴纳比例: [0.08, 0.16],
+          折算比例: [0.5, 0.2],
+          缴纳基数: 1.0,
+      },
+      医疗保险: {
+        缴纳比例: [0.02, 0.05],
+          折算比例: [0.8, 0.5],
+          缴纳基数: 1.0,
+      },
+        公积金: {
+          缴纳比例: [0.12, 0.12],
+          折算比例: [1.0, 1.0],
+          缴纳基数: 1.0,
+        },
+      };
+
+    /**
+     * 计算实际缴纳基数
+     * @param {number} 缴纳基数配置值 - 如果 <= 1.0 则为比例，如果 > 1.0 则为实际金额
+     * @param {number} 月基础工资 - 用于计算比例的基数
+     * @returns {number} 实际缴纳基数
+     */
+    function 计算实际缴纳基数(缴纳基数配置值, 月基础工资) {
+      if (缴纳基数配置值 <= 1.0) {
+        // 小于等于1.0表示比例，实际缴纳基数 = 月基础工资 * 比例
+        return 月基础工资 * 缴纳基数配置值;
+      } else {
+        // 大于1.0表示实际金额，直接使用
+        return 缴纳基数配置值;
+      }
+    }
+
+      /**
+       * 纳税计算
+       */
+      function 纳税(年度的应纳税所得额) {
+        if (年度的应纳税所得额 <= 0) return 0;
+
+        let 阶梯纳税总和 = 0;
+        if (年度的应纳税所得额 < 36000) {
+          阶梯纳税总和 = 年度的应纳税所得额 * 0.03;
+        } else if (年度的应纳税所得额 < 144000) {
+          阶梯纳税总和 = 36000 * 0.03 + (年度的应纳税所得额 - 36000) * 0.1;
+        } else if (年度的应纳税所得额 < 300000) {
+          阶梯纳税总和 =
+            36000 * 0.03 +
+            (144000 - 36000) * 0.1 +
+            (年度的应纳税所得额 - 144000) * 0.2;
+        } else if (年度的应纳税所得额 < 420000) {
+          阶梯纳税总和 =
+            36000 * 0.03 +
+            (144000 - 36000) * 0.1 +
+            (300000 - 144000) * 0.2 +
+            (年度的应纳税所得额 - 300000) * 0.25;
+        } else if (年度的应纳税所得额 < 660000) {
+          阶梯纳税总和 =
+            36000 * 0.03 +
+            (144000 - 36000) * 0.1 +
+            (300000 - 144000) * 0.2 +
+            (420000 - 300000) * 0.25 +
+            (年度的应纳税所得额 - 420000) * 0.3;
+        } else if (年度的应纳税所得额 < 960000) {
+          阶梯纳税总和 =
+            36000 * 0.03 +
+            (144000 - 36000) * 0.1 +
+            (300000 - 144000) * 0.2 +
+            (420000 - 300000) * 0.25 +
+            (660000 - 420000) * 0.3 +
+            (年度的应纳税所得额 - 660000) * 0.35;
+        } else {
+          阶梯纳税总和 =
+            36000 * 0.03 +
+            (144000 - 36000) * 0.1 +
+            (300000 - 144000) * 0.2 +
+            (420000 - 300000) * 0.25 +
+            (660000 - 420000) * 0.3 +
+            (960000 - 660000) * 0.35 +
+            (年度的应纳税所得额 - 960000) * 0.45;
+        }
+        return 阶梯纳税总和;
+      }
+
+      /**
+       * 计算个人名义收益（不考虑折算，但考虑纳税）
+       * 名义收益 = 税后收入 + 五险一金（100%折算，个人+公司全部算作收益）
+       */
+      function 计算个人名义收益(
+      按月基础工资,
+      按月额外收入,
+      相对与base的奖金系数,
+      免税额度,
+      五险一金比例配置
+    ) {
+        // 计算个人缴纳的五险一金
+        let 个人缴纳五险一金总额 = 0;
+        Object.keys(五险一金比例配置).forEach((五险一金项目名称) => {
+          const [个人缴纳比例] = 五险一金比例配置[五险一金项目名称].缴纳比例;
+          const 缴纳基数配置值 = 五险一金比例配置[五险一金项目名称].缴纳基数;
+          const 实际缴纳基数 = 计算实际缴纳基数(缴纳基数配置值, 按月基础工资);
+          个人缴纳五险一金总额 += 实际缴纳基数 * 个人缴纳比例;
+        });
+
+        // 基本减除费用（每年60000元，即每月5000元）
+        const 基本减除费用 = 60000;
+
+        // 计算年度应纳税所得额
+        // 公式：年度收入 - 基本减除费用 - 专项扣除（五险一金）- 专项附加扣除（免税额度）
+        const 年度收入 = (按月基础工资 + 按月额外收入) * 12;
+        const 年度五险一金扣除 = 个人缴纳五险一金总额 * 12;
+        const 年度的应纳税所得额 =
+          年度收入 - 基本减除费用 - 年度五险一金扣除 - 免税额度;
+
+        // 计算奖金
+        const 奖金 = 相对与base的奖金系数 * 按月基础工资;
+
+        // 计算年度应纳税款（奖金并入综合所得计算）
+        const 年度应纳税款 = 纳税(Math.max(0, 年度的应纳税所得额 + 奖金));
+
+        // 税后收入 = 年度收入 + 奖金 - 年度五险一金扣除 - 年度应纳税款
+        const 税后收入 = 年度收入 + 奖金 - 年度五险一金扣除 - 年度应纳税款;
+
+        // 计算五险一金总额（100%折算，不考虑实际折算比例）
+        let 按月五险一金总额 = 0;
+        Object.keys(五险一金比例配置).forEach((五险一金项目名称) => {
+          const [个人缴纳比例, 公司缴纳比例] =
+            五险一金比例配置[五险一金项目名称].缴纳比例;
+          const 缴纳基数配置值 = 五险一金比例配置[五险一金项目名称].缴纳基数;
+          const 实际缴纳基数 = 计算实际缴纳基数(缴纳基数配置值, 按月基础工资);
+          // 100%折算：个人缴纳 + 公司缴纳全部算作收益
+          按月五险一金总额 +=
+            实际缴纳基数 * 个人缴纳比例 + 实际缴纳基数 * 公司缴纳比例;
+        });
+        const 年度五险一金总额 = 按月五险一金总额 * 12;
+
+        // 个人名义收益 = 税后收入 + 五险一金（100%折算）
+        const 个人名义收益 = 税后收入 + 年度五险一金总额;
+
+        return {
+          月度: 个人名义收益 / 12,
+          年度: 个人名义收益,
+          月度税前: ((按月基础工资 + 按月额外收入) * 12) / 12,
+          年度税前: (按月基础工资 + 按月额外收入) * 12 + 奖金,
+        };
+      }
+
+      /**
+       * 计算个人名义收益（不考虑折算，不考虑纳税）
+       * 名义收益 = 公司实际成本 = 税前工资 + 奖金 + 公司缴纳的五险一金
+       * 注意：个人缴纳的五险一金也是公司先发放的，所以应该与公司成本一致
+       */
+      function 计算个人名义收益不考虑纳税(
+        按月基础工资,
+        按月额外收入,
+        相对与base的奖金系数,
+        五险一金比例配置
+      ) {
+        // 基础工资成本
+        const 基础工资成本 = 按月基础工资 * 12;
+
+        // 额外收入成本
+        const 额外收入成本 = 按月额外收入 * 12;
+
+        // 奖金成本
+        const 奖金成本 = 相对与base的奖金系数 * 按月基础工资;
+
+        // 公司缴纳的五险一金
+        let 公司缴纳五险一金总额 = 0;
+        Object.keys(五险一金比例配置).forEach((五险一金项目名称) => {
+          const [, 公司缴纳比例] = 五险一金比例配置[五险一金项目名称].缴纳比例;
+          const 缴纳基数配置值 = 五险一金比例配置[五险一金项目名称].缴纳基数;
+          const 实际缴纳基数 = 计算实际缴纳基数(缴纳基数配置值, 按月基础工资);
+          公司缴纳五险一金总额 += 实际缴纳基数 * 公司缴纳比例;
+        });
+        const 年度公司缴纳五险一金 = 公司缴纳五险一金总额 * 12;
+
+        // 个人名义收益（不考虑折算，不考虑纳税）= 公司实际成本
+        // 因为个人缴纳的五险一金也是公司先发放的工资的一部分
+        const 个人名义收益 = 基础工资成本 + 额外收入成本 + 奖金成本 + 年度公司缴纳五险一金;
+
+        return {
+          月度: 个人名义收益 / 12,
+          年度: 个人名义收益,
+        };
+      }
+
+      /**
+       * 计算个人实际收益（考虑折算，考虑纳税）
+       * 实际收益 = 税后收入 + 五险一金（按折算比例计算）
+       */
+      function 计算个人实际收益(
+        按月基础工资,
+        按月额外收入,
+        相对与base的奖金系数,
+        免税额度,
+        五险一金比例配置
+      ) {
+        // 计算个人缴纳的五险一金（用于纳税计算）
+      let 个人缴纳五险一金总额 = 0;
+      Object.keys(五险一金比例配置).forEach((五险一金项目名称) => {
+        const [个人缴纳比例] = 五险一金比例配置[五险一金项目名称].缴纳比例;
+          const 缴纳基数配置值 = 五险一金比例配置[五险一金项目名称].缴纳基数;
+          const 实际缴纳基数 = 计算实际缴纳基数(缴纳基数配置值, 按月基础工资);
+          个人缴纳五险一金总额 += 实际缴纳基数 * 个人缴纳比例;
+        });
+
+        // 基本减除费用（每年60000元，即每月5000元）
+        const 基本减除费用 = 60000;
+
+        // 计算年度应纳税所得额
+        const 年度收入 = (按月基础工资 + 按月额外收入) * 12;
+        const 年度五险一金扣除 = 个人缴纳五险一金总额 * 12;
+      const 年度的应纳税所得额 =
+          年度收入 - 基本减除费用 - 年度五险一金扣除 - 免税额度;
+
+        // 计算奖金
+      const 奖金 = 相对与base的奖金系数 * 按月基础工资;
+
+        // 计算年度应纳税款
+        const 年度应纳税款 = 纳税(Math.max(0, 年度的应纳税所得额 + 奖金));
+
+        // 税后收入 = 年度收入 + 奖金 - 年度五险一金扣除 - 年度应纳税款
+        const 税后收入 = 年度收入 + 奖金 - 年度五险一金扣除 - 年度应纳税款;
+
+        // 计算五险一金折算收益（按折算比例计算）
+      let 按月五险一金折算收益 = 0;
+      Object.keys(五险一金比例配置).forEach((五险一金项目名称) => {
+        const [个人缴纳比例, 公司缴纳比例] =
+          五险一金比例配置[五险一金项目名称].缴纳比例;
+          const 缴纳基数配置值 = 五险一金比例配置[五险一金项目名称].缴纳基数;
+          const 实际缴纳基数 = 计算实际缴纳基数(缴纳基数配置值, 按月基础工资);
+        const [个人缴纳折算比例, 公司缴纳折算比例] =
+          五险一金比例配置[五险一金项目名称].折算比例;
+          // 按折算比例计算
+        按月五险一金折算收益 +=
+            实际缴纳基数 * 个人缴纳比例 * 个人缴纳折算比例 +
+            实际缴纳基数 * 公司缴纳比例 * 公司缴纳折算比例;
+        });
+        const 年度五险一金折算收益 = 按月五险一金折算收益 * 12;
+
+        // 个人实际收益 = 税后收入 + 五险一金（按折算比例计算）
+        const 个人实际收益 = 税后收入 + 年度五险一金折算收益;
+
+        return {
+          月度: 个人实际收益 / 12,
+          年度: 个人实际收益,
+        };
+      }
+
+      /**
+       * 计算公司实际成本
+       */
+      function 计算公司实际成本(
+        按月基础工资,
+        按月额外收入,
+        相对与base的奖金系数,
+        五险一金比例配置
+      ) {
+        // 基础工资成本
+        const 基础工资成本 = 按月基础工资 * 12;
+
+        // 额外收入成本
+        const 额外收入成本 = 按月额外收入 * 12;
+
+        // 奖金成本
+        const 奖金成本 = 相对与base的奖金系数 * 按月基础工资;
+
+        // 公司缴纳的五险一金
+        let 公司缴纳五险一金总额 = 0;
+        Object.keys(五险一金比例配置).forEach((五险一金项目名称) => {
+          const [, 公司缴纳比例] = 五险一金比例配置[五险一金项目名称].缴纳比例;
+          const 缴纳基数配置值 = 五险一金比例配置[五险一金项目名称].缴纳基数;
+          const 实际缴纳基数 = 计算实际缴纳基数(缴纳基数配置值, 按月基础工资);
+          公司缴纳五险一金总额 += 实际缴纳基数 * 公司缴纳比例;
+        });
+        const 年度公司缴纳五险一金 = 公司缴纳五险一金总额 * 12;
+
+        const 总成本 =
+          基础工资成本 + 额外收入成本 + 奖金成本 + 年度公司缴纳五险一金;
+
+        return {
+          月度: 总成本 / 12,
+          年度: 总成本,
+        };
+      }
+
+      function calculate() {
+        // 获取输入值
+        const company1Data = {
+          按月基础工资:
+            parseFloat(document.getElementById("company1-base-salary").value) ||
+            0,
+          按月额外收入:
+            parseFloat(
+              document.getElementById("company1-extra-income").value
+            ) || 0,
+          相对与base的奖金系数:
+            parseFloat(document.getElementById("company1-bonus-ratio").value) ||
+            0,
+          免税额度:
+            parseFloat(document.getElementById("company1-deduction").value) ||
+            0 * 12,
+        };
+
+        const company2Data = {
+          按月基础工资:
+            parseFloat(document.getElementById("company2-base-salary").value) ||
+            0,
+          按月额外收入:
+            parseFloat(
+              document.getElementById("company2-extra-income").value
+            ) || 0,
+          相对与base的奖金系数:
+            parseFloat(document.getElementById("company2-bonus-ratio").value) ||
+            0,
+          免税额度:
+            parseFloat(document.getElementById("company2-deduction").value) ||
+            0 * 12,
+        };
+
+        // 设置五险一金配置（从输入框读取）
+        const 用户五险一金配置 = 读取五险一金配置();
+
+        // 五险一金配置已包含缴纳基数配置值（会在计算函数中根据值判断是比例还是实际金额）
+        const 五险一金配置1 = JSON.parse(
+          JSON.stringify(用户五险一金配置.公司1)
+        );
+        const 五险一金配置2 = JSON.parse(
+          JSON.stringify(用户五险一金配置.公司2)
+        );
+
+        // 计算公司1的各项收益
+        const company1名义收益不考虑纳税 = 计算个人名义收益不考虑纳税(
+          company1Data.按月基础工资,
+          company1Data.按月额外收入,
+          company1Data.相对与base的奖金系数,
+          五险一金配置1
+        );
+
+        const company1名义收益 = 计算个人名义收益(
+          company1Data.按月基础工资,
+          company1Data.按月额外收入,
+          company1Data.相对与base的奖金系数,
+          company1Data.免税额度,
+          五险一金配置1
+        );
+
+        const company1实际收益 = 计算个人实际收益(
+          company1Data.按月基础工资,
+          company1Data.按月额外收入,
+          company1Data.相对与base的奖金系数,
+          company1Data.免税额度,
+          五险一金配置1
+        );
+
+        // 计算公司2的各项收益
+        const company2名义收益不考虑纳税 = 计算个人名义收益不考虑纳税(
+          company2Data.按月基础工资,
+          company2Data.按月额外收入,
+          company2Data.相对与base的奖金系数,
+          五险一金配置2
+        );
+
+        const company2名义收益 = 计算个人名义收益(
+          company2Data.按月基础工资,
+          company2Data.按月额外收入,
+          company2Data.相对与base的奖金系数,
+          company2Data.免税额度,
+          五险一金配置2
+        );
+
+        const company2实际收益 = 计算个人实际收益(
+          company2Data.按月基础工资,
+          company2Data.按月额外收入,
+          company2Data.相对与base的奖金系数,
+          company2Data.免税额度,
+          五险一金配置2
+        );
+
+        // 计算增长幅度
+        const 名义收益不考虑纳税增长月度 =
+          ((company2名义收益不考虑纳税.月度 - company1名义收益不考虑纳税.月度) /
+            company1名义收益不考虑纳税.月度) *
+          100;
+        const 名义收益不考虑纳税增长年度 =
+          ((company2名义收益不考虑纳税.年度 - company1名义收益不考虑纳税.年度) /
+            company1名义收益不考虑纳税.年度) *
+          100;
+
+        const 名义收益增长月度 =
+          ((company2名义收益.月度 - company1名义收益.月度) /
+            company1名义收益.月度) *
+          100;
+        const 名义收益增长年度 =
+          ((company2名义收益.年度 - company1名义收益.年度) /
+            company1名义收益.年度) *
+          100;
+        const 实际收益增长月度 =
+          ((company2实际收益.月度 - company1实际收益.月度) /
+            company1实际收益.月度) *
+          100;
+        const 实际收益增长年度 =
+          ((company2实际收益.年度 - company1实际收益.年度) /
+            company1实际收益.年度) *
+          100;
+
+        // 显示结果 - 个人名义收益（不考虑折算，不考虑纳税）
+        document.getElementById(
+          "nominal-no-tax-monthly-c1"
+        ).textContent = `¥${company1名义收益不考虑纳税.月度.toFixed(2)}`;
+        document.getElementById(
+          "nominal-no-tax-monthly-c2"
+        ).textContent = `¥${company2名义收益不考虑纳税.月度.toFixed(2)}`;
+        document.getElementById(
+          "nominal-no-tax-yearly-c1"
+        ).textContent = `¥${company1名义收益不考虑纳税.年度.toFixed(2)}`;
+        document.getElementById(
+          "nominal-no-tax-yearly-c2"
+        ).textContent = `¥${company2名义收益不考虑纳税.年度.toFixed(2)}`;
+
+        const nominalNoTaxGrowthMonthlyEl = document.getElementById(
+          "nominal-no-tax-growth-monthly"
+        );
+        nominalNoTaxGrowthMonthlyEl.textContent = `${名义收益不考虑纳税增长月度.toFixed(2)}%`;
+        nominalNoTaxGrowthMonthlyEl.className = `growth-cell ${
+          名义收益不考虑纳税增长月度 >= 0 ? "positive" : "negative"
+        }`;
+
+        const nominalNoTaxGrowthYearlyEl = document.getElementById(
+          "nominal-no-tax-growth-yearly"
+        );
+        nominalNoTaxGrowthYearlyEl.textContent = `${名义收益不考虑纳税增长年度.toFixed(2)}%`;
+        nominalNoTaxGrowthYearlyEl.className = `growth-cell ${
+          名义收益不考虑纳税增长年度 >= 0 ? "positive" : "negative"
+        }`;
+
+        // 显示结果 - 个人名义收益（不考虑折算，考虑纳税）
+        document.getElementById(
+          "nominal-monthly-c1"
+        ).textContent = `¥${company1名义收益.月度.toFixed(2)}`;
+        document.getElementById(
+          "nominal-monthly-c2"
+        ).textContent = `¥${company2名义收益.月度.toFixed(2)}`;
+        document.getElementById(
+          "nominal-yearly-c1"
+        ).textContent = `¥${company1名义收益.年度.toFixed(2)}`;
+        document.getElementById(
+          "nominal-yearly-c2"
+        ).textContent = `¥${company2名义收益.年度.toFixed(2)}`;
+
+        const nominalGrowthMonthlyEl = document.getElementById(
+          "nominal-growth-monthly"
+        );
+        nominalGrowthMonthlyEl.textContent = `${名义收益增长月度.toFixed(2)}%`;
+        nominalGrowthMonthlyEl.className = `growth-cell ${
+          名义收益增长月度 >= 0 ? "positive" : "negative"
+        }`;
+
+        const nominalGrowthYearlyEl = document.getElementById(
+          "nominal-growth-yearly"
+        );
+        nominalGrowthYearlyEl.textContent = `${名义收益增长年度.toFixed(2)}%`;
+        nominalGrowthYearlyEl.className = `growth-cell ${
+          名义收益增长年度 >= 0 ? "positive" : "negative"
+        }`;
+
+        // 显示结果 - 个人实际收益
+        document.getElementById(
+          "actual-monthly-c1"
+        ).textContent = `¥${company1实际收益.月度.toFixed(2)}`;
+        document.getElementById(
+          "actual-monthly-c2"
+        ).textContent = `¥${company2实际收益.月度.toFixed(2)}`;
+        document.getElementById(
+          "actual-yearly-c1"
+        ).textContent = `¥${company1实际收益.年度.toFixed(2)}`;
+        document.getElementById(
+          "actual-yearly-c2"
+        ).textContent = `¥${company2实际收益.年度.toFixed(2)}`;
+
+        const actualGrowthMonthlyEl = document.getElementById(
+          "actual-growth-monthly"
+        );
+        actualGrowthMonthlyEl.textContent = `${实际收益增长月度.toFixed(2)}%`;
+        actualGrowthMonthlyEl.className = `growth-cell ${
+          实际收益增长月度 >= 0 ? "positive" : "negative"
+        }`;
+
+        const actualGrowthYearlyEl = document.getElementById(
+          "actual-growth-yearly"
+        );
+        actualGrowthYearlyEl.textContent = `${实际收益增长年度.toFixed(2)}%`;
+        actualGrowthYearlyEl.className = `growth-cell ${
+          实际收益增长年度 >= 0 ? "positive" : "negative"
+        }`;
+
+        // 显示结果区域
+        const resultsSection = document.getElementById("results-section");
+        if (resultsSection) {
+          resultsSection.classList.remove("hidden");
+          resultsSection.style.display = "flex";
+          // 确保结果区域可见 - 滚动到结果区域
+          setTimeout(() => {
+            try {
+              resultsSection.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+            } catch (e) {
+              // 如果scrollIntoView失败，直接滚动容器
+              const container = document.querySelector(".container");
+              if (container) {
+                container.scrollTop = container.scrollHeight;
+              }
+            }
+          }, 200);
+      } else {
+          console.error("results-section element not found!");
+        }
+      }
+
+      // 从输入框读取五险一金配置（返回两个公司的配置）
+      function 读取五险一金配置() {
+        // 读取共用的折算比例
+        const 折算比例 = {
+          养老保险: [
+            parseFloat(
+              document.getElementById("insurance-养老-个人折算").value
+            ) || 0.5,
+            parseFloat(
+              document.getElementById("insurance-养老-公司折算").value
+            ) || 0.2,
+          ],
+          医疗保险: [
+            parseFloat(
+              document.getElementById("insurance-医疗-个人折算").value
+            ) || 0.8,
+            parseFloat(
+              document.getElementById("insurance-医疗-公司折算").value
+            ) || 0.5,
+          ],
+          公积金: [
+            parseFloat(
+              document.getElementById("insurance-公积金-个人折算").value
+            ) || 1.0,
+            parseFloat(
+              document.getElementById("insurance-公积金-公司折算").value
+            ) || 1.0,
+          ],
+        };
+
+        // 返回两个公司的配置
+        return {
+          公司1: {
+        养老保险: {
+              缴纳比例: [
+                parseFloat(
+                  document.getElementById("insurance-养老-c1-个人比例").value
+                ) || 0.08,
+                parseFloat(
+                  document.getElementById("insurance-养老-c1-公司比例").value
+                ) || 0.16,
+              ],
+              折算比例: 折算比例.养老保险,
+              缴纳基数:
+                parseFloat(
+                  document.getElementById("insurance-养老-c1-缴纳基数").value
+                ) || 1.0,
+        },
+        医疗保险: {
+              缴纳比例: [
+                parseFloat(
+                  document.getElementById("insurance-医疗-c1-个人比例").value
+                ) || 0.02,
+                parseFloat(
+                  document.getElementById("insurance-医疗-c1-公司比例").value
+                ) || 0.05,
+              ],
+              折算比例: 折算比例.医疗保险,
+              缴纳基数:
+                parseFloat(
+                  document.getElementById("insurance-医疗-c1-缴纳基数").value
+                ) || 1.0,
+        },
+        公积金: {
+              缴纳比例: [
+                parseFloat(
+                  document.getElementById("insurance-公积金-c1-个人比例").value
+                ) || 0.12,
+                parseFloat(
+                  document.getElementById("insurance-公积金-c1-公司比例").value
+                ) || 0.12,
+              ],
+              折算比例: 折算比例.公积金,
+              缴纳基数:
+                parseFloat(
+                  document.getElementById("insurance-公积金-c1-缴纳基数").value
+                ) || 1.0,
+            },
+          },
+          公司2: {
+            养老保险: {
+              缴纳比例: [
+                parseFloat(
+                  document.getElementById("insurance-养老-c2-个人比例").value
+                ) || 0.08,
+                parseFloat(
+                  document.getElementById("insurance-养老-c2-公司比例").value
+                ) || 0.16,
+              ],
+              折算比例: 折算比例.养老保险,
+              缴纳基数:
+                parseFloat(
+                  document.getElementById("insurance-养老-c2-缴纳基数").value
+                ) || 1.0,
+            },
+            医疗保险: {
+              缴纳比例: [
+                parseFloat(
+                  document.getElementById("insurance-医疗-c2-个人比例").value
+                ) || 0.02,
+                parseFloat(
+                  document.getElementById("insurance-医疗-c2-公司比例").value
+                ) || 0.05,
+              ],
+              折算比例: 折算比例.医疗保险,
+              缴纳基数:
+                parseFloat(
+                  document.getElementById("insurance-医疗-c2-缴纳基数").value
+                ) || 1.0,
+            },
+            公积金: {
+              缴纳比例: [
+                parseFloat(
+                  document.getElementById("insurance-公积金-c2-个人比例").value
+                ) || 0.12,
+                parseFloat(
+                  document.getElementById("insurance-公积金-c2-公司比例").value
+                ) || 0.12,
+              ],
+              折算比例: 折算比例.公积金,
+              缴纳基数:
+                parseFloat(
+                  document.getElementById("insurance-公积金-c2-缴纳基数").value
+                ) || 1.0,
+            },
+          },
+        };
+      }
+
+      // 页面加载时自动计算
+      window.addEventListener("load", function () {
+        calculate();
+      });
+  </script>
+  </body>
+</html>
