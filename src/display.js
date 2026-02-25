@@ -124,8 +124,18 @@ function renderIframe(html, js) {
     `);
 }
 
-function runJsInWeb(js) {
-  let html = /*html*/ `
+function runJsInWeb(js, ...js_libs) {
+  let html = "";
+  js_libs.forEach((js_lib) => {
+    html += /*html*/ `
+      <script>
+          { // 限制变量定义域
+              ${js_lib}
+          }
+      </script>
+  `;
+  });
+  html += /*html*/ `
         <script>
             { // 限制变量定义域
                 ${js}
@@ -133,7 +143,6 @@ function runJsInWeb(js) {
         </script>
     `;
   html += global_scripts.join("\n");
-  console.log(html);
   display.html(html);
 }
 
