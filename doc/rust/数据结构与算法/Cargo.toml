@@ -1,0 +1,11 @@
+[package]
+name = "data-structures-algorithms"
+version = "0.1.0"
+edition = "2021"
+authors = ["Your Name <your.email@example.com>"]
+description = "Rust 数据结构与算法学习项目"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+
+[dev-dependencies]
