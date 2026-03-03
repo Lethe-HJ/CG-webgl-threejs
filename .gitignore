@@ -1,3 +1,7 @@
 /resource
 /node_modules
 /resource
+
+# 本地配置不提交
+**/config.local.py
+src/__pycache__
