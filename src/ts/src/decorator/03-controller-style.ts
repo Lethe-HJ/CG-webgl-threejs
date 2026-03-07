@@ -42,6 +42,7 @@ export function getRegisteredRoutes(): Readonly<typeof routes> {
 @Controller("/api/user")
 class UserController {
   getUsers(): string[] {
+    // 这里写“处理请求并返回响应”的逻辑；实际框架中通常会给该方法加 @Get() 等装饰器，以指定匹配的 HTTP 方法（GET/POST 等）。
     return ["u1", "u2"];
   }
 }
@@ -53,11 +54,13 @@ class ConfigController {
   }
 }
 
+const controllers = [UserController, ConfigController];
 // 模拟启动时扫描（实际框架会通过模块/入口自动发现）
-registerController(UserController);
-registerController(ConfigController);
+controllers.forEach((controller) => {
+  registerController(controller);
+});
 
 console.log(
   "已注册路由:",
-  getRegisteredRoutes().map((r) => r.path)
+  getRegisteredRoutes().map((r) => r.path),
 );

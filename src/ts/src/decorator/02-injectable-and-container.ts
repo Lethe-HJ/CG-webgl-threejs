@@ -12,6 +12,8 @@ import { defineMetadata, getMetadata, METADATA_KEYS } from "./metadata.ts";
 // 装饰器：Injectable（打标记 + 写元数据）
 // ---------------------------------------------------------------------------
 
+type Constructor<T = unknown, Arg = unknown> = new (...args: Arg[]) => T;
+
 export interface InjectableOptions {
   providedIn?: "root" | null;
 }
@@ -22,8 +24,8 @@ export function Injectable(metadata?: InjectableOptions) {
   };
 }
 
-/** 参数装饰器：显式指定该参数要注入的 token（类） */
-export function Inject(token: new (...args: unknown[]) => unknown) {
+/** 参数装饰器：显式指定该参数要注入的 depCtors（类） */
+export function Inject(depCtors: Constructor) {
   return function (
     target: object,
     _key: string | symbol | undefined,
@@ -33,10 +35,10 @@ export function Inject(token: new (...args: unknown[]) => unknown) {
       typeof target === "function"
         ? target
         : (target as { constructor: Function }).constructor;
-    const existing: (new (...args: unknown[]) => unknown)[] =
-      getMetadata("inject:tokens", ctor) ?? [];
-    existing[index] = token;
-    defineMetadata("inject:tokens", existing, ctor);
+    const existingDepCtors: Constructor[] =
+      getMetadata("inject:dep-ctors", ctor) ?? [];
+    existingDepCtors[index] = depCtors;
+    defineMetadata("inject:dep-ctors", existingDepCtors, ctor);
   };
 }
 
@@ -46,14 +48,13 @@ export function Inject(token: new (...args: unknown[]) => unknown) {
 
 const instances = new Map<Function, unknown>();
 
-export function getOrCreate<T>(Ctor: new (...args: unknown[]) => T): T {
+export function getInstance<T>(Ctor: Constructor<T, any>): T {
   if (instances.has(Ctor)) {
     return instances.get(Ctor) as T;
   }
-  const tokens: (new (...args: unknown[]) => unknown)[] =
-    getMetadata("inject:tokens", Ctor) ?? [];
-  const deps = tokens.map((T) => getOrCreate(T));
-  const instance = new Ctor(...deps);
+  const depCtors: Constructor[] = getMetadata("inject:dep-ctors", Ctor) ?? [];
+  const depInstances = depCtors.map((T) => getInstance(T));
+  const instance = new Ctor(...depInstances);
   instances.set(Ctor, instance);
   return instance;
 }
@@ -76,7 +77,10 @@ class UserService {
 
 @Injectable()
 class AppService {
-  constructor(@Inject(UserService) private userService: UserService) {}
+  constructor(
+    @Inject(UserService)
+    private userService: UserService,
+  ) {}
 
   run(): string {
     return `AppService running, userId: ${this.userService.getUserId()}`;
@@ -84,5 +88,5 @@ class AppService {
 }
 
 // 通过容器获取实例，依赖自动解析
-const app = getOrCreate(AppService);
+const app = getInstance(AppService);
 console.log(app.run());
