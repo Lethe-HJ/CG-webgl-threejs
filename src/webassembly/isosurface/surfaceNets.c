@@ -44,9 +44,41 @@ int cube_edges[24];
 int edge_table[256];
 int buffer[4096];
 
-EM_PORT_API(void) surfaceNets(float *data, int *dims, float level, Mesh *mesh, int storeFlag){
-    float3D *vertices = mesh->p;
-    int3D *faces = mesh->t;
+Mesh mesh;
+
+void init_surfacenets(void)
+{
+    int i, j, p, em, k = 0;
+    for (i = 0; i < 8; ++i)
+    {
+        for (j = 1; j <= 4; j = j << 1)
+        {
+            p = i ^ j;
+            if (i <= p)
+            {
+                cube_edges[k++] = i;
+                cube_edges[k++] = p;
+            }
+        }
+    }
+    for (i = 0; i < 256; ++i)
+    {
+        em = 0;
+        for (j = 0; j < 24; j += 2)
+        {
+            int a = !(i & (1 << cube_edges[j])); // was !!, which in js turns into boolean false null, undefined, etc
+            int b = !(i & (1 << cube_edges[j + 1]));
+            em |= a != b ? (1 << (j >> 1)) : 0; // was !==
+        }
+        edge_table[i] = em;
+    }
+}
+
+EM_PORT_API(void)
+surfaceNets(float *data, int *dims, float level, int storeFlag)
+{
+    float3D *vertices = mesh.p;
+    int3D *faces = mesh.t;
     int n = 0;
     float x[3];
     int R[3];
@@ -151,48 +183,60 @@ EM_PORT_API(void) surfaceNets(float *data, int *dims, float level, Mesh *mesh, i
         buf_no ^= 1;
         R[2] = -R[2];
     }
-    mesh->np = vertices_length;
-    mesh->nt = faces_length;
+    mesh.np = vertices_length;
+    mesh.nt = faces_length;
 }
 
-EM_PORT_API(Mesh) computeSurfaceNets(float *data, int *dims, float level)
+EM_PORT_API(void)
+computeSurfaceNets(float *data, int *dims, float level)
 {
-    Mesh m;
-    surfaceNets(data, dims, level, &m, 0); // 1st pass: evaluate memory requirements
-    m.p = (float3D *)calloc(m.np, sizeof(float3D));
-    m.t = (int3D *)calloc(m.nt, sizeof(int3D));
-    surfaceNets(data, dims, level, &m, 1); // 2nd pass: store vertices and triangles
-    return m;
+    init_surfacenets();
+    surfaceNets(data, dims, level, 0); // 1st pass: evaluate memory requirements
+    mesh.p = (float3D *)calloc(mesh.np, sizeof(float3D));
+    mesh.t = (int3D *)calloc(mesh.nt, sizeof(int3D));
+    surfaceNets(data, dims, level, 1); // 2nd pass: store vertices and triangles
 }
 
 // 获取 Mesh 中的顶点数
-EM_PORT_API(int) getMeshVertexCount(Mesh* mesh) {
-    return mesh->np;
+EM_PORT_API(int)
+getMeshVertexCount()
+{
+    return mesh.np;
 }
 
 // 获取 Mesh 中的三角形数
-EM_PORT_API(int) getMeshTriangleCount(Mesh* mesh) {
-    return mesh->nt;
+EM_PORT_API(int)
+getMeshTriangleCount()
+{
+    return mesh.nt;
 }
 
 // 获取 Mesh 的顶点数组指针
-EM_PORT_API(float3D*) getMeshVertices(Mesh* mesh) {
-    return mesh->p;
+EM_PORT_API(float3D *)
+getMeshVertices()
+{
+    return mesh.p;
 }
 
 // 获取 Mesh 的三角形数组指针
-EM_PORT_API(int3D*) getMeshTriangles(Mesh* mesh) {
-    return mesh->t;
+EM_PORT_API(int3D *)
+getMeshTriangles()
+{
+    return mesh.t;
 }
 
-EM_PORT_API(void) freeMesh(Mesh* mesh) {
+EM_PORT_API(void)
+freeMesh()
+{
     // 先检查指针是否为 NULL，避免尝试释放未分配的内存
-    if (mesh->p != NULL) {
-        free(mesh->p); // 释放顶点数组
-        mesh->p = NULL; // 避免悬挂指针
+    if (mesh.p != NULL)
+    {
+        free(mesh.p);  // 释放顶点数组
+        mesh.p = NULL; // 避免悬挂指针
     }
-    if (mesh->t != NULL) {
-        free(mesh->t); // 释放三角形数组
-        mesh->t = NULL; // 避免悬挂指针
+    if (mesh.t != NULL)
+    {
+        free(mesh.t);  // 释放三角形数组
+        mesh.t = NULL; // 避免悬挂指针
     }
 }

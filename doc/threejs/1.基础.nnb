@@ -1,0 +1,11 @@
+{
+    "cells": [
+        {
+            "language": "javascript",
+            "source": [
+                "const { display } = require(\"node-kernel\");\r\nconst { getLibs } = require(\"../../src/display.js\");\r\nconst path = require(\"path\");\r\n\r\ndisplay(/*html */ `\r\n<!DOCTYPE html>\r\n<html lang=\"en\">\r\n    <head>\r\n        <meta charset=\"UTF-8\">\r\n        <title>Title</title>\r\n        <style>\r\n            *{\r\n                margin: 0;\r\n                padding: 0;\r\n            }\r\n        </style>\r\n        <script>${getLibs(path.resolve(__dirname, \"../../src/three/three.js\"))}</script>\r\n    </head>\r\n    <script>\r\n        // 创建一个场景\r\n        const scene = new THREE.Scene();\r\n\r\n        // 创建一个相机 视点\r\n        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);\r\n        // 设置相机的位置\r\n        camera.position.set(0,0,20);\r\n\r\n        // 创建一个渲染器\r\n        const renderer = new THREE.WebGLRenderer();\r\n        // 设置渲染器尺寸\r\n        renderer.setSize(window.innerWidth, window.innerHeight);\r\n\r\n        document.body.appendChild(renderer.domElement);\r\n\r\n        // 添加一个立方体\r\n        // 定义了一个立方体的对象\r\n        const cubeGeometry = new THREE.BoxGeometry(2, 2, 2);\r\n\r\n        // 创建材质\r\n        const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: false });\r\n\r\n        const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);\r\n\r\n        // 添加到场景里\r\n        scene.add(cube);\r\n\r\n        // 添加一个球体\r\n        const sphereGeometry = new THREE.SphereGeometry(1,10,10);\r\n        const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: false });\r\n        const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);\r\n\r\n        sphere.position.x = 3;\r\n        sphere.position.y = 3;\r\n\r\n        scene.add(sphere);\r\n\r\n        const animation = () => {\r\n            cube.rotation.x += 0.01;\r\n            cube.rotation.y += 0.01;\r\n\r\n            // 渲染\r\n            renderer.render(scene, camera);\r\n\r\n            requestAnimationFrame(animation);\r\n        }\r\n        animation()\r\n    </script>\r\n    <body>\r\n    </body>\r\n</html>\r\n`);\r\n"
+            ],
+            "outputs": []
+        }
+    ]
+}

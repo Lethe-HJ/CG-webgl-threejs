@@ -1,0 +1,40 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>使用WebGL绘制基本图形</title>
+    <style>
+      canvas {
+        background-color: #fff;
+        border: 1px solid #ccc;
+      }
+      div {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <canvas
+        id="webgl-a"
+        width="500"
+        height="500"
+      ></canvas>
+      <canvas
+        id="webgl-b"
+        width="500"
+        height="500"
+      ></canvas>
+       <div>
+      <canvas
+        id="webgl-c"
+        width="500"
+        height="500"
+      ></canvas>
+    </div>
+    <script type="module" src="./point.js"></script>
+    <script type="module" src="./rectangle.js"></script>
+    <script type="module" src="./triangle.js"></script>
+  </body>
+</html>
