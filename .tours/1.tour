@@ -1,0 +1,12 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "1",
+  "steps": [
+    {
+      "file": "src/ts/src/decorator/02-injectable-and-container.ts",
+      "description": "如果是函数说明是构造函数, 直接返回\r\n\r\n否则为类, 那么获取其构造函数",
+      "line": 32
+    }
+  ],
+  "ref": "main"
+}

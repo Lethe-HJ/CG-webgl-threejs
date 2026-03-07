@@ -1,0 +1,23 @@
+{
+  "recommendations": [
+      "exodiusstudios.comment-anchors",
+      "streetsidesoftware.code-spell-checker",
+      "esbenp.prettier-vscode",
+      "naumovs.color-highlight",
+      "geforcelegend.vscode-glsl",
+      "boyswan.glsl-literal",
+      "hediet.vscode-drawio",
+      "vitest.explorer",
+      "edwinhuish.better-comments-next",
+      "vsls-contrib.codetour",
+      "pushqrdx.inline-html",
+      "mathematic.vscode-latex",
+      "christian-kohler.path-intellisense",
+      "rust-lang.rust-analyzer",
+      "slevesque.shader",
+      "gruntfuggly.todo-tree",
+      "liamhammett.inline-parameters",
+      "dtoplak.vscode-glsllint",
+      "raczzalan.webgl-glsl-editor"
+  ]
+}

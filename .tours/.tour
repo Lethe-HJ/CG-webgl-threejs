@@ -1,0 +1,12 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "注释",
+  "steps": [
+    {
+      "file": "src/ts/src/decorator/02-injectable-and-container.ts",
+      "description": "1. `new (...args: unknown[]) => unknown` 表示 构造函数类型（可被 new 调用的类型）\r\n2. `new`表示“用 new 调用的函数”（构造函数），不是普通函数\r\n3. `(...args: unknown[])` 表示构造函数可以接受任意个参数，类型是 unknown[]（任意类型、任意数量）\r\n4. `=> unknown` 表示 new 出来的实例类型是 unknown（这里不关心具体类型，只表示“某个类的构造函数”）",
+      "line": 26
+    }
+  ],
+  "ref": "main"
+}
