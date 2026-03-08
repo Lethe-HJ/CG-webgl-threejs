@@ -12,6 +12,7 @@
         "lowp",
         "mediump",
         "Microtasks",
+        "paramtypes",
         "PHONG",
         "println",
         "Raycaster",

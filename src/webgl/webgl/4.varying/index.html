@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>varying</title>
+    <style>
+      canvas {
+        background-color: #fff;
+        border: 1px solid #ccc;
+      }
+      div {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <canvas id="webgl-a" width="400" height="400"></canvas>
+      <canvas id="webgl-b" width="400" height="400"></canvas>
+      <canvas id="webgl-c" width="400" height="400"></canvas>
+      <canvas id="webgl-d" width="400" height="400"></canvas>
+    </div>
+
+    <script type="module" src="./color-varying.js"></script>
+    <script type="module" src="./colored-triangle.js"></script>
+    <script type="module" src="./two-triangle.js"></script>
+    <script type="module" src="./same-buffer.js"></script>
+  </body>
+</html>
