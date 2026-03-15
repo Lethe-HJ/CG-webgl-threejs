@@ -1,0 +1,32 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "注释",
+  "steps": [
+    {
+      "file": "src/ts/src/decorator/02-injectable-and-container.ts",
+      "description": "1. `<T = unknown>` 表示泛型T未指定的时候默认为`unknown`\r\n2. `new (...args: unknown[]) => unknown` 表示 构造函数类型（可被 new 调用的类型）\r\n3. `new`表示“用 new 调用的函数”（构造函数），不是普通函数\r\n4. `(...args: unknown[])` 表示构造函数可以接受任意个参数，类型是`unknown[]`（任意类型、任意数量）\r\n5. `=> unknown` 表示 new 出来的实例类型是`unknown`这里不关心具体类型，只表示“某个类的构造函数”）",
+      "line": 15
+    },
+    {
+      "file": "src/ts/src/decorator/02-injectable-and-container.ts",
+      "description": "`@Inject`修饰的是传入的`userService`参数\r\n\r\n内部会将`UserService`注入为`AppService`的依赖\r\n\r\n在后续对`AppService`做`getInstance`操作时会顺便将其依赖对应的实例传入`AppService`的构造函数",
+      "line": 82
+    },
+    {
+      "file": "src/ts/src/decorator/03-controller-style.ts",
+      "description": "`Controller`装饰器负责记录元数据 在元数据中记录被装饰的类是否记录过, 并记录其`path`",
+      "line": 17
+    },
+    {
+      "file": "src/ts/src/decorator/02-injectable-and-container.ts",
+      "description": "如果是函数说明是构造函数, 直接返回\r\n\r\n否则为类, 那么获取其构造函数",
+      "line": 32
+    },
+    {
+      "file": "src/ts/src/decorator/02-injectable-and-container.ts",
+      "description": "取该构造函数对应的元数据的`inject:tokens`字段 默认值为 []\r\n\r\n如果该构造函数没有元数据, 则会自动为其新建一个空的元数据\r\n\r\n如果该构造函数有元数据, 则会获取该元数据",
+      "line": 37
+    }
+  ],
+  "ref": "main"
+}
